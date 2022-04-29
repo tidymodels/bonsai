@@ -1,4 +1,6 @@
-add_decision_tree_partykit <- function() {
+# nocov start
+
+make_decision_tree_partykit <- function() {
   parsnip::set_model_engine("decision_tree", mode = "regression", eng = "partykit")
 
   parsnip::set_dependency("decision_tree", eng = "partykit", pkg = "partykit")
@@ -149,7 +151,7 @@ add_decision_tree_partykit <- function() {
 
 }
 
-add_rand_forest_partykit <- function() {
+make_rand_forest_partykit <- function() {
   parsnip::set_model_engine("rand_forest", mode = "regression", eng = "partykit")
 
   parsnip::set_dependency("rand_forest", eng = "partykit", pkg = "partykit")
@@ -318,3 +320,5 @@ add_rand_forest_partykit <- function() {
   )
 
 }
+
+# nocov end
