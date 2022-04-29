@@ -5,9 +5,8 @@
 # been loaded.
 
 .onLoad <- function(libname, pkgname) {
-  # make_*()
-
-  # s3_register("generics::tunable", ...)
+  make_decision_tree_partykit()
+  make_rand_forest_partykit()
 }
 
 
