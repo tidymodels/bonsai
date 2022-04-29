@@ -25,6 +25,9 @@ knitr::opts_chunk$set(
 The goal of bonsai is to provide bindings for additional tree-based model 
 engines for use with the 'parsnip' package. 
 
+_Note that this package is in very early stages of development, and is not yet
+minimally functional._
+
 ## Installation
 
 You can install the development version of bonsai from [GitHub](https://github.com/) with:
@@ -32,6 +35,30 @@ You can install the development version of bonsai from [GitHub](https://github.c
 ``` r
 # install.packages("devtools")
 devtools::install_github("tidymodels/bonsai")
+```
+
+## Available Engines
+
+The bonsai package provides additional engines for the models in the following table:
+
+```{r, echo = FALSE, message = FALSE, eval = FALSE}
+library(parsnip)
+
+parsnip_models <- get_from_env("models") %>%
+  setNames(., .) %>%
+  purrr::map_dfr(get_from_env, .id = "model")
+
+library(bonsai)
+
+bonsai_models <- get_from_env("models") %>%
+  setNames(., .) %>%
+  purrr::map_dfr(get_from_env, .id = "model")
+
+dplyr::anti_join(
+  bonsai_models, parsnip_models, 
+  by = c("model", "engine", "mode")
+) %>%
+  knitr::kable()
 ```
 
 ## Code of Conduct

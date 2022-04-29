@@ -17,6 +17,9 @@ coverage](https://codecov.io/gh/tidymodels/bonsai/branch/main/graph/badge.svg)](
 The goal of bonsai is to provide bindings for additional tree-based
 model engines for use with the ‘parsnip’ package.
 
+*Note that this package is in very early stages of development, and is
+not yet minimally functional.*
+
 ## Installation
 
 You can install the development version of bonsai from
@@ -26,6 +29,11 @@ You can install the development version of bonsai from
 # install.packages("devtools")
 devtools::install_github("tidymodels/bonsai")
 ```
+
+## Available Engines
+
+The bonsai package provides additional engines for the models in the
+following table:
 
 ## Code of Conduct
 
