@@ -20,14 +20,16 @@ Imports:
     purrr,
     rlang,
     tibble,
-    parsnip,
+    parsnip (>= 0.2.1.9001),
     withr,
     stats,
     dials,
-    generics
+    generics,
+    utils
 Suggests: 
     tree,
     lightgbm,
+    partykit,
     covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
