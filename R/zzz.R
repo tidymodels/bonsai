@@ -5,6 +5,8 @@
 # been loaded.
 
 .onLoad <- function(libname, pkgname) {
+  make_boost_tree_lightgbm()
+
   make_decision_tree_partykit()
   make_rand_forest_partykit()
 }
