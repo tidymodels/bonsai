@@ -15,7 +15,19 @@ Authors@R: c(
 Description: Bindings for additional tree-based model engines for use with the 
     'parsnip' package. 
 License: TBD
+Imports: 
+    dplyr,
+    purrr,
+    rlang,
+    tibble,
+    parsnip,
+    withr,
+    stats,
+    dials,
+    generics
 Suggests: 
+    tree,
+    lightgbm,
     covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
