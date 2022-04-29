@@ -5,10 +5,8 @@
 # been loaded.
 
 .onLoad <- function(libname, pkgname) {
-  # make_*()
-
-  # s3_register("generics::tunable", ...)
+  # Define the model functions in the parsnip model database
+  make_decision_tree_tree()
 }
-
 
 # nocov end
