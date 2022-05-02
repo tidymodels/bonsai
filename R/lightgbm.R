@@ -88,6 +88,12 @@ train_lightgbm <- function(x, y, max_depth = 17, num_iterations = 10, learning_r
 
   arg_list <- purrr::compact(c(arg_list, others))
 
+  if ("verbose" %in% names(arg_list)) {
+    verbose <- arg_list$verbose
+    arg_list[["verbose"]] <- NULL
+  } else {
+    verbose <- 1L
+  }
 
   d <- lightgbm::lgb.Dataset(
     data = prepare_df_lgbm(x),
@@ -98,7 +104,8 @@ train_lightgbm <- function(x, y, max_depth = 17, num_iterations = 10, learning_r
 
   main_args <- list(
     data = quote(d),
-    params = arg_list
+    params = arg_list,
+    verbose = verbose
   )
 
   call <- parsnip::make_call(fun = "lgb.train", ns = "lightgbm", main_args)
