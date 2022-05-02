@@ -1,5 +1,5 @@
 #' bonsai: Model Wrappers for Tree-Based Models
 #'
 #' @docType package
-#' @name bonsai
+#' @aliases bonsai
 "_PACKAGE"

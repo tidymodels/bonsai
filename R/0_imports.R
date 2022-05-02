@@ -1,6 +1,3 @@
-#' @keywords internal
-"_PACKAGE"
-
 #' @importFrom rlang enquo call2 eval_tidy new_quosure empty_env enquos expr
 #' @importFrom purrr map_dfr map_df
 #' @importFrom tibble as_tibble tibble
