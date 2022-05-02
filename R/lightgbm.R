@@ -21,7 +21,7 @@
 #' @return A fitted `lightgbm.Model` object.
 #' @keywords internal
 #' @export
-train_lightgbm <- function(x, y, max_depth = 17, num_iterations = 10, learning_rate = 0.1,
+train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
                            feature_fraction = 1, min_data_in_leaf = 20,
                            min_gain_to_split = 0, bagging_fraction = 1,
                            quiet = FALSE, ...) {
@@ -33,30 +33,19 @@ train_lightgbm <- function(x, y, max_depth = 17, num_iterations = 10, learning_r
     rlang::abort("'quiet' should be a logical value.")
   }
 
-  if(!is.null(feature_fraction)) {
-    feature_fraction <- feature_fraction/ncol(x)
-  }
-  if(feature_fraction > 1) {
-    feature_fraction <- 1
-  }
-
-  if (bagging_fraction > 1) {
-    bagging_fraction <- 1
-  }
-
   if (!any(names(others) %in% c("objective"))) {
     if (is.numeric(y)) {
-      others$num_class <- 1
+      #others$num_class <- 1
       others$objective <- "regression"
     } else {
       lvl <- levels(y)
       lvls <- length(lvl)
       y <- as.numeric(y) - 1
       if (lvls == 2) {
-        others$num_class <- 1
+        #others$num_class <- 1
         others$objective <- "binary"
       } else {
-        others$num_class <- lvls
+        #others$num_class <- lvls
         others$objective <- "multiclass"
       }
     }
@@ -76,15 +65,6 @@ train_lightgbm <- function(x, y, max_depth = 17, num_iterations = 10, learning_r
 
   # parallelism should be explicitly specified by the user
   if(all(sapply(others[c("num_threads", "num_thread", "nthread", "nthreads", "n_jobs")], is.null))) others$num_threads <- 1L
-
-  if (max_depth > 17) {
-    warning("max_depth > 17, num_leaves truncated to 2^17 - 1")
-    max_depth <- 17
-  }
-
-  if (is.null(others$num_leaves)) {
-    others$num_leaves = max(2^max_depth - 1, 2)
-  }
 
   arg_list <- purrr::compact(c(arg_list, others))
 
