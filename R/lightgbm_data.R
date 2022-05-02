@@ -26,7 +26,7 @@ make_boost_tree_lightgbm <- function() {
     value = list(
       interface = "data.frame",
       protect = c("x", "y"),
-      func = c(pkg = "treesnip", fun = "train_lightgbm"),
+      func = c(pkg = "bonsai", fun = "train_lightgbm"),
       defaults = list(verbose = -1)
     )
   )
@@ -51,7 +51,7 @@ make_boost_tree_lightgbm <- function() {
     value = list(
       pre = NULL,
       post = NULL,
-      func = c(pkg = "treesnip", fun = "predict_lightgbm_regression_numeric"),
+      func = c(pkg = "bonsai", fun = "predict_lightgbm_regression_numeric"),
       args = list(
         object = quote(object),
         new_data = quote(new_data)
@@ -66,8 +66,8 @@ make_boost_tree_lightgbm <- function() {
     value = list(
       interface = "data.frame",
       protect = c("x", "y"),
-      func = c(pkg = "treesnip", fun = "train_lightgbm"),
-      defaults = list()
+      func = c(pkg = "bonsai", fun = "train_lightgbm"),
+      defaults = list(verbose = -1)
     )
   )
 
@@ -91,7 +91,7 @@ make_boost_tree_lightgbm <- function() {
     value = parsnip::pred_value_template(
       pre = NULL,
       post = NULL,
-      func = c(pkg = "treesnip", fun = "predict_lightgbm_classification_class"),
+      func = c(pkg = "bonsai", fun = "predict_lightgbm_classification_class"),
       object = quote(object),
       new_data = quote(new_data)
     )
@@ -105,7 +105,7 @@ make_boost_tree_lightgbm <- function() {
     value = parsnip::pred_value_template(
       pre = NULL,
       post = NULL,
-      func = c(pkg = "treesnip", fun = "predict_lightgbm_classification_prob"),
+      func = c(pkg = "bonsai", fun = "predict_lightgbm_classification_prob"),
       object = quote(object),
       new_data = quote(new_data)
     )
@@ -119,7 +119,7 @@ make_boost_tree_lightgbm <- function() {
     value = parsnip::pred_value_template(
       pre = NULL,
       post = NULL,
-      func = c(pkg = "treesnip", fun = "predict_lightgbm_classification_raw"),
+      func = c(pkg = "bonsai", fun = "predict_lightgbm_classification_raw"),
       object = quote(object),
       new_data = quote(new_data)
     )

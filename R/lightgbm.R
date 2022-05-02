@@ -224,3 +224,19 @@ prepare_df_lgbm <- function(x, y = NULL) {
   return(x)
 }
 
+categorical_columns <- function(x){
+  categorical_cols <- NULL
+  for (i in seq_along(x)) {
+    if (is.factor(x[[i]])) {
+      categorical_cols <- c(categorical_cols, i)
+    }
+  }
+  categorical_cols
+}
+
+categorical_features_to_int <- function(x, cat_indices){
+  for (i in cat_indices){
+    x[[i]] <- as.integer(x[[i]]) -1
+  }
+  x
+}
