@@ -17,9 +17,7 @@ test_that("boost_tree with lightgbm",{
     boost_tree() %>% set_engine("lightgbm", nrounds = 100) %>% set_mode("classification")
   )
 
-  # ----------------------------------------------------------------------------
-  # regression
-
+  # regression -----------------------------------------------------------------
   expect_error_free({
     pars_fit_1 <-
       boost_tree() %>%
@@ -128,11 +126,112 @@ test_that("boost_tree with lightgbm",{
 
   expect_equal(pars_preds_3$.pred, lgbm_preds_3)
 
-  # ----------------------------------------------------------------------------
-  # classification
+  # classification -------------------------------------------------------------
 
+  # multiclass
+  expect_error_free({
+    pars_fit_4 <-
+      boost_tree() %>%
+      set_engine("lightgbm") %>%
+      set_mode("classification") %>%
+      fit(species ~ ., data = penguins)
+  })
 
+  expect_error_free({
+    pars_preds_4 <-
+      predict(pars_fit_4, penguins, type = "prob")
+  })
 
+  pars_preds_4_mtx <- as.matrix(pars_preds_4)
+  dimnames(pars_preds_4_mtx) <- NULL
+
+  peng_y_c <- peng$species
+
+  peng_m_c <- peng %>%
+    select(-species) %>%
+    as.matrix()
+
+  peng_x_c <-
+    lgb.Dataset(
+      data = peng_m_c,
+      label = peng_y_c,
+      params = list(feature_pre_filter = FALSE),
+      categorical_feature = c(1L, 6L),
+    )
+
+  params_4 <- list(
+    objective = "multiclass",
+    num_class = 3
+  )
+
+  lgbm_fit_4 <-
+    lightgbm::lgb.train(
+      data = peng_x_c,
+      params = params_4,
+      verbose = -1
+    )
+
+  lgbm_preds_4 <- predict(lgbm_fit_4, peng_m_c, reshape = TRUE)
+
+  expect_equal(pars_preds_4_mtx, lgbm_preds_4)
+
+  # check class predictions
+  pars_preds_5 <-
+    predict(pars_fit_4, penguins, type = "class") %>%
+    `[[`(".pred_class") %>%
+    as.character()
+
+  lgbm_preds_5 <- apply(pars_preds_4_mtx, 1, function(x) which.max(x)) %>%
+    factor(labels = c("Adelie", "Chinstrap", "Gentoo")) %>%
+    as.character()
+
+  expect_equal(pars_preds_5, lgbm_preds_5)
+
+  # classification on a two-level outcome
+  expect_error_free({
+    pars_fit_6 <-
+      boost_tree() %>%
+      set_engine("lightgbm") %>%
+      set_mode("classification") %>%
+      fit(sex ~ ., data = penguins)
+  })
+
+  expect_error_free({
+    pars_preds_6 <-
+      predict(pars_fit_6, penguins, type = "prob")
+  })
+
+  pars_preds_6_b <- pars_preds_6$.pred_male
+
+  peng_y_b <- peng$sex
+
+  peng_m_b <- peng %>%
+    select(-sex) %>%
+    as.matrix()
+
+  peng_x_b <-
+    lgb.Dataset(
+      data = peng_m_b,
+      label = peng_y_b,
+      params = list(feature_pre_filter = FALSE),
+      categorical_feature = c(1L, 2L),
+    )
+
+  params_6 <- list(
+    objective = "binary",
+    num_class = 1
+  )
+
+  lgbm_fit_6 <-
+    lightgbm::lgb.train(
+      data = peng_x_b,
+      params = params_6,
+      verbose = -1
+    )
+
+  lgbm_preds_6 <- predict(lgbm_fit_6, peng_m_b)
+
+  expect_equal(pars_preds_6_b, lgbm_preds_6)
 })
 
 

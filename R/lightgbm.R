@@ -42,10 +42,10 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
       lvls <- length(lvl)
       y <- as.numeric(y) - 1
       if (lvls == 2) {
-        #others$num_class <- 1
+        others$num_class <- 1
         others$objective <- "binary"
       } else {
-        #others$num_class <- lvls
+        others$num_class <- lvls
         others$objective <- "multiclass"
       }
     }
