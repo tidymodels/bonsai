@@ -4,6 +4,7 @@ make_decision_tree_partykit <- function() {
   parsnip::set_model_engine("decision_tree", mode = "regression", eng = "partykit")
 
   parsnip::set_dependency("decision_tree", eng = "partykit", pkg = "partykit")
+  parsnip::set_dependency("decision_tree", eng = "partykit", pkg = "bonsai")
 
   parsnip::set_encoding(
     model = "decision_tree",
@@ -70,6 +71,7 @@ make_decision_tree_partykit <- function() {
   parsnip::set_model_engine("decision_tree", mode = "classification", eng = "partykit")
 
   parsnip::set_dependency("decision_tree", eng = "partykit", pkg = "partykit")
+  parsnip::set_dependency("decision_tree", eng = "partykit", pkg = "bonsai")
 
   parsnip::set_encoding(
     model = "decision_tree",
@@ -155,6 +157,7 @@ make_rand_forest_partykit <- function() {
   parsnip::set_model_engine("rand_forest", mode = "regression", eng = "partykit")
 
   parsnip::set_dependency("rand_forest", eng = "partykit", pkg = "partykit")
+  parsnip::set_dependency("rand_forest", eng = "partykit", pkg = "bonsai")
 
   parsnip::set_encoding(
     model = "rand_forest",
@@ -240,6 +243,7 @@ make_rand_forest_partykit <- function() {
   parsnip::set_model_engine("rand_forest", mode = "classification", eng = "partykit")
 
   parsnip::set_dependency("rand_forest", eng = "partykit", pkg = "partykit")
+  parsnip::set_dependency("rand_forest", eng = "partykit", pkg = "bonsai")
 
   parsnip::set_encoding(
     model = "rand_forest",

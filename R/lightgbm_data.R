@@ -19,6 +19,12 @@ make_boost_tree_lightgbm <- function() {
     pkg = "lightgbm"
   )
 
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "lightgbm",
+    pkg = "bonsai"
+  )
+
   parsnip::set_fit(
     model = "boost_tree",
     eng = "lightgbm",
