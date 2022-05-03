@@ -124,13 +124,12 @@ test_that("condition inference forests",{
       fit(mpg ~ ., data = mtcars)
   })
   set.seed(1)
-  pk_fit_2 <- cforest(mpg ~ ., data = mtcars, ntree = 5, control = ctree_control(mtry = 2))
+  pk_fit_2 <- cforest(mpg ~ ., data = mtcars, ntree = 5, mtry = 2)
   expect_equal(pk_fit_2$fitted, cf_fit_2$fit$fitted)
 
-  # TODO unsure why this is close but not the same
-  # expect_error_free(cf_pred_2 <- predict(cf_fit_2, mtcars)$.pred)
-  # pk_pred_2 <- unname(predict(pk_fit_2, mtcars))
-  # expect_equal(pk_pred_2, cf_pred_2)
+  expect_error_free(cf_pred_2 <- predict(cf_fit_2, mtcars)$.pred)
+  pk_pred_2 <- unname(predict(pk_fit_2, mtcars))
+  expect_equal(pk_pred_2, cf_pred_2)
 
   expect_error_free({
     set.seed(1)
