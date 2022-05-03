@@ -35,7 +35,6 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
 
   if (!any(names(others) %in% c("objective"))) {
     if (is.numeric(y)) {
-      #others$num_class <- 1
       others$objective <- "regression"
     } else {
       lvl <- levels(y)
