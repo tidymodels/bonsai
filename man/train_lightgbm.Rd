@@ -7,8 +7,8 @@
 train_lightgbm(
   x,
   y,
-  max_depth = 17,
-  num_iterations = 10,
+  max_depth = -1,
+  num_iterations = 100,
   learning_rate = 0.1,
   feature_fraction = 1,
   min_data_in_leaf = 20,
