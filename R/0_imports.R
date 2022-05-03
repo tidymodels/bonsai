@@ -7,6 +7,12 @@
 
 # ------------------------------------------------------------------------------
 
+#' @importFrom parsnip %>%
+#' @export
+parsnip::`%>%`
+
+# ------------------------------------------------------------------------------
+
 utils::globalVariables(
   c(
     "categorical_columns", "categorical_features_to_int",
