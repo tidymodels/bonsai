@@ -9,6 +9,8 @@
 
   make_decision_tree_partykit()
   make_rand_forest_partykit()
+
+  make_boost_tree_gbm()
 }
 
 
