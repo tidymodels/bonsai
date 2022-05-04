@@ -40,7 +40,7 @@ pak::pak("tidymodels/bonsai")
 
 The bonsai package provides additional engines for the models in the following table:
 
-```{r, echo = FALSE, message = FALSE, eval = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(parsnip)
 
 parsnip_models <- get_from_env("models") %>%

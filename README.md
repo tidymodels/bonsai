@@ -38,6 +38,15 @@ pak::pak("tidymodels/bonsai")
 The bonsai package provides additional engines for the models in the
 following table:
 
+| model         | engine   | mode           |
+|:--------------|:---------|:---------------|
+| boost_tree    | lightgbm | regression     |
+| boost_tree    | lightgbm | classification |
+| decision_tree | partykit | regression     |
+| decision_tree | partykit | classification |
+| rand_forest   | partykit | regression     |
+| rand_forest   | partykit | classification |
+
 ## Code of Conduct
 
 Please note that the bonsai project is released with a [Contributor Code
