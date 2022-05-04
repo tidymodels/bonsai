@@ -15,12 +15,13 @@ Authors@R: c(
 Description: Bindings for additional tree-based model engines for use with the 
     'parsnip' package. 
 License: TBD
+Depends:
+    parsnip (>= 0.2.1.9001)
 Imports: 
     dplyr,
     purrr,
     rlang,
     tibble,
-    parsnip (>= 0.2.1.9001),
     stats,
     dials,
     generics,
@@ -34,7 +35,7 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.1.2.9000
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Config/Needs/website: tidyverse/tidytemplate
