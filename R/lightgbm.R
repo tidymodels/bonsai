@@ -124,6 +124,7 @@ process_mtry <- function(feature_fraction, counts, x, is_missing) {
         "{ineq} than or equal to 1. \n\n`mtry` is currently being interpreted ",
         "as a {interp} rather than a {opp}. Supply `counts = {!counts}` to ",
         "`set_engine` to supply this argument as a {opp} rather than ",
+        # TODO: link to parsnip's lightgbm docs instead here
         "a {interp}. \n\nSee `?train_lightgbm` for more details."
       ),
       call = NULL
