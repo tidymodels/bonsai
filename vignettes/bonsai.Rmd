@@ -1,0 +1,61 @@
+---
+title: "Introduction to bonsai"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to bonsai}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The goal of bonsai is to provide bindings for additional tree-based model engines for use with the {parsnip} package. 
+
+If you're not familiar with parsnip, you can read more about the package on it's [website](https://parsnip.tidymodels.org).
+
+To get started, load bonsai with:
+
+```{r setup}
+library(bonsai)
+```
+
+To illustrate how to use the package, we'll fit some models to a dataset containing measurements on 3 different species of penguins. Loading in that data and checking it out:
+
+```{r}
+library(modeldata)
+
+data(penguins)
+
+str(penguins)
+```
+
+Specifically, we'll make use of measurements on penguin's flippers, and the island that they live on, to predict their species using a decision tree. We'll do so using the engine `"partykit"`—this is one of the packages that bonsai supports that will be used to actually fit model parameter estimates.
+
+
+```{r}
+# set seed for reproducibility
+set.seed(1)
+
+# specify and fit model
+dec_mod <- 
+  decision_tree() %>%
+  set_engine(engine = "partykit") %>%
+  set_mode(mode = "classification") %>%
+  fit(
+    formula = species ~ flipper_length_mm + island, 
+    data = penguins
+  )
+
+dec_mod
+```
+
+From this output, we can see that the model generally first looks to `island` to determine species, and then makes use of a mix of flipper length and island to ultimately make a species prediction. There are a total of `r ` terminal nodes in this tree.
+
+```{r}
+
+```
