@@ -30,11 +30,12 @@
 train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
                            feature_fraction = 1, min_data_in_leaf = 20,
                            min_gain_to_split = 0, bagging_fraction = 1,
+                           early_stopping_rounds = NULL,
                            counts = TRUE, quiet = FALSE, ...) {
 
   force(x)
   force(y)
-  others <- list(...)
+
   if (!is.logical(quiet)) {
     rlang::abort("'quiet' should be a logical value.")
   }
@@ -43,61 +44,52 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
     process_mtry(feature_fraction = feature_fraction,
                  counts = counts, x = x, is_missing = missing(feature_fraction))
 
-  if (!any(names(others) %in% c("objective"))) {
-    if (is.numeric(y)) {
-      others$objective <- "regression"
-    } else {
-      lvl <- levels(y)
-      lvls <- length(lvl)
-      y <- as.numeric(y) - 1
-      if (lvls == 2) {
-        others$num_class <- 1
-        others$objective <- "binary"
-      } else {
-        others$num_class <- lvls
-        others$objective <- "multiclass"
-      }
-    }
+  args <- list(
+    param = list(
+      num_iterations = num_iterations,
+      learning_rate = learning_rate,
+      max_depth = max_depth,
+      feature_fraction = feature_fraction,
+      min_data_in_leaf = min_data_in_leaf,
+      min_gain_to_split = min_gain_to_split,
+      bagging_fraction = bagging_fraction
+    ),
+    main = list(
+      early_stopping_rounds = early_stopping_rounds,
+      ...
+    )
+  )
+
+  args <- process_objective_function(args, x, y)
+
+  if (args$param$objective != "regression") {
+    y <- as.numeric(y) - 1
   }
 
-  arg_list <- list(
-    num_iterations = num_iterations,
-    learning_rate = learning_rate,
-    max_depth = max_depth,
-    feature_fraction = feature_fraction,
-    min_data_in_leaf = min_data_in_leaf,
-    min_gain_to_split = min_gain_to_split,
-    bagging_fraction = bagging_fraction
-  )
+  args <- process_parallelism(args)
 
-  others <- others[!(names(others) %in% c("data", names(arg_list)))]
+  args <- sort_args(args)
 
-  # parallelism should be explicitly specified by the user
-  if(all(sapply(others[c("num_threads", "num_thread", "nthread", "nthreads", "n_jobs")], is.null))) others$num_threads <- 1L
-
-  arg_list <- purrr::compact(c(arg_list, others))
-
-  if ("verbose" %in% names(arg_list)) {
-    verbose <- arg_list$verbose
-    arg_list[["verbose"]] <- NULL
-  } else {
-    verbose <- 1L
+  if (!"verbose" %in% names(args$main)) {
+    args$main$verbose <- 1L
   }
 
-  d <- lightgbm::lgb.Dataset(
-    data = prepare_df_lgbm(x),
-    label = y,
-    categorical_feature = categorical_columns(x),
-    params = list(feature_pre_filter = FALSE)
-  )
+  args$main$data <-
+    lightgbm::lgb.Dataset(
+      data = prepare_df_lgbm(x),
+      label = y,
+      categorical_feature = categorical_columns(x),
+      params = list(feature_pre_filter = FALSE)
+    )
 
-  main_args <- list(
-    data = quote(d),
-    params = arg_list,
-    verbose = verbose
-  )
+  compacted <-
+    c(
+      list(param = args$param),
+      args$main[names(args$main) != "data"],
+      list(data = args$main$data)
+    )
 
-  call <- parsnip::make_call(fun = "lgb.train", ns = "lightgbm", main_args)
+  call <- parsnip::make_call(fun = "lgb.train", ns = "lightgbm", compacted)
 
   if (quiet) {
     junk <- utils::capture.output(res <- rlang::eval_tidy(call, env = rlang::current_env()))
@@ -148,6 +140,78 @@ process_mtry <- function(feature_fraction, counts, x, is_missing) {
   }
 
   feature_fraction
+}
+
+process_objective_function <- function(args, x, y) {
+  # set the "objective" param argument, clear it out from main args
+  if (!any(names(args$main) %in% c("objective"))) {
+    if (is.numeric(y)) {
+      args$param$objective <- "regression"
+    } else {
+      lvl <- levels(y)
+      lvls <- length(lvl)
+      y <- as.numeric(y) - 1
+      if (lvls == 2) {
+        args$param$num_class <- 1
+        args$param$objective <- "binary"
+      } else {
+        args$param$num_class <- lvls
+        args$param$objective <- "multiclass"
+      }
+    }
+  } else {
+    args$param$objective <- args$main$objective
+  }
+
+  args$main$objective <- NULL
+
+  args
+}
+
+# supply the number of threads as num_threads in params, clear out
+# any other thread args that might be passed as main arguments
+process_parallelism <- function(args) {
+  # TODO: use more tidymodels-esque infrastructure here
+  thread_args <- c("num_threads", "num_thread", "nthread", "nthreads", "n_jobs")
+
+  if (!all(sapply(args$main[thread_args], is.null))) {
+    args$param$num_threads <- args$main[names(args$main) == thread_args][1]
+    args$main[names(args$main) == thread_args] <- NULL
+  } else {
+    args$param$num_threads <- 1L
+  }
+
+  args
+}
+
+# transfers arguments between param and main arguments
+sort_args <- function(args) {
+  # warn on arguments that won't be passed along
+  protected <- c("valids", "obj", "init_model", "colnames",
+                 "categorical_feature", "callbacks", "reset_data")
+
+  if (any(names(args$main) %in% protected)) {
+    protected_args <- names(args$main[names(args$main) %in% protected])
+
+    rlang::warn(
+      glue::glue(
+        "The following argument(s) are guarded by bonsai and will not ",
+        "be passed to `lgb.train`: {paste0(protected_args)}"
+      )
+    )
+
+    args$main[protected_args] <- NULL
+  }
+
+  # dots are deprecated in lgb.train -- pass to param instead
+  to_main   <- c("nrounds", "eval", "verbose", "record", "eval_freq",
+                 "early_stopping_rounds")
+
+  args$param <- c(args$param, args$main[!names(args$main) %in% to_main])
+
+  args$main[!names(args$main) %in% to_main] <- NULL
+
+  args
 }
 
 #' Internal functions
