@@ -14,6 +14,7 @@ train_lightgbm(
   min_data_in_leaf = 20,
   min_gain_to_split = 0,
   bagging_fraction = 1,
+  counts = TRUE,
   quiet = FALSE,
   ...
 )
@@ -29,7 +30,8 @@ train_lightgbm(
 
 \item{learning_rate}{A numeric value between zero and one to control the learning rate.}
 
-\item{feature_fraction}{Subsampling proportion of columns.}
+\item{feature_fraction}{Fraction of predictors that will be randomly sampled
+at each split.}
 
 \item{min_data_in_leaf}{A numeric value for the minimum sum of instances needed
 in a child to continue to split.}
@@ -38,6 +40,12 @@ in a child to continue to split.}
 further partition on a leaf node of the tree.}
 
 \item{bagging_fraction}{Subsampling proportion of rows.}
+
+\item{counts}{A logical; should \code{feature_fraction} be interpreted as the
+\emph{number} of predictors that will be randomly sampled at each split?
+\code{TRUE} indicates that \code{mtry} will be interpreted in its sense as a \emph{count},
+\code{FALSE} indicates that the argument will be interpreted in its sense as a
+\emph{proportion}.}
 
 \item{quiet}{A logical; should logging by \code{\link[lightgbm:lgb.train]{lightgbm::lgb.train()}} be muted?}
 
