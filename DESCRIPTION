@@ -38,7 +38,9 @@ Suggests:
     tune,
     rsample,
     covr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
 Remotes:
     tidymodels/parsnip
@@ -48,3 +50,4 @@ RoxygenNote: 7.2.0
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Config/Needs/website: tidyverse/tidytemplate
+VignetteBuilder: knitr
