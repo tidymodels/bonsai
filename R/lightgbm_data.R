@@ -193,6 +193,15 @@ make_boost_tree_lightgbm <- function() {
     func = list(pkg = "dials", fun = "sample_prop"),
     has_submodel = FALSE
   )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "lightgbm",
+    parsnip = "stop_iter",
+    original = "early_stopping_rounds",
+    func = list(pkg = "dials", fun = "stop_iter"),
+    has_submodel = FALSE
+  )
 }
 
 # nocov end

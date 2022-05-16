@@ -13,7 +13,11 @@ Authors@R: c(
     person("RStudio", role = c("cph", "fnd"))
   )
 Description: Bindings for additional tree-based model engines for use with the 
-    'parsnip' package. 
+    'parsnip' package. Models include gradient boosted decision trees with 
+    LightGBM (Guolin et al, 2017. <doi:10.5555/3294996.3295074>) and conditional 
+    inference trees and conditional random forests with partykit (Hothorn and 
+    Zeileis, 2015. <doi:10.5555/2789272.2912120> and Hothorn et al, 
+    2006. <doi:10.1198/106186006X133933>).
 License: TBD
 Depends:
     parsnip (>= 0.2.1.9001)
@@ -24,12 +28,15 @@ Imports:
     tibble,
     stats,
     dials,
-    generics,
-    utils
+    utils,
+    glue,
+    foreach
 Suggests: 
     lightgbm,
     partykit,
     modeldata,
+    tune,
+    rsample,
     covr,
     testthat (>= 3.0.0),
     knitr,
@@ -37,7 +44,7 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2.9000
+RoxygenNote: 7.2.0
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Config/Needs/website: tidyverse/tidytemplate
