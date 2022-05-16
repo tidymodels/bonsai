@@ -7,3 +7,4 @@
 ^pkgdown$
 README.Rmd
 cran-comments.md
+^LICENSE\.md$
