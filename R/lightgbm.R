@@ -68,12 +68,6 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
 
   args <- process_parallelism(args)
 
-  args <- sort_args(args)
-
-  if (!"verbose" %in% names(args$main)) {
-    args$main$verbose <- 1L
-  }
-
   args$main$data <-
     lightgbm::lgb.Dataset(
       data = prepare_df_lgbm(x),
@@ -81,6 +75,12 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
       categorical_feature = categorical_columns(x),
       params = list(feature_pre_filter = FALSE)
     )
+
+  args <- sort_args(args)
+
+  if (!"verbose" %in% names(args$main)) {
+    args$main$verbose <- 1L
+  }
 
   compacted <-
     c(
@@ -196,7 +196,7 @@ sort_args <- function(args) {
     rlang::warn(
       glue::glue(
         "The following argument(s) are guarded by bonsai and will not ",
-        "be passed to `lgb.train`: {paste0(protected_args)}"
+        "be passed to `lgb.train`: {glue::glue_collapse(protected_args, sep = ', ')}"
       )
     )
 
@@ -209,7 +209,11 @@ sort_args <- function(args) {
 
   args$param <- c(args$param, args$main[!names(args$main) %in% to_main])
 
-  args$main[!names(args$main) %in% to_main] <- NULL
+  args$main[!names(args$main) %in% c(to_main, "data")] <- NULL
+
+  if ("early_stopping_rounds" %in% names(args$main)) {
+    args$main$valids <- list(x = args$main$data)
+  }
 
   args
 }
