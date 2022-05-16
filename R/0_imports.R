@@ -11,6 +11,10 @@
 #' @export
 parsnip::`%>%`
 
+# quiet R CMD CHECK warning re: declared Imports
+#' @importFrom dials min_n
+dials::min_n()
+
 # ------------------------------------------------------------------------------
 
 utils::globalVariables(

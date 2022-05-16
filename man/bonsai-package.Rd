@@ -7,7 +7,7 @@
 \alias{bonsai}
 \title{bonsai: Model Wrappers for Tree-Based Models}
 \description{
-Bindings for additional tree-based model engines for use with the 'parsnip' package. Models include gradient boosted decision trees with LightGBM (Guolin et al, 2017. <doi:10.5555/3294996.3295074>) and conditional inference trees and conditional random forests with partykit (Hothorn and Zeileis, 2015. <doi:10.5555/2789272.2912120> and Hothorn et al, 2006. <doi:10.1198/106186006X133933>).
+Bindings for additional tree-based model engines for use with the 'parsnip' package. Models include gradient boosted decision trees with LightGBM (Guolin et al, 2017. \doi{10.5555/3294996.3295074}) and conditional inference trees and conditional random forests with partykit (Hothorn and Zeileis, 2015. \doi{10.5555/2789272.2912120} and Hothorn et al, 2006. \doi{10.1198/106186006X133933}).
 }
 \seealso{
 Useful links:

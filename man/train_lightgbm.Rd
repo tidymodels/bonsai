@@ -14,6 +14,7 @@ train_lightgbm(
   min_data_in_leaf = 20,
   min_gain_to_split = 0,
   bagging_fraction = 1,
+  early_stopping_rounds = NULL,
   counts = TRUE,
   quiet = FALSE,
   ...
@@ -41,6 +42,9 @@ further partition on a leaf node of the tree.}
 
 \item{bagging_fraction}{Subsampling proportion of rows.}
 
+\item{early_stopping_rounds}{Number of iterations without an improvement in
+the objective function occur before training should be halted.}
+
 \item{counts}{A logical; should \code{feature_fraction} be interpreted as the
 \emph{number} of predictors that will be randomly sampled at each split?
 \code{TRUE} indicates that \code{mtry} will be interpreted in its sense as a \emph{count},
@@ -49,7 +53,9 @@ further partition on a leaf node of the tree.}
 
 \item{quiet}{A logical; should logging by \code{\link[lightgbm:lgb.train]{lightgbm::lgb.train()}} be muted?}
 
-\item{...}{Other options to pass to \code{\link[lightgbm:lgb.train]{lightgbm::lgb.train()}}.}
+\item{...}{Other options to pass to \code{\link[lightgbm:lgb.train]{lightgbm::lgb.train()}}. Arguments
+will be correctly routed to the \code{param} argument, or as a main argument,
+depending on their name.}
 }
 \value{
 A fitted \code{lightgbm.Model} object.
