@@ -34,28 +34,75 @@ data(penguins)
 str(penguins)
 ```
 
-Specifically, we'll make use of measurements on penguin's flippers, and the island that they live on, to predict their species using a decision tree. We'll do so using the engine `"partykit"`—this is one of the packages that bonsai supports that will be used to actually fit model parameter estimates.
-
+Specifically, making use of our knowledge of which island that they live on and measurements on their flipper length, we will predict their species using a decision tree. We'll first do so using the engine `"rpart"`, which is supported with parsnip alone:
 
 ```{r}
 # set seed for reproducibility
 set.seed(1)
 
 # specify and fit model
-dec_mod <- 
+dt_mod <- 
   decision_tree() %>%
-  set_engine(engine = "partykit") %>%
+  set_engine(engine = "rpart") %>%
   set_mode(mode = "classification") %>%
   fit(
     formula = species ~ flipper_length_mm + island, 
     data = penguins
   )
 
-dec_mod
+dt_mod
 ```
 
-From this output, we can see that the model generally first looks to `island` to determine species, and then makes use of a mix of flipper length and island to ultimately make a species prediction. There are a total of `r ` terminal nodes in this tree.
+From this output, we can see that the model generally first looks to `island` to determine species, and then makes use of a mix of flipper length and island to ultimately make a species prediction.
+
+A benefit of using parsnip and bonsai is that, to use a different implementation of decision trees, we simply change the engine argument to `set_engine`; all other elements of the interface stay the same. For instance, using `"partykit"`—which implements a type of decision tree called a _conditional inference tree_—as our backend instead:
 
 ```{r}
-
+decision_tree() %>%
+  set_engine(engine = "partykit") %>%
+  set_mode(mode = "classification") %>%
+  fit(
+    formula = species ~ flipper_length_mm + island, 
+    data = penguins
+  )
 ```
+
+This model, unlike the first, relies on recursive conditional inference to generate its splits. As such, we can see it generates slightly different results. Read more about this implementation of decision trees in `?details_decision_tree_partykit`.
+
+One generalization of a decision tree is a _random forest_, which fits a large number of decision trees, each independently of the others. The fitted random forest model combines predictions from the individual decision trees to generate its predictions.
+
+bonsai introduces support for random forests using the `partykit` engine, which implements an algorithm called a _conditional random forest_. Conditional random forests are a type of random forest that uses conditional inference trees (like the one we fit above!) for its constituent decision trees.
+
+To fit a conditional random forest with partykit, our code looks pretty similar to that which we we needed to fit a conditional inference tree. Just switch out `decision_tree()` with `rand_forest()` and remember to keep the engine set as `"partykit"`:
+
+```{r}
+rf_mod <- 
+  rand_forest() %>%
+  set_engine(engine = "partykit") %>%
+  set_mode(mode = "classification") %>%
+  fit(
+    formula = species ~ flipper_length_mm + island, 
+    data = penguins
+  )
+```
+
+Read more about this implementation of random forests in `?details_rand_forest_partykit`.
+
+Another generalization of a decision tree is a series of decision trees where _each tree depends on the results of previous trees_—this is called a _boosted tree_. bonsai implements an additional parsnip engine for this model type called `lightgbm`. To make use of it, start out with a `boost_tree` model spec and set `engine = "lightgbm"`:
+
+```{r}
+bt_mod <- 
+  boost_tree() %>%
+  set_engine(engine = "lightgbm") %>%
+  set_mode(mode = "classification") %>%
+  fit(
+    formula = species ~ flipper_length_mm + island, 
+    data = penguins
+  )
+
+bt_mod
+```
+
+Read more about this implementation of boosted trees in `?details_boost_tree_lightgbm`.
+
+Each of these model specs and engines have several arguments and tuning parameters that affect user experience and results greatly. We recommend reading about each of these parameters and tuning them when you find them relevant for your modeling use case.
