@@ -29,7 +29,8 @@ Imports:
     stats,
     dials,
     utils,
-    glue
+    glue,
+    foreach
 Suggests: 
     lightgbm,
     partykit,

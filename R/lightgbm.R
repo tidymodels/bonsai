@@ -175,14 +175,11 @@ process_objective_function <- function(args, x, y) {
 # supply the number of threads as num_threads in params, clear out
 # any other thread args that might be passed as main arguments
 process_parallelism <- function(args) {
-  # TODO: use more tidymodels-esque infrastructure here
-  thread_args <- c("num_threads", "num_thread", "nthread", "nthreads", "n_jobs")
-
-  if (!all(sapply(args$main[thread_args], is.null))) {
-    args$param$num_threads <- args$main[names(args$main) == thread_args][1]
-    args$main[names(args$main) == thread_args] <- NULL
+  if (!is.null(args$main["num_threads"])) {
+    args$param$num_threads <- args$main[names(args$main) == "num_threads"]
+    args$main[names(args$main) == "num_threads"] <- NULL
   } else {
-    args$param$num_threads <- 1L
+    args$param$num_threads <- foreach::getDoParWorkers()
   }
 
   args
