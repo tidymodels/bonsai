@@ -28,8 +28,8 @@ Imports:
     tibble,
     stats,
     dials,
-    generics,
-    utils
+    utils,
+    glue
 Suggests: 
     lightgbm,
     partykit,

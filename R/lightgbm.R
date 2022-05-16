@@ -17,13 +17,17 @@
 #' @param min_gain_to_split A number for the minimum loss reduction required to make a
 #'  further partition on a leaf node of the tree.
 #' @param bagging_fraction Subsampling proportion of rows.
-#' @param quiet A logical; should logging by [lightgbm::lgb.train()] be muted?
+#' @param early_stopping_rounds Number of iterations without an improvement in
+#' the objective function occur before training should be halted.
 #' @param counts A logical; should `feature_fraction` be interpreted as the
 #' _number_ of predictors that will be randomly sampled at each split?
 #' `TRUE` indicates that `mtry` will be interpreted in its sense as a _count_,
 #' `FALSE` indicates that the argument will be interpreted in its sense as a
 #' _proportion_.
-#' @param ... Other options to pass to [lightgbm::lgb.train()].
+#' @param quiet A logical; should logging by [lightgbm::lgb.train()] be muted?
+#' @param ... Other options to pass to [lightgbm::lgb.train()]. Arguments
+#' will be correctly routed to the `param` argument, or as a main argument,
+#' depending on their name.
 #' @return A fitted `lightgbm.Model` object.
 #' @keywords internal
 #' @export

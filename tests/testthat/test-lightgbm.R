@@ -366,6 +366,8 @@ test_that("tuning mtry vs mtry_prop", {
 
   penguins <- penguins[complete.cases(penguins),]
 
+  set.seed(1)
+
   suppressMessages(
     expect_error_free({
       gbm_tune <- tune::tune_grid(
