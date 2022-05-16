@@ -90,7 +90,7 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
     c(
       list(param = args$param),
       args$main[names(args$main) != "data"],
-      list(data = args$main$data)
+      list(data = quote(args$main$data))
     )
 
   call <- parsnip::make_call(fun = "lgb.train", ns = "lightgbm", compacted)
@@ -206,11 +206,11 @@ sort_args <- function(args) {
 
   # dots are deprecated in lgb.train -- pass to param instead
   to_main   <- c("nrounds", "eval", "verbose", "record", "eval_freq",
-                 "early_stopping_rounds")
+                 "early_stopping_rounds", "data")
 
   args$param <- c(args$param, args$main[!names(args$main) %in% to_main])
 
-  args$main[!names(args$main) %in% c(to_main, "data")] <- NULL
+  args$main[!names(args$main) %in% to_main] <- NULL
 
   if ("early_stopping_rounds" %in% names(args$main)) {
     args$main$valids <- list(x = args$main$data)
