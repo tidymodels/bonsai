@@ -12,6 +12,18 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+if (rlang::is_installed("partykit") && 
+    rlang::is_installed("lightgbm") &&
+    rlang::is_installed("modeldata")) {
+  run <- TRUE
+} else {
+  run <- FALSE
+}
+
+knitr::opts_chunk$set(
+  eval = run
+)
 ```
 
 The goal of bonsai is to provide bindings for additional tree-based model engines for use with the {parsnip} package. 
