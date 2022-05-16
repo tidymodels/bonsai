@@ -393,3 +393,82 @@ test_that("tuning mtry vs mtry_prop", {
     error = TRUE
   )
 })
+
+test_that("training wrapper warns on protected arguments", {
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("modeldata")
+
+  library(lightgbm)
+  library(modeldata)
+  library(dplyr)
+
+  data("penguins", package = "modeldata")
+
+  penguins <- penguins[complete.cases(penguins),]
+
+  expect_warning(
+    boost_tree() %>%
+      set_engine("lightgbm", colnames = paste0("X", 1:ncol(penguins))) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins),
+    "guarded by bonsai.*colnames"
+  )
+
+  expect_warning(
+    boost_tree() %>%
+      set_engine(
+        "lightgbm",
+        colnames = paste0("X", 1:ncol(penguins)),
+        callbacks = list(p = print)
+      ) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins),
+    "guarded by bonsai.*colnames, callbacks"
+  )
+
+  expect_warning(
+    boost_tree() %>%
+      set_engine(
+        "lightgbm",
+        colnames = paste0("X", 1:ncol(penguins)),
+        nrounds = 50
+      ) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins),
+    "guarded by bonsai.*colnames"
+  )
+})
+
+test_that("training wrapper passes stop_iter correctly", {
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("modeldata")
+
+  library(lightgbm)
+  library(modeldata)
+  library(dplyr)
+
+  data("penguins", package = "modeldata")
+
+  penguins <- penguins[complete.cases(penguins),]
+
+  expect_error_free(
+    pars_fit <-
+      boost_tree(stop_iter = 10) %>%
+      set_engine("lightgbm") %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_equal(pars_fit$fit$params$early_stopping_round, 10)
+
+  expect_warning(
+    pars_fit_2 <-
+      boost_tree() %>%
+      set_engine("lightgbm", early_stopping_rounds = 10) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins),
+    "were removed: early_stopping_rounds"
+  )
+
+  expect_null(pars_fit_2$fit$params$early_stopping_round)
+})
