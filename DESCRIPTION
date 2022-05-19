@@ -9,45 +9,46 @@ Authors@R: c(
     person("Max", "Kuhn", , "max@rstudio.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2402-136X")),
     person("Simon", "Couch", , "simonpatrickcouch@gmail.com", role = "aut",
-           comment = c(ORCID = "0000-0001-5676-5107")),       
+           comment = c(ORCID = "0000-0001-5676-5107")),
     person("RStudio", role = c("cph", "fnd"))
   )
-Description: Bindings for additional tree-based model engines for use with the 
-    'parsnip' package. Models include gradient boosted decision trees with 
-    LightGBM (Guolin et al, 2017. <doi:10.5555/3294996.3295074>) and conditional 
-    inference trees and conditional random forests with partykit (Hothorn and 
-    Zeileis, 2015. <doi:10.5555/2789272.2912120> and Hothorn et al, 
-    2006. <doi:10.1198/106186006X133933>).
+Description: Bindings for additional tree-based model engines for use with
+    the 'parsnip' package. Models include gradient boosted decision trees
+    with LightGBM (Guolin et al, 2017. <doi:10.5555/3294996.3295074>) and
+    conditional inference trees and conditional random forests with
+    partykit (Hothorn and Zeileis, 2015. <doi:10.5555/2789272.2912120> and
+    Hothorn et al, 2006. <doi:10.1198/106186006X133933>).
 License: MIT + file LICENSE
+URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
+BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
     parsnip (>= 0.2.1.9001)
 Imports: 
+    dials,
     dplyr,
+    foreach,
+    glue,
     purrr,
     rlang,
-    tibble,
     stats,
-    dials,
-    utils,
-    glue,
-    foreach
+    tibble,
+    utils
 Suggests: 
-    lightgbm,
-    partykit,
-    modeldata,
-    tune,
-    rsample,
     covr,
-    testthat (>= 3.0.0),
     knitr,
-    rmarkdown
-Config/testthat/edition: 3
+    lightgbm,
+    modeldata,
+    partykit,
+    rmarkdown,
+    rsample,
+    testthat (>= 3.0.0),
+    tune
+VignetteBuilder: 
+    knitr
 Remotes:
     tidymodels/parsnip
+Config/Needs/website: tidyverse/tidytemplate
+Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
-URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
-BugReports: https://github.com/tidymodels/bonsai/issues
-Config/Needs/website: tidyverse/tidytemplate
-VignetteBuilder: knitr
