@@ -16,15 +16,30 @@ make_boost_tree_lightgbm <- function() {
   parsnip::set_dependency(
     model = "boost_tree",
     eng = "lightgbm",
-    pkg = "lightgbm"
+    pkg = "lightgbm",
+    mode = "regression"
   )
 
   parsnip::set_dependency(
     model = "boost_tree",
     eng = "lightgbm",
-    pkg = "bonsai"
+    pkg = "bonsai",
+    mode = "regression"
   )
 
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "lightgbm",
+    pkg = "lightgbm",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "lightgbm",
+    pkg = "bonsai",
+    mode = "classification"
+  )
   parsnip::set_fit(
     model = "boost_tree",
     eng = "lightgbm",
