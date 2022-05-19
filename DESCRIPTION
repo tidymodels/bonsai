@@ -1,14 +1,14 @@
 Package: bonsai
 Title: Model Wrappers for Tree-Based Models
-Version: 0.0.1.9000
+Version: 0.0.2
 Authors@R: c(
     person("Daniel", "Falbel", , "dfalbel@curso-r.com", role = "aut"),
     person("Athos", "Damiani", , "adamiani@curso-r.com", role = "aut"),
     person("Roel M.", "Hogervorst", , "hogervorst.rm@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0001-7509-0328")),
-    person("Max", "Kuhn", , "max@rstudio.com", role = c("aut", "cre"),
+    person("Max", "Kuhn", , "max@rstudio.com", role = "aut",
            comment = c(ORCID = "0000-0003-2402-136X")),
-    person("Simon", "Couch", , "simonpatrickcouch@gmail.com", role = "aut",
+    person("Simon", "Couch", , "simonpatrickcouch@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5676-5107")),       
     person("RStudio", role = c("cph", "fnd"))
   )
