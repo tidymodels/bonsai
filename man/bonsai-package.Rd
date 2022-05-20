@@ -16,7 +16,6 @@ Useful links:
 \itemize{
   \item \url{https://bonsai.tidymodels.org/}
   \item \url{https://github.com/tidymodels/bonsai}
-  \item \url{https://bonsai.tidymodels.org}
   \item Report bugs at \url{https://github.com/tidymodels/bonsai/issues}
 }
 

@@ -15,6 +15,7 @@ train_lightgbm(
   min_gain_to_split = 0,
   bagging_fraction = 1,
   early_stopping_rounds = NULL,
+  validation = 0,
   counts = TRUE,
   quiet = FALSE,
   ...
@@ -44,6 +45,9 @@ further partition on a leaf node of the tree.}
 
 \item{early_stopping_rounds}{Number of iterations without an improvement in
 the objective function occur before training should be halted.}
+
+\item{validation}{The \emph{proportion} of the training data that are used for
+performance assessment and potential early stopping.}
 
 \item{counts}{A logical; should \code{feature_fraction} be interpreted as the
 \emph{number} of predictors that will be randomly sampled at each split?
