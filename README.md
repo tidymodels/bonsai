@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bonsai
+# bonsai <img src="man/figures/logo.png" align="right" width=280 />
 
 <!-- badges: start -->
 

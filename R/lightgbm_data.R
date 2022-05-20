@@ -16,15 +16,30 @@ make_boost_tree_lightgbm <- function() {
   parsnip::set_dependency(
     model = "boost_tree",
     eng = "lightgbm",
-    pkg = "lightgbm"
+    pkg = "lightgbm",
+    mode = "regression"
   )
 
   parsnip::set_dependency(
     model = "boost_tree",
     eng = "lightgbm",
-    pkg = "bonsai"
+    pkg = "bonsai",
+    mode = "regression"
   )
 
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "lightgbm",
+    pkg = "lightgbm",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "lightgbm",
+    pkg = "bonsai",
+    mode = "classification"
+  )
   parsnip::set_fit(
     model = "boost_tree",
     eng = "lightgbm",
@@ -33,7 +48,12 @@ make_boost_tree_lightgbm <- function() {
       interface = "data.frame",
       protect = c("x", "y"),
       func = c(pkg = "bonsai", fun = "train_lightgbm"),
-      defaults = list(verbose = -1)
+      defaults = list(
+        verbose = -1,
+        num_threads = 0,
+        seed = quote(sample.int(10^5, 1)),
+        deterministic = TRUE
+      )
     )
   )
 
@@ -73,9 +93,15 @@ make_boost_tree_lightgbm <- function() {
       interface = "data.frame",
       protect = c("x", "y"),
       func = c(pkg = "bonsai", fun = "train_lightgbm"),
-      defaults = list(verbose = -1)
+      defaults = list(
+        verbose = -1,
+        num_threads = 0,
+        seed = quote(sample.int(10^5, 1)),
+        deterministic = TRUE
+      )
     )
   )
+
 
   parsnip::set_encoding(
     model = "boost_tree",
