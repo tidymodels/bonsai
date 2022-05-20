@@ -74,7 +74,8 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
 
   args <- process_parallelism(args)
 
-  args <- process_data(args, x, y, validation, early_stopping_rounds)
+  args <- process_data(args, x, y, validation, missing(validation),
+                       early_stopping_rounds)
 
   args <- sort_args(args)
 
@@ -181,10 +182,13 @@ process_parallelism <- function(args) {
   args
 }
 
-process_data <- function(args, x, y, validation, early_stopping_rounds) {
+process_data <- function(args, x, y, validation, missing_validation,
+                         early_stopping_rounds) {
   n <- nrow(x)
 
-  if (is.null(early_stopping_rounds)) {
+  needs_validation <- !missing_validation || !is.null(early_stopping_rounds)
+
+  if (!needs_validation) {
     trn_index <- 1:n
     val_index <- NULL
   } else {
@@ -202,13 +206,15 @@ process_data <- function(args, x, y, validation, early_stopping_rounds) {
       params = list(feature_pre_filter = FALSE)
     )
 
-  if (!is.null(early_stopping_rounds)) {
-    args$params$valids <-
-      lightgbm::lgb.Dataset(
-        data = prepare_df_lgbm(x[val_index,]),
-        label = y[val_index],
-        categorical_feature = categorical_columns(x[val_index,]),
-        params = list(feature_pre_filter = FALSE)
+  if (needs_validation) {
+    args$main$valids <-
+      list(validation =
+          lightgbm::lgb.Dataset(
+          data = prepare_df_lgbm(x[val_index,]),
+          label = y[val_index],
+          categorical_feature = categorical_columns(x[val_index,]),
+          params = list(feature_pre_filter = FALSE)
+        )
       )
   }
 
@@ -218,7 +224,7 @@ process_data <- function(args, x, y, validation, early_stopping_rounds) {
 # transfers arguments between param and main arguments
 sort_args <- function(args) {
   # warn on arguments that won't be passed along
-  protected <- c("valids", "obj", "init_model", "colnames",
+  protected <- c("obj", "init_model", "colnames",
                  "categorical_feature", "callbacks", "reset_data")
 
   if (any(names(args$main) %in% protected)) {
@@ -236,15 +242,11 @@ sort_args <- function(args) {
 
   # dots are deprecated in lgb.train -- pass to param instead
   to_main   <- c("nrounds", "eval", "verbose", "record", "eval_freq",
-                 "early_stopping_rounds", "data")
+                 "early_stopping_rounds", "data", "valids")
 
   args$param <- c(args$param, args$main[!names(args$main) %in% to_main])
 
   args$main[!names(args$main) %in% to_main] <- NULL
-
-  if ("early_stopping_rounds" %in% names(args$main)) {
-    args$main$valids <- list(x = args$main$data)
-  }
 
   args
 }

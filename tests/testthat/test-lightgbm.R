@@ -471,10 +471,34 @@ test_that("training wrapper passes stop_iter correctly", {
       fit(bill_length_mm ~ ., data = penguins)
   )
 
+  expect_error_free(
+    pars_fit_4 <-
+      boost_tree() %>%
+      set_engine("lightgbm", validation = .2) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_error_free(
+    pars_fit_5 <-
+      boost_tree(stop_iter = 10) %>%
+      set_engine("lightgbm", validation = .2) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+
+  # detect early_stopping round in the model fit
   expect_equal(pars_fit_1$fit$params$early_stopping_round, 10)
   expect_null( pars_fit_2$fit$params$early_stopping_round)
   expect_null( pars_fit_3$fit$params$early_stopping_round)
+  expect_null( pars_fit_4$fit$params$early_stopping_round)
+  expect_equal(pars_fit_5$fit$params$early_stopping_round, 10)
 
+  # detect validation in the model fit
   expect_true(!is.na(pars_fit_1$fit$best_score))
+  expect_true( is.na(pars_fit_2$fit$best_score))
   expect_true( is.na(pars_fit_3$fit$best_score))
+  expect_true(!is.na(pars_fit_4$fit$best_score))
+  expect_true(!is.na(pars_fit_5$fit$best_score))
 })
