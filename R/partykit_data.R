@@ -3,14 +3,19 @@
 make_decision_tree_partykit <- function() {
   parsnip::set_model_engine("decision_tree", mode = "regression", eng = "partykit")
 
-  parsnip::set_dependency("decision_tree",
-                          eng = "partykit",
-                          pkg = "partykit",
-                          mode = "regression")
-  parsnip::set_dependency("decision_tree",
-                          eng = "partykit",
-                          pkg = "bonsai",
-                          mode = "regression")
+  parsnip::set_dependency(
+    model = "decision_tree",
+    eng = "partykit",
+    pkg = "partykit",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "decision_tree",
+    eng = "partykit",
+    pkg = "bonsai",
+    mode = "regression"
+  )
 
   parsnip::set_encoding(
     model = "decision_tree",
@@ -76,14 +81,18 @@ make_decision_tree_partykit <- function() {
 
   parsnip::set_model_engine("decision_tree", mode = "classification", eng = "partykit")
 
-  parsnip::set_dependency("decision_tree",
-                          eng = "partykit",
-                          pkg = "partykit",
-                          mode = "classification")
-  parsnip::set_dependency("decision_tree",
-                          eng = "partykit",
-                          pkg = "bonsai",
-                          mode = "classification")
+  parsnip::set_dependency(
+    model = "decision_tree",
+    eng = "partykit",
+    pkg = "partykit",
+    mode = "classification"
+  )
+  parsnip::set_dependency(
+    model = "decision_tree",
+    eng = "partykit",
+    pkg = "bonsai",
+    mode = "classification"
+  )
 
   parsnip::set_encoding(
     model = "decision_tree",
