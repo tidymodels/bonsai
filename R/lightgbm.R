@@ -184,18 +184,27 @@ process_parallelism <- function(args) {
 
 process_data <- function(args, x, y, validation, missing_validation,
                          early_stopping_rounds) {
+  #                                           trn_index       | val_index
+  #                                         ----------------------------------
+  #  needs_validation &  missing_validation | 1:n               1:n
+  #  needs_validation & !missing_validation | sample(1:n, m)    setdiff(trn_index, 1:n)
+  # !needs_validation &  missing_validation | 1:n               NULL
+  # !needs_validation & !missing_validation | sample(1:n, m)    setdiff(trn_index, 1:n)
+
   n <- nrow(x)
+  needs_validation <- !is.null(early_stopping_rounds)
 
-  needs_validation <- !missing_validation || !is.null(early_stopping_rounds)
-
-  if (!needs_validation) {
+  if (missing_validation) {
     trn_index <- 1:n
-    val_index <- NULL
+    if (needs_validation) {
+      val_index <- trn_index
+    } else {
+      val_index <- NULL
+    }
   } else {
     m <- min(floor(n * (1 - validation)) + 1, n - 1)
-
     trn_index <- sample(1:n, size = max(m, 2))
-    val_index <- setdiff(1:nrow(x), trn_index)
+    val_index <- setdiff(1:n, trn_index)
   }
 
   args$main$data <-
@@ -206,7 +215,7 @@ process_data <- function(args, x, y, validation, missing_validation,
       params = list(feature_pre_filter = FALSE)
     )
 
-  if (needs_validation) {
+  if (!is.null(val_index)) {
     args$main$valids <-
       list(validation =
           lightgbm::lgb.Dataset(
