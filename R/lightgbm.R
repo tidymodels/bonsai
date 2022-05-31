@@ -209,9 +209,9 @@ process_data <- function(args, x, y, validation, missing_validation,
 
   args$main$data <-
     lightgbm::lgb.Dataset(
-      data = prepare_df_lgbm(x[trn_index,]),
+      data = prepare_df_lgbm(x[trn_index, , drop = FALSE]),
       label = y[trn_index],
-      categorical_feature = categorical_columns(x[trn_index,]),
+      categorical_feature = categorical_columns(x[trn_index, , drop = FALSE]),
       params = list(feature_pre_filter = FALSE)
     )
 
@@ -219,9 +219,9 @@ process_data <- function(args, x, y, validation, missing_validation,
     args$main$valids <-
       list(validation =
           lightgbm::lgb.Dataset(
-          data = prepare_df_lgbm(x[val_index,]),
+          data = prepare_df_lgbm(x[val_index, , drop = FALSE]),
           label = y[val_index],
-          categorical_feature = categorical_columns(x[val_index,]),
+          categorical_feature = categorical_columns(x[val_index, , drop = FALSE]),
           params = list(feature_pre_filter = FALSE)
         )
       )
