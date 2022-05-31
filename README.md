@@ -20,8 +20,6 @@ off of the work done in the [treesnip
 repository](https://github.com/curso-r/treesnip) by Athos Damiani,
 Daniel Falbel, and Roel Hogervorst. bonsai will be the official version
 that will go to CRAN; new development will reside here.  
-*Note that this package is in very early stages of development, and is
-not yet minimally functional.*
 
 ## Installation
 

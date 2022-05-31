@@ -24,7 +24,6 @@ knitr::opts_chunk$set(
 
 The goal of bonsai is to provide bindings for additional tree-based model  engines for use with the 'parsnip' package. 
 This package is based off of the work done in the [treesnip repository](https://github.com/curso-r/treesnip) by Athos Damiani, Daniel Falbel, and Roel Hogervorst. bonsai will be the official version that will go to CRAN; new development will reside here.  
-_Note that this package is in very early stages of development, and is not yet minimally functional._ 
 
 ## Installation
 
