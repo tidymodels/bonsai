@@ -65,6 +65,7 @@ where all of the model arguments are in the main function.</p>
   min_gain_to_split <span class="op">=</span> <span class="fl">0</span>,
   bagging_fraction <span class="op">=</span> <span class="fl">1</span>,
   early_stopping_rounds <span class="op">=</span> <span class="cn">NULL</span>,
+  validation <span class="op">=</span> <span class="fl">0</span>,
   counts <span class="op">=</span> <span class="cn">TRUE</span>,
   quiet <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
@@ -97,6 +98,9 @@ further partition on a leaf node of the tree.</p></dd>
 <dt>early_stopping_rounds</dt>
 <dd><p>Number of iterations without an improvement in
 the objective function occur before training should be halted.</p></dd>
+<dt>validation</dt>
+<dd><p>The <em>proportion</em> of the training data that are used for
+performance assessment and potential early stopping.</p></dd>
 <dt>counts</dt>
 <dd><p>A logical; should <code>feature_fraction</code> be interpreted as the
 <em>number</em> of predictors that will be randomly sampled at each split?
