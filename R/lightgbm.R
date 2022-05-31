@@ -19,6 +19,8 @@
 #' @param bagging_fraction Subsampling proportion of rows.
 #' @param early_stopping_rounds Number of iterations without an improvement in
 #' the objective function occur before training should be halted.
+#' @param validation The _proportion_ of the training data that are used for
+#' performance assessment and potential early stopping.
 #' @param counts A logical; should `feature_fraction` be interpreted as the
 #' _number_ of predictors that will be randomly sampled at each split?
 #' `TRUE` indicates that `mtry` will be interpreted in its sense as a _count_,
@@ -34,7 +36,7 @@
 train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
                            feature_fraction = 1, min_data_in_leaf = 20,
                            min_gain_to_split = 0, bagging_fraction = 1,
-                           early_stopping_rounds = NULL,
+                           early_stopping_rounds = NULL, validation = 0,
                            counts = TRUE, quiet = FALSE, ...) {
 
   force(x)
@@ -72,13 +74,8 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
 
   args <- process_parallelism(args)
 
-  args$main$data <-
-    lightgbm::lgb.Dataset(
-      data = prepare_df_lgbm(x),
-      label = y,
-      categorical_feature = categorical_columns(x),
-      params = list(feature_pre_filter = FALSE)
-    )
+  args <- process_data(args, x, y, validation, missing(validation),
+                       early_stopping_rounds)
 
   args <- sort_args(args)
 
@@ -185,10 +182,58 @@ process_parallelism <- function(args) {
   args
 }
 
+process_data <- function(args, x, y, validation, missing_validation,
+                         early_stopping_rounds) {
+  #                                           trn_index       | val_index
+  #                                         ----------------------------------
+  #  needs_validation &  missing_validation | 1:n               1:n
+  #  needs_validation & !missing_validation | sample(1:n, m)    setdiff(trn_index, 1:n)
+  # !needs_validation &  missing_validation | 1:n               NULL
+  # !needs_validation & !missing_validation | sample(1:n, m)    setdiff(trn_index, 1:n)
+
+  n <- nrow(x)
+  needs_validation <- !is.null(early_stopping_rounds)
+
+  if (missing_validation) {
+    trn_index <- 1:n
+    if (needs_validation) {
+      val_index <- trn_index
+    } else {
+      val_index <- NULL
+    }
+  } else {
+    m <- min(floor(n * (1 - validation)) + 1, n - 1)
+    trn_index <- sample(1:n, size = max(m, 2))
+    val_index <- setdiff(1:n, trn_index)
+  }
+
+  args$main$data <-
+    lightgbm::lgb.Dataset(
+      data = prepare_df_lgbm(x[trn_index, , drop = FALSE]),
+      label = y[trn_index],
+      categorical_feature = categorical_columns(x[trn_index, , drop = FALSE]),
+      params = list(feature_pre_filter = FALSE)
+    )
+
+  if (!is.null(val_index)) {
+    args$main$valids <-
+      list(validation =
+          lightgbm::lgb.Dataset(
+          data = prepare_df_lgbm(x[val_index, , drop = FALSE]),
+          label = y[val_index],
+          categorical_feature = categorical_columns(x[val_index, , drop = FALSE]),
+          params = list(feature_pre_filter = FALSE)
+        )
+      )
+  }
+
+  args
+}
+
 # transfers arguments between param and main arguments
 sort_args <- function(args) {
   # warn on arguments that won't be passed along
-  protected <- c("valids", "obj", "init_model", "colnames",
+  protected <- c("obj", "init_model", "colnames",
                  "categorical_feature", "callbacks", "reset_data")
 
   if (any(names(args$main) %in% protected)) {
@@ -206,15 +251,11 @@ sort_args <- function(args) {
 
   # dots are deprecated in lgb.train -- pass to param instead
   to_main   <- c("nrounds", "eval", "verbose", "record", "eval_freq",
-                 "early_stopping_rounds", "data")
+                 "early_stopping_rounds", "data", "valids")
 
   args$param <- c(args$param, args$main[!names(args$main) %in% to_main])
 
   args$main[!names(args$main) %in% to_main] <- NULL
-
-  if ("early_stopping_rounds" %in% names(args$main)) {
-    args$main$valids <- list(x = args$main$data)
-  }
 
   args
 }

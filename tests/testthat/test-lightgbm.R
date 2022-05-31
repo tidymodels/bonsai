@@ -2,9 +2,10 @@ test_that("boost_tree with lightgbm",{
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
 
-  library(lightgbm)
-  library(modeldata)
-  library(dplyr)
+  suppressPackageStartupMessages({
+    library(lightgbm)
+    library(dplyr)
+  })
 
   data("penguins", package = "modeldata")
 
@@ -400,10 +401,6 @@ test_that("training wrapper warns on protected arguments", {
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
 
-  library(lightgbm)
-  library(modeldata)
-  library(dplyr)
-
   data("penguins", package = "modeldata")
 
   penguins <- penguins[complete.cases(penguins),]
@@ -445,23 +442,17 @@ test_that("training wrapper passes stop_iter correctly", {
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
 
-  library(lightgbm)
-  library(modeldata)
-  library(dplyr)
-
   data("penguins", package = "modeldata")
 
   penguins <- penguins[complete.cases(penguins),]
 
   expect_error_free(
-    pars_fit <-
+    pars_fit_1 <-
       boost_tree(stop_iter = 10) %>%
       set_engine("lightgbm") %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins)
   )
-
-  expect_equal(pars_fit$fit$params$early_stopping_round, 10)
 
   expect_warning(
     pars_fit_2 <-
@@ -472,5 +463,42 @@ test_that("training wrapper passes stop_iter correctly", {
     "were removed: early_stopping_rounds"
   )
 
-  expect_null(pars_fit_2$fit$params$early_stopping_round)
+  expect_error_free(
+    pars_fit_3 <-
+      boost_tree() %>%
+      set_engine("lightgbm") %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_error_free(
+    pars_fit_4 <-
+      boost_tree() %>%
+      set_engine("lightgbm", validation = .2) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_error_free(
+    pars_fit_5 <-
+      boost_tree(stop_iter = 10) %>%
+      set_engine("lightgbm", validation = .2) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+
+  # detect early_stopping round in the model fit
+  expect_equal(pars_fit_1$fit$params$early_stopping_round, 10)
+  expect_null( pars_fit_2$fit$params$early_stopping_round)
+  expect_null( pars_fit_3$fit$params$early_stopping_round)
+  expect_null( pars_fit_4$fit$params$early_stopping_round)
+  expect_equal(pars_fit_5$fit$params$early_stopping_round, 10)
+
+  # detect validation in the model fit
+  expect_true(!is.na(pars_fit_1$fit$best_score))
+  expect_true( is.na(pars_fit_2$fit$best_score))
+  expect_true( is.na(pars_fit_3$fit$best_score))
+  expect_true(!is.na(pars_fit_4$fit$best_score))
+  expect_true(!is.na(pars_fit_5$fit$best_score))
 })
