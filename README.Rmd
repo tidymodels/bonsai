@@ -22,8 +22,9 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/tidymodels/bonsai/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/bonsai/actions)
 <!-- badges: end -->
 
-The goal of bonsai is to provide bindings for additional tree-based model  engines for use with the 'parsnip' package. 
-This package is based off of the work done in the [treesnip repository](https://github.com/curso-r/treesnip) by Athos Damiani, Daniel Falbel, and Roel Hogervorst. bonsai will be the official version that will go to CRAN; new development will reside here.  
+bonsai provides bindings for additional tree-based model engines for use with the [parsnip](https://parsnip.tidymodels.org/) package. 
+
+This package is based off of the work done in the [treesnip repository](https://github.com/curso-r/treesnip) by Athos Damiani, Daniel Falbel, and Roel Hogervorst. bonsai is the official CRAN version of the package; new development will reside here.  
 
 ## Installation
 

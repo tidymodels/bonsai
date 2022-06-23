@@ -1,6 +1,6 @@
 Package: bonsai
 Title: Model Wrappers for Tree-Based Models
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: c(
     person("Daniel", "Falbel", , "dfalbel@curso-r.com", role = "aut"),
     person("Athos", "Damiani", , "adamiani@curso-r.com", role = "aut"),
@@ -14,15 +14,15 @@ Authors@R: c(
   )
 Description: Bindings for additional tree-based model engines for use with
     the 'parsnip' package. Models include gradient boosted decision trees
-    with LightGBM (Guolin et al, 2017. <doi:10.5555/3294996.3295074>) and
+    with 'LightGBM' (Ke et al, 2017.) and
     conditional inference trees and conditional random forests with
-    partykit (Hothorn and Zeileis, 2015. <doi:10.5555/2789272.2912120> and
+    'partykit' (Hothorn and Zeileis, 2015. and
     Hothorn et al, 2006. <doi:10.1198/106186006X133933>).
 License: MIT + file LICENSE
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
-    parsnip (>= 0.2.1.9001)
+    parsnip (>= 1.0.0)
 Imports: 
     dials,
     dplyr,
@@ -45,8 +45,6 @@ Suggests:
     tune
 VignetteBuilder: 
     knitr
-Remotes:
-    tidymodels/parsnip
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
