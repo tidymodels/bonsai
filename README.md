@@ -24,6 +24,12 @@ of the package; new development will reside here.
 
 ## Installation
 
+You can install the most recent official release of bonsai with:
+
+``` r
+install.packages("bonsai")
+```
+
 You can install the development version of bonsai from
 [GitHub](https://github.com/) with:
 
