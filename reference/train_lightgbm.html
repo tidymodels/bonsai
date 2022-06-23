@@ -12,7 +12,7 @@ where all of the model arguments are in the main function."><meta property="og:i
     
     <a class="navbar-brand me-2" href="../index.html">bonsai</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,47 +76,76 @@ where all of the model arguments are in the main function.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>A data frame or matrix of predictors</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A vector (factor or numeric) or matrix (numeric) of outcome data.</p></dd>
+
+
 <dt>max_depth</dt>
 <dd><p>An integer for the maximum depth of the tree.</p></dd>
+
+
 <dt>num_iterations</dt>
 <dd><p>An integer for the number of boosting iterations.</p></dd>
+
+
 <dt>learning_rate</dt>
 <dd><p>A numeric value between zero and one to control the learning rate.</p></dd>
+
+
 <dt>feature_fraction</dt>
 <dd><p>Fraction of predictors that will be randomly sampled
 at each split.</p></dd>
+
+
 <dt>min_data_in_leaf</dt>
 <dd><p>A numeric value for the minimum sum of instances needed
 in a child to continue to split.</p></dd>
+
+
 <dt>min_gain_to_split</dt>
 <dd><p>A number for the minimum loss reduction required to make a
 further partition on a leaf node of the tree.</p></dd>
+
+
 <dt>bagging_fraction</dt>
 <dd><p>Subsampling proportion of rows.</p></dd>
+
+
 <dt>early_stopping_rounds</dt>
 <dd><p>Number of iterations without an improvement in
 the objective function occur before training should be halted.</p></dd>
+
+
 <dt>validation</dt>
 <dd><p>The <em>proportion</em> of the training data that are used for
 performance assessment and potential early stopping.</p></dd>
+
+
 <dt>counts</dt>
 <dd><p>A logical; should <code>feature_fraction</code> be interpreted as the
 <em>number</em> of predictors that will be randomly sampled at each split?
 <code>TRUE</code> indicates that <code>mtry</code> will be interpreted in its sense as a <em>count</em>,
 <code>FALSE</code> indicates that the argument will be interpreted in its sense as a
 <em>proportion</em>.</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>A logical; should logging by <code><a href="https://rdrr.io/pkg/lightgbm/man/lgb.train.html" class="external-link">lightgbm::lgb.train()</a></code> be muted?</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other options to pass to <code><a href="https://rdrr.io/pkg/lightgbm/man/lgb.train.html" class="external-link">lightgbm::lgb.train()</a></code>. Arguments
 will be correctly routed to the <code>param</code> argument, or as a main argument,
 depending on their name.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A fitted <code>lightgbm.Model</code> object.</p>
+    
+
+<p>A fitted <code>lightgbm.Model</code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -134,7 +163,7 @@ depending on their name.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>
