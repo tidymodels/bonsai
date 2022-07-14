@@ -502,3 +502,39 @@ test_that("training wrapper passes stop_iter correctly", {
   expect_true(!is.na(pars_fit_4$fit$best_score))
   expect_true(!is.na(pars_fit_5$fit$best_score))
 })
+
+test_that("training wrapper handles bagging correctly", {
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("modeldata")
+
+  data("penguins", package = "modeldata")
+
+  penguins <- penguins[complete.cases(penguins),]
+
+  pars_fit_1 <-
+    boost_tree() %>%
+    set_engine("lightgbm") %>%
+    set_mode("regression") %>%
+    fit(bill_length_mm ~ ., data = penguins)
+
+  pars_fit_2 <-
+    boost_tree(sample_size = .5) %>%
+    set_engine("lightgbm") %>%
+    set_mode("regression") %>%
+    fit(bill_length_mm ~ ., data = penguins)
+
+  pars_fit_3 <-
+    boost_tree(sample_size = .5) %>%
+    set_engine("lightgbm", bagging_freq = 2) %>%
+    set_mode("regression") %>%
+    fit(bill_length_mm ~ ., data = penguins)
+
+  expect_equal(pars_fit_1$fit$params$bagging_fraction, 1)
+  expect_null( pars_fit_1$fit$params$bagging_freq)
+
+  expect_equal(pars_fit_2$fit$params$bagging_fraction, .5)
+  expect_equal(pars_fit_2$fit$params$bagging_freq, 1)
+
+  expect_equal(pars_fit_3$fit$params$bagging_fraction, .5)
+  expect_equal(pars_fit_3$fit$params$bagging_freq, 2)
+})

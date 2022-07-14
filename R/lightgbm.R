@@ -16,7 +16,9 @@
 #'  in a child to continue to split.
 #' @param min_gain_to_split A number for the minimum loss reduction required to make a
 #'  further partition on a leaf node of the tree.
-#' @param bagging_fraction Subsampling proportion of rows.
+#' @param bagging_fraction Subsampling proportion of rows. Setting this argument
+#'  to a non-default value will also set `bagging_freq = 1`. See the Bagging
+#'  section in `?details_boost_tree_lightgbm` for more details.
 #' @param early_stopping_rounds Number of iterations without an improvement in
 #' the objective function occur before training should be halted.
 #' @param validation The _proportion_ of the training data that are used for
@@ -73,6 +75,8 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
   }
 
   args <- process_parallelism(args)
+
+  args <- process_bagging(args, ...)
 
   args <- process_data(args, x, y, validation, missing(validation),
                        early_stopping_rounds)
@@ -177,6 +181,15 @@ process_parallelism <- function(args) {
     args$main[names(args$main) == "num_threads"] <- NULL
   } else {
     args$param$num_threads <- foreach::getDoParWorkers()
+  }
+
+  args
+}
+
+process_bagging <- function(args, ...) {
+  if (args$param$bagging_fraction != 1 &&
+      (!"bagging_freq" %in% names(list(...)))) {
+    args$param$bagging_freq <- 1
   }
 
   args

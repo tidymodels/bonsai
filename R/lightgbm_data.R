@@ -214,9 +214,9 @@ make_boost_tree_lightgbm <- function() {
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "lightgbm",
-    parsnip = "sample_prop",
+    parsnip = "sample_size",
     original = "bagging_fraction",
-    func = list(pkg = "dials", fun = "sample_prop"),
+    func = list(pkg = "dials", fun = "sample_size"),
     has_submodel = FALSE
   )
 

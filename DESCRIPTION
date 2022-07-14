@@ -43,6 +43,8 @@ Suggests:
     rsample,
     testthat (>= 3.0.0),
     tune
+Remotes:
+    tidymodels/parsnip#768
 VignetteBuilder: 
     knitr
 Config/Needs/website: tidyverse/tidytemplate
