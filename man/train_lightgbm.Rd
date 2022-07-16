@@ -33,7 +33,7 @@ train_lightgbm(
 \item{learning_rate}{A numeric value between zero and one to control the learning rate.}
 
 \item{feature_fraction}{Fraction of predictors that will be randomly sampled
-at each split.}
+during each iteration (i.e. for each tree).}
 
 \item{min_data_in_leaf}{A numeric value for the minimum sum of instances needed
 in a child to continue to split.}

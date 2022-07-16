@@ -11,7 +11,7 @@
 #' @param num_iterations An integer for the number of boosting iterations.
 #' @param learning_rate A numeric value between zero and one to control the learning rate.
 #' @param feature_fraction Fraction of predictors that will be randomly sampled
-#' at each split.
+#'   during each iteration (i.e. for each tree).
 #' @param min_data_in_leaf A numeric value for the minimum sum of instances needed
 #'  in a child to continue to split.
 #' @param min_gain_to_split A number for the minimum loss reduction required to make a
