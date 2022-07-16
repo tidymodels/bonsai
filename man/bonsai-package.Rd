@@ -9,7 +9,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Bindings for additional tree-based model engines for use with the 'parsnip' package. Models include gradient boosted decision trees with LightGBM (Guolin et al, 2017. \doi{10.5555/3294996.3295074}) and conditional inference trees and conditional random forests with partykit (Hothorn and Zeileis, 2015. \doi{10.5555/2789272.2912120} and Hothorn et al, 2006. \doi{10.1198/106186006X133933}).
+Bindings for additional tree-based model engines for use with the 'parsnip' package. Models include gradient boosted decision trees with 'LightGBM' (Ke et al, 2017.) and conditional inference trees and conditional random forests with 'partykit' (Hothorn and Zeileis, 2015. and Hothorn et al, 2006. \doi{10.1198/106186006X133933}).
 }
 \seealso{
 Useful links:
@@ -21,14 +21,14 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Max Kuhn \email{max@rstudio.com} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
+\strong{Maintainer}: Simon Couch \email{simonpatrickcouch@gmail.com} (\href{https://orcid.org/0000-0001-5676-5107}{ORCID})
 
 Authors:
 \itemize{
   \item Daniel Falbel \email{dfalbel@curso-r.com}
   \item Athos Damiani \email{adamiani@curso-r.com}
   \item Roel M. Hogervorst \email{hogervorst.rm@gmail.com} (\href{https://orcid.org/0000-0001-7509-0328}{ORCID})
-  \item Simon Couch \email{simonpatrickcouch@gmail.com} (\href{https://orcid.org/0000-0001-5676-5107}{ORCID})
+  \item Max Kuhn \email{max@rstudio.com} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
 }
 
 Other contributors:
