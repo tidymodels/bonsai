@@ -172,7 +172,9 @@ test_that("boost_tree with lightgbm",{
       verbose = -1
     )
 
-  lgbm_preds_4 <- predict(lgbm_fit_4, peng_m_c, reshape = TRUE)
+  lgbm_preds_4 <-
+      predict(lgbm_fit_4, peng_m_c) %>%
+      reshape_lightgbm_multiclass_preds(num_rows = nrow(peng_m_c))
 
   expect_equal(pars_preds_4_mtx, lgbm_preds_4)
 
