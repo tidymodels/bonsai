@@ -271,7 +271,7 @@ sort_args <- function(args) {
 reshape_lightgbm_multiclass_preds <- function(preds, num_rows) {
     n_preds_per_case <- length(preds) / num_rows
     if (is.vector(preds) && n_preds_per_case > 1) {
-        preds <- matrix(preds, ncol = npreds_per_case, byrow = TRUE)
+        preds <- matrix(preds, ncol = n_preds_per_case, byrow = TRUE)
     }
     preds
 }
