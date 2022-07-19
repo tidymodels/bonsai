@@ -311,7 +311,11 @@ predict_lightgbm_classification_class <- function(object, new_data, ...) {
 #' @export
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_raw <- function(object, new_data, ...) {
-  p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
+  if (using_newer_lightgbm_version()) {
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), type = "raw", ...)
+  } else {
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
+  }
   reshape_lightgbm_multiclass_preds(preds = p, num_rows = nrow(new_data))
 }
 

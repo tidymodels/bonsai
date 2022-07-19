@@ -141,7 +141,12 @@ test_that("boost_tree with lightgbm",{
   expect_error_free({
     pars_preds_4 <-
       predict(pars_fit_4, penguins, type = "prob")
+    pars_preds_raw_4 <-
+      predict(pars_fit_4, penguins, type = "raw")
   })
+
+  expect_equal(nrow(pars_preds_raw_4), nrow(penguins))
+  expect_equal(ncol(pars_preds_raw_4), 3)
 
   pars_preds_4_mtx <- as.matrix(pars_preds_4)
   dimnames(pars_preds_4_mtx) <- NULL
@@ -202,7 +207,12 @@ test_that("boost_tree with lightgbm",{
   expect_error_free({
     pars_preds_6 <-
       predict(pars_fit_6, penguins, type = "prob")
+    pars_preds_raw_6 <-
+        predict(pars_fit_6, penguins, type = "raw")
   })
+
+  expect_equal(length(pars_preds_raw_6), nrow(penguins))
+  expect_false(identical(pars_preds_6, pars_preds_raw_6))
 
   pars_preds_6_b <- pars_preds_6$.pred_male
 
