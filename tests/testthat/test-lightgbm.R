@@ -549,7 +549,7 @@ test_that("training wrapper passes stop_iter correctly", {
   expect_true(!is.na(pars_fit_5$fit$best_score))
 })
 
-test_that("multi_predict() produces probabilities if 'type' not given ", {
+test_that("multi_predict() predicts classes if 'type' not given ", {
     skip_if_not_installed("lightgbm")
     skip_if_not_installed("modeldata")
 
@@ -594,10 +594,10 @@ test_that("multi_predict() produces probabilities if 'type' not given ", {
     pred_tbl <- multi_preds$.pred[[1]]
     expect_s3_class(pred_tbl, "tbl_df")
 
-    # should look like probabilities
-    prob_mat <- as.matrix(pred_tbl[, paste0(".pred_", levels(penguins[["species"]]))])
-    expect_true(all(prob_mat >= 0 & prob_mat <= 1))
-    expect_equal(rowSums(prob_mat), rep(1, num_iterations), tolerance = 1e-6)
+    # should look like class predictions
+    expect_named(pred_tbl, c("trees", ".pred_class"))
+    expect_s3_class(pred_tbl[[".pred_class"]], "factor")
+    expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["species"]])))
 
     # classification (binary) ------------------------------------------------
     expect_error_free({
@@ -625,8 +625,8 @@ test_that("multi_predict() produces probabilities if 'type' not given ", {
     pred_tbl <- multi_preds$.pred[[1]]
     expect_s3_class(pred_tbl, "tbl_df")
 
-    # should look like probabilities
-    prob_mat <- as.matrix(pred_tbl[, c(".pred_female", ".pred_male")])
-    expect_true(all(prob_mat >= 0 & prob_mat <= 1))
-    expect_equal(rowSums(prob_mat), rep(1, num_iterations), tolerance = 1e-6)
+    # should look like class predictions
+    expect_named(pred_tbl, c("trees", ".pred_class"))
+    expect_s3_class(pred_tbl[[".pred_class"]], "factor")
+    expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
 })
