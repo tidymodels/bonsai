@@ -364,7 +364,7 @@ lightgbm_by_tree <- function(tree, object, new_data, type = NULL) {
 
     nms <- names(pred)
   } else {
-    if (type == "class") {
+    if (is.null(type) || type == "class") {
       pred <- predict_lightgbm_classification_class(object, new_data, num_iteration = tree)
 
       pred <- tibble::tibble(.pred_class = factor(pred, levels = object$lvl))

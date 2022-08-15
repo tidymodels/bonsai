@@ -548,3 +548,85 @@ test_that("training wrapper passes stop_iter correctly", {
   expect_true(!is.na(pars_fit_4$fit$best_score))
   expect_true(!is.na(pars_fit_5$fit$best_score))
 })
+
+test_that("multi_predict() predicts classes if 'type' not given ", {
+    skip_if_not_installed("lightgbm")
+    skip_if_not_installed("modeldata")
+
+    suppressPackageStartupMessages({
+        library(lightgbm)
+        library(dplyr)
+    })
+
+    data("penguins", package = "modeldata")
+    penguins <- penguins[complete.cases(penguins),]
+    penguins_subset <- penguins[1:10,]
+    penguins_subset_numeric <-
+        penguins_subset %>%
+        mutate(across(where(is.character), ~as.factor(.x))) %>%
+        mutate(across(where(is.factor), ~as.integer(.x) - 1))
+
+    num_iterations <- 5
+
+    # classification (multiclass) ------------------------------------------------
+    expect_error_free({
+        clf_multiclass_fit <-
+            boost_tree(trees = num_iterations) %>%
+            set_engine("lightgbm") %>%
+            set_mode("classification") %>%
+            fit(species ~ ., data = penguins)
+    })
+    expect_equal(clf_multiclass_fit$fit$current_iter(), num_iterations)
+
+    new_data <-
+        penguins_subset_numeric %>%
+        select(-species) %>%
+        as.matrix()
+
+    multi_preds <-
+        multi_predict(
+            clf_multiclass_fit,
+            new_data = new_data[1, , drop = FALSE],
+            trees = seq_len(num_iterations)
+        )
+
+    # should be a tibble
+    pred_tbl <- multi_preds$.pred[[1]]
+    expect_s3_class(pred_tbl, "tbl_df")
+
+    # should look like class predictions
+    expect_named(pred_tbl, c("trees", ".pred_class"))
+    expect_s3_class(pred_tbl[[".pred_class"]], "factor")
+    expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["species"]])))
+
+    # classification (binary) ------------------------------------------------
+    expect_error_free({
+        clf_binary_fit <-
+            boost_tree(trees = num_iterations) %>%
+            set_engine("lightgbm") %>%
+            set_mode("classification") %>%
+            fit(sex ~ ., data = penguins)
+    })
+    expect_equal(clf_binary_fit$fit$current_iter(), num_iterations)
+
+    new_data <-
+        penguins_subset_numeric %>%
+        select(-sex) %>%
+        as.matrix()
+
+    multi_preds <-
+        multi_predict(
+            clf_binary_fit,
+            new_data = new_data[1, , drop = FALSE],
+            trees = seq_len(num_iterations)
+        )
+
+    # should be a tibble
+    pred_tbl <- multi_preds$.pred[[1]]
+    expect_s3_class(pred_tbl, "tbl_df")
+
+    # should look like class predictions
+    expect_named(pred_tbl, c("trees", ".pred_class"))
+    expect_s3_class(pred_tbl[[".pred_class"]], "factor")
+    expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
+})
