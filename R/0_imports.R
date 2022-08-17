@@ -4,6 +4,7 @@
 #' @importFrom parsnip multi_predict set_mode set_engine fit
 #' @importFrom parsnip decision_tree boost_tree rand_forest
 #' @importFrom stats predict
+#' @importFrom utils packageVersion
 
 # ------------------------------------------------------------------------------
 
@@ -24,4 +25,11 @@ utils::globalVariables(
   )
 )
 
+# ------------------------------------------------------------------------------
 
+# lightgbm had significant breaking changes following release v3.3.2.
+# this function is used by patches that make bonsai backward-compatible with
+# older lightgbm versions
+using_newer_lightgbm_version <- function(){
+    utils::packageVersion("lightgbm") > package_version("3.3.2")
+}

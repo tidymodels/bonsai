@@ -273,6 +273,22 @@ sort_args <- function(args) {
   args
 }
 
+# in lightgbm <= 3.3.2, predict() for multiclass classification produced a single
+# vector of length num_observations * num_classes, in row-major order
+#
+# in versions after that release, lightgbm produces a numeric matrix with shape
+# [num_observations, num_classes]
+#
+# this function ensures that multiclass classification predictions are always
+# returned as a [num_observations, num_classes] matrix, regardless of lightgbm version
+reshape_lightgbm_multiclass_preds <- function(preds, num_rows) {
+    n_preds_per_case <- length(preds) / num_rows
+    if (is.vector(preds) && n_preds_per_case > 1) {
+        preds <- matrix(preds, ncol = n_preds_per_case, byrow = TRUE)
+    }
+    preds
+}
+
 #' Internal functions
 #'
 #' Not intended for direct use.
@@ -281,7 +297,8 @@ sort_args <- function(args) {
 #' @export
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_prob <- function(object, new_data, ...) {
-  p <- stats::predict(object$fit, prepare_df_lgbm(new_data), reshape = TRUE, ...)
+  p <- stats::predict(object$fit, prepare_df_lgbm(new_data), ...)
+  p <- reshape_lightgbm_multiclass_preds(preds = p, num_rows = nrow(new_data))
 
   if(is.vector(p)) {
     p <- tibble::tibble(p1 = 1 - p, p2 = p)
@@ -307,7 +324,12 @@ predict_lightgbm_classification_class <- function(object, new_data, ...) {
 #' @export
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_raw <- function(object, new_data, ...) {
-  stats::predict(object$fit, prepare_df_lgbm(new_data), reshape = TRUE, rawscore = TRUE, ...)
+  if (using_newer_lightgbm_version()) {
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), type = "raw", ...)
+  } else {
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
+  }
+  reshape_lightgbm_multiclass_preds(preds = p, num_rows = nrow(new_data))
 }
 
 #' @keywords internal
@@ -318,7 +340,6 @@ predict_lightgbm_regression_numeric <- function(object, new_data, ...) {
     stats::predict(
       object$fit,
       prepare_df_lgbm(new_data),
-      reshape = TRUE,
       params = list(predict_disable_shape_check = TRUE),
       ...
     )
@@ -356,7 +377,7 @@ lightgbm_by_tree <- function(tree, object, new_data, type = NULL) {
 
     nms <- names(pred)
   } else {
-    if (type == "class") {
+    if (is.null(type) || type == "class") {
       pred <- predict_lightgbm_classification_class(object, new_data, num_iteration = tree)
 
       pred <- tibble::tibble(.pred_class = factor(pred, levels = object$lvl))
