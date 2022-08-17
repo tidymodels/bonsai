@@ -41,7 +41,9 @@ in a child to continue to split.}
 \item{min_gain_to_split}{A number for the minimum loss reduction required to make a
 further partition on a leaf node of the tree.}
 
-\item{bagging_fraction}{Subsampling proportion of rows.}
+\item{bagging_fraction}{Subsampling proportion of rows. Setting this argument
+to a non-default value will also set \code{bagging_freq = 1}. See the Bagging
+section in \code{?details_boost_tree_lightgbm} for more details.}
 
 \item{early_stopping_rounds}{Number of iterations without an improvement in
 the objective function occur before training should be halted.}
