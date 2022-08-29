@@ -70,7 +70,7 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
 
   args <- process_objective_function(args, x, y)
 
-  if (args$param$objective != "regression") {
+  if (!is.numeric(y)) {
     y <- as.numeric(y) - 1
   }
 
@@ -155,7 +155,6 @@ process_objective_function <- function(args, x, y) {
     } else {
       lvl <- levels(y)
       lvls <- length(lvl)
-      y <- as.numeric(y) - 1
       if (lvls == 2) {
         args$param$num_class <- 1
         args$param$objective <- "binary"
