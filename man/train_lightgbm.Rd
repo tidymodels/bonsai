@@ -10,7 +10,7 @@ train_lightgbm(
   max_depth = -1,
   num_iterations = 100,
   learning_rate = 0.1,
-  feature_fraction = 1,
+  feature_fraction_bynode = 1,
   min_data_in_leaf = 20,
   min_gain_to_split = 0,
   bagging_fraction = 1,
@@ -32,7 +32,7 @@ train_lightgbm(
 
 \item{learning_rate}{A numeric value between zero and one to control the learning rate.}
 
-\item{feature_fraction}{Fraction of predictors that will be randomly sampled
+\item{feature_fraction_bynode}{Fraction of predictors that will be randomly sampled
 at each split.}
 
 \item{min_data_in_leaf}{A numeric value for the minimum sum of instances needed
@@ -51,7 +51,7 @@ the objective function occur before training should be halted.}
 \item{validation}{The \emph{proportion} of the training data that are used for
 performance assessment and potential early stopping.}
 
-\item{counts}{A logical; should \code{feature_fraction} be interpreted as the
+\item{counts}{A logical; should \code{feature_fraction_bynode} be interpreted as the
 \emph{number} of predictors that will be randomly sampled at each split?
 \code{TRUE} indicates that \code{mtry} will be interpreted in its sense as a \emph{count},
 \code{FALSE} indicates that the argument will be interpreted in its sense as a

@@ -299,7 +299,7 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   })
 
   expect_equal(
-    extract_fit_engine(pars_fit_1)$params$feature_fraction,
+    extract_fit_engine(pars_fit_1)$params$feature_fraction_bynode,
     1
   )
 
@@ -313,7 +313,7 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   })
 
   expect_equal(
-    extract_fit_engine(pars_fit_2)$params$feature_fraction,
+    extract_fit_engine(pars_fit_2)$params$feature_fraction_bynode,
     1 / (ncol(penguins) - 1)
   )
 
@@ -326,7 +326,7 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   })
 
   expect_equal(
-    extract_fit_engine(pars_fit_3)$params$feature_fraction,
+    extract_fit_engine(pars_fit_3)$params$feature_fraction_bynode,
     1
   )
 
@@ -340,7 +340,7 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   })
 
   expect_equal(
-    extract_fit_engine(pars_fit_4)$params$feature_fraction,
+    extract_fit_engine(pars_fit_4)$params$feature_fraction_bynode,
     3 / (ncol(penguins) - 1)
   )
 
@@ -368,14 +368,14 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   expect_warning({
     pars_fit_7 <-
       boost_tree() %>%
-      set_engine("lightgbm", feature_fraction = .5) %>%
+      set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins)},
-    "manually modified and were removed: feature_fraction."
+    "manually modified and were removed: feature_fraction_bynode."
   )
 
   expect_equal(
-    extract_fit_engine(pars_fit_7)$params$feature_fraction,
+    extract_fit_engine(pars_fit_7)$params$feature_fraction_bynode,
     1
   )
 
@@ -383,7 +383,7 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   expect_snapshot({
     pars_fit_8 <-
       boost_tree(mtry = .5) %>%
-      set_engine("lightgbm", feature_fraction = .5) %>%
+      set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins)},
     error = TRUE
@@ -392,14 +392,14 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   expect_warning({
     pars_fit_9 <-
       boost_tree(mtry = 2) %>%
-      set_engine("lightgbm", feature_fraction = .5) %>%
+      set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins)},
-    "manually modified and were removed: feature_fraction."
+    "manually modified and were removed: feature_fraction_bynode."
   )
 
   expect_equal(
-    extract_fit_engine(pars_fit_9)$params$feature_fraction,
+    extract_fit_engine(pars_fit_9)$params$feature_fraction_bynode,
     2 / (ncol(penguins) - 1)
   )
 })

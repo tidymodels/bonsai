@@ -188,7 +188,7 @@ make_boost_tree_lightgbm <- function() {
     model = "boost_tree",
     eng = "lightgbm",
     parsnip = "mtry",
-    original = "feature_fraction",
+    original = "feature_fraction_bynode",
     func = list(pkg = "dials", fun = "mtry"),
     has_submodel = FALSE
   )

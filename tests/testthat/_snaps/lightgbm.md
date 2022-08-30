@@ -42,10 +42,10 @@
 
     Code
       pars_fit_8 <- boost_tree(mtry = 0.5) %>% set_engine("lightgbm",
-        feature_fraction = 0.5) %>% set_mode("regression") %>% fit(bill_length_mm ~ .,
-      data = penguins)
+        feature_fraction_bynode = 0.5) %>% set_mode("regression") %>% fit(
+        bill_length_mm ~ ., data = penguins)
     Warning <rlang_warning>
-      The following arguments cannot be manually modified and were removed: feature_fraction.
+      The following arguments cannot be manually modified and were removed: feature_fraction_bynode.
     Error <rlang_error>
       The supplied argument `mtry = 0.5` must be greater than or equal to 1. 
       
