@@ -63,7 +63,7 @@ where all of the model arguments are in the main function.</p>
 <span>  max_depth <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
 <span>  num_iterations <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  learning_rate <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  feature_fraction <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  feature_fraction_bynode <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  min_data_in_leaf <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  min_gain_to_split <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  bagging_fraction <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -97,7 +97,7 @@ where all of the model arguments are in the main function.</p>
 <dd><p>A numeric value between zero and one to control the learning rate.</p></dd>
 
 
-<dt>feature_fraction</dt>
+<dt>feature_fraction_bynode</dt>
 <dd><p>Fraction of predictors that will be randomly sampled
 at each split.</p></dd>
 
@@ -129,7 +129,7 @@ performance assessment and potential early stopping.</p></dd>
 
 
 <dt>counts</dt>
-<dd><p>A logical; should <code>feature_fraction</code> be interpreted as the
+<dd><p>A logical; should <code>feature_fraction_bynode</code> be interpreted as the
 <em>number</em> of predictors that will be randomly sampled at each split?
 <code>TRUE</code> indicates that <code>mtry</code> will be interpreted in its sense as a <em>count</em>,
 <code>FALSE</code> indicates that the argument will be interpreted in its sense as a
