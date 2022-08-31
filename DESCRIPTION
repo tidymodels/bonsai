@@ -22,7 +22,7 @@ License: MIT + file LICENSE
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
-    parsnip (>= 1.0.0)
+    parsnip (>= 1.0.1)
 Imports: 
     dials,
     dplyr,
@@ -43,8 +43,6 @@ Suggests:
     rsample,
     testthat (>= 3.0.0),
     tune
-Remotes:
-    tidymodels/parsnip#768
 VignetteBuilder: 
     knitr
 Config/Needs/website: tidyverse/tidytemplate
