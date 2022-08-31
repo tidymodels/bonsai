@@ -1,4 +1,4 @@
-# bonsai 0.1.0.9000 (developmental version)
+# bonsai 0.2.0
 
 * Enabled bagging with lightgbm via the `sample_size` argument to `boost_tree` 
   (#32 and tidymodels/parsnip#768). The following docs now available in
