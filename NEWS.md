@@ -1,3 +1,7 @@
+# bonsai (developmental version)
+
+bonsai 0.2.0.9000 is a dev version of the package and will be released with a different version number.
+
 # bonsai 0.2.0
 
 * Enabled bagging with lightgbm via the `sample_size` argument to `boost_tree` 
