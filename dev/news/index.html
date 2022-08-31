@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bonsai</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,16 +48,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0.9000" id="bonsai-0109000-developmental-version">bonsai 0.1.0.9000 (developmental version)<a class="anchor" aria-label="anchor" href="#bonsai-0109000-developmental-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="bonsai-020">bonsai 0.2.0<a class="anchor" aria-label="anchor" href="#bonsai-020"></a></h2><p class="text-muted">CRAN release: 2022-08-31</p>
 <ul><li>Enabled bagging with lightgbm via the <code>sample_size</code> argument to <code>boost_tree</code> (<a href="https://github.com/tidymodels/bonsai/issues/32" class="external-link">#32</a> and tidymodels/parsnip#768). The following docs now available in <code><a href="https://parsnip.tidymodels.org/reference/details_boost_tree_lightgbm.html" class="external-link">?details_boost_tree_lightgbm</a></code> describe the interface in detail:</li></ul><blockquote>
 <p>The <code>sample_size</code> argument is translated to the <code>bagging_fraction</code> parameter in the <code>param</code> argument of <code>lgb.train</code>. The argument is interpreted by lightgbm as a <em>proportion</em> rather than a count, so bonsai internally reparameterizes the <code>sample_size</code> argument with [dials::sample_prop()] during tuning.</p>
 <p>To effectively enable bagging, the user would also need to set the <code>bagging_freq</code> argument to lightgbm. <code>bagging_freq</code> defaults to 0, which means bagging is disabled, and a <code>bagging_freq</code> argument of <code>k</code> means that the booster will perform bagging at every <code>k</code>th boosting iteration. Thus, by default, the <code>sample_size</code> argument would be ignored without setting this argument manually. Other boosting libraries, like xgboost, do not have an analogous argument to <code>bagging_freq</code> and use <code>k = 1</code> when the analogue to <code>bagging_fraction</code> is in <span class="math inline">(0,1)</span>. <em>bonsai will thus automatically set</em> <code>bagging_freq = 1</code> <em>in</em> <code>set_engine("lightgbm", ...)</code> if <code>sample_size</code> (i.e. <code>bagging_fraction</code>) is not equal to 1 and no <code>bagging_freq</code> value is supplied. This default can be overridden by setting the <code>bagging_freq</code> argument to <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine()</a></code> manually.</p>
 </blockquote>
-<ul><li><p>Fixed error in lightgbm with engine argument <code>objective = "tweedie"</code> and response values less than 1.</p></li>
-<li>
+<ul><li>
 <p>Corrected mapping of the <code>mtry</code> argument in <code>boost_tree</code> with the lightgbm engine. <code>mtry</code> previously mapped to the <code>feature_fraction</code> argument to <code>lgb.train</code> but was documented as mapping to an argument more closely resembling <code>feature_fraction_bynode</code>. <code>mtry</code> now maps to <code>feature_fraction_bynode</code>.</p>
 <p>This means that code that set <code>feature_fraction_bynode</code> as an argument to <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine()</a></code> will now error, and the user can now pass <code>feature_fraction</code> to <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine()</a></code> without raising an error.</p>
 </li>
+<li><p>Fixed error in lightgbm with engine argument <code>objective = "tweedie"</code> and response values less than 1.</p></li>
+<li><p>A number of documentation improvements, increases in testing coverage, and changes to internals in anticipation of the 4.0.0 release of the lightgbm package. Thank you to <code>@jameslamb</code> for the effort and expertise!</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="bonsai-010">bonsai 0.1.0<a class="anchor" aria-label="anchor" href="#bonsai-010"></a></h2><p class="text-muted">CRAN release: 2022-06-23</p>
