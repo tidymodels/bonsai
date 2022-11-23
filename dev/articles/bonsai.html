@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.3/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.3/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to bonsai">
@@ -87,13 +87,17 @@
 
     
     
-<p>The goal of bonsai is to provide bindings for additional tree-based model engines for use with the {parsnip} package.</p>
-<p>If you’re not familiar with parsnip, you can read more about the package on it’s <a href="https://parsnip.tidymodels.org" class="external-link">website</a>.</p>
+<p>The goal of bonsai is to provide bindings for additional tree-based
+model engines for use with the {parsnip} package.</p>
+<p>If you’re not familiar with parsnip, you can read more about the
+package on it’s <a href="https://parsnip.tidymodels.org" class="external-link">website</a>.</p>
 <p>To get started, load bonsai with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bonsai.tidymodels.org/">bonsai</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: parsnip</span></span></code></pre></div>
-<p>To illustrate how to use the package, we’ll fit some models to a dataset containing measurements on 3 different species of penguins. Loading in that data and checking it out:</p>
+<p>To illustrate how to use the package, we’ll fit some models to a
+dataset containing measurements on 3 different species of penguins.
+Loading in that data and checking it out:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span>
 <span></span>
@@ -108,7 +112,10 @@
 <span><span class="co">#&gt;  $ flipper_length_mm: int [1:344] 181 186 195 NA 193 190 181 195 193 190 ...</span></span>
 <span><span class="co">#&gt;  $ body_mass_g      : int [1:344] 3750 3800 3250 NA 3450 3650 3625 4675 3475 4250 ...</span></span>
 <span><span class="co">#&gt;  $ sex              : Factor w/ 2 levels "female","male": 2 1 1 NA 1 2 1 2 NA NA ...</span></span></code></pre></div>
-<p>Specifically, making use of our knowledge of which island that they live on and measurements on their flipper length, we will predict their species using a decision tree. We’ll first do so using the engine <code>"rpart"</code>, which is supported with parsnip alone:</p>
+<p>Specifically, making use of our knowledge of which island that they
+live on and measurements on their flipper length, we will predict their
+species using a decision tree. We’ll first do so using the engine
+<code>"rpart"</code>, which is supported with parsnip alone:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set seed for reproducibility</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -140,8 +147,15 @@
 <span><span class="co">#&gt;    3) flipper_length_mm&gt;=206.5 130   7 Gentoo (0.015384615 0.038461538 0.946153846)  </span></span>
 <span><span class="co">#&gt;      6) island=Dream,Torgersen 7   2 Chinstrap (0.285714286 0.714285714 0.000000000) *</span></span>
 <span><span class="co">#&gt;      7) island=Biscoe 123   0 Gentoo (0.000000000 0.000000000 1.000000000) *</span></span></code></pre></div>
-<p>From this output, we can see that the model generally first looks to <code>island</code> to determine species, and then makes use of a mix of flipper length and island to ultimately make a species prediction.</p>
-<p>A benefit of using parsnip and bonsai is that, to use a different implementation of decision trees, we simply change the engine argument to <code>set_engine</code>; all other elements of the interface stay the same. For instance, using <code>"partykit"</code>—which implements a type of decision tree called a <em>conditional inference tree</em>—as our backend instead:</p>
+<p>From this output, we can see that the model generally first looks to
+<code>island</code> to determine species, and then makes use of a mix of
+flipper length and island to ultimately make a species prediction.</p>
+<p>A benefit of using parsnip and bonsai is that, to use a different
+implementation of decision trees, we simply change the engine argument
+to <code>set_engine</code>; all other elements of the interface stay the
+same. For instance, using <code>"partykit"</code>—which implements a
+type of decision tree called a <em>conditional inference tree</em>—as
+our backend instead:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://parsnip.tidymodels.org/reference/decision_tree.html" class="external-link">decision_tree</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"partykit"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -171,10 +185,24 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of inner nodes:    5</span></span>
 <span><span class="co">#&gt; Number of terminal nodes: 6</span></span></code></pre></div>
-<p>This model, unlike the first, relies on recursive conditional inference to generate its splits. As such, we can see it generates slightly different results. Read more about this implementation of decision trees in <code><a href="https://parsnip.tidymodels.org/reference/details_decision_tree_partykit.html" class="external-link">?details_decision_tree_partykit</a></code>.</p>
-<p>One generalization of a decision tree is a <em>random forest</em>, which fits a large number of decision trees, each independently of the others. The fitted random forest model combines predictions from the individual decision trees to generate its predictions.</p>
-<p>bonsai introduces support for random forests using the <code>partykit</code> engine, which implements an algorithm called a <em>conditional random forest</em>. Conditional random forests are a type of random forest that uses conditional inference trees (like the one we fit above!) for its constituent decision trees.</p>
-<p>To fit a conditional random forest with partykit, our code looks pretty similar to that which we we needed to fit a conditional inference tree. Just switch out <code><a href="https://parsnip.tidymodels.org/reference/decision_tree.html" class="external-link">decision_tree()</a></code> with <code><a href="https://parsnip.tidymodels.org/reference/rand_forest.html" class="external-link">rand_forest()</a></code> and remember to keep the engine set as <code>"partykit"</code>:</p>
+<p>This model, unlike the first, relies on recursive conditional
+inference to generate its splits. As such, we can see it generates
+slightly different results. Read more about this implementation of
+decision trees in <code><a href="https://parsnip.tidymodels.org/reference/details_decision_tree_partykit.html" class="external-link">?details_decision_tree_partykit</a></code>.</p>
+<p>One generalization of a decision tree is a <em>random forest</em>,
+which fits a large number of decision trees, each independently of the
+others. The fitted random forest model combines predictions from the
+individual decision trees to generate its predictions.</p>
+<p>bonsai introduces support for random forests using the
+<code>partykit</code> engine, which implements an algorithm called a
+<em>conditional random forest</em>. Conditional random forests are a
+type of random forest that uses conditional inference trees (like the
+one we fit above!) for its constituent decision trees.</p>
+<p>To fit a conditional random forest with partykit, our code looks
+pretty similar to that which we we needed to fit a conditional inference
+tree. Just switch out <code><a href="https://parsnip.tidymodels.org/reference/decision_tree.html" class="external-link">decision_tree()</a></code> with
+<code><a href="https://parsnip.tidymodels.org/reference/rand_forest.html" class="external-link">rand_forest()</a></code> and remember to keep the engine set as
+<code>"partykit"</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rf_mod</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/rand_forest.html" class="external-link">rand_forest</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -184,8 +212,15 @@
 <span>    formula <span class="op">=</span> <span class="va">species</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">island</span>, </span>
 <span>    data <span class="op">=</span> <span class="va">penguins</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p>Read more about this implementation of random forests in <code><a href="https://parsnip.tidymodels.org/reference/details_rand_forest_partykit.html" class="external-link">?details_rand_forest_partykit</a></code>.</p>
-<p>Another generalization of a decision tree is a series of decision trees where <em>each tree depends on the results of previous trees</em>—this is called a <em>boosted tree</em>. bonsai implements an additional parsnip engine for this model type called <code>lightgbm</code>. To make use of it, start out with a <code>boost_tree</code> model spec and set <code>engine = "lightgbm"</code>:</p>
+<p>Read more about this implementation of random forests in
+<code><a href="https://parsnip.tidymodels.org/reference/details_rand_forest_partykit.html" class="external-link">?details_rand_forest_partykit</a></code>.</p>
+<p>Another generalization of a decision tree is a series of decision
+trees where <em>each tree depends on the results of previous
+trees</em>—this is called a <em>boosted tree</em>. bonsai implements an
+additional parsnip engine for this model type called
+<code>lightgbm</code>. To make use of it, start out with a
+<code>boost_tree</code> model spec and set
+<code>engine = "lightgbm"</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bt_mod</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/boost_tree.html" class="external-link">boost_tree</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -243,8 +278,12 @@
 <span><span class="co">#&gt;     train_set: lgb.Dataset, R6</span></span>
 <span><span class="co">#&gt;     train_set_version: 1</span></span>
 <span><span class="co">#&gt;     valid_sets: list</span></span></code></pre></div>
-<p>Read more about this implementation of boosted trees in <code><a href="https://parsnip.tidymodels.org/reference/details_boost_tree_lightgbm.html" class="external-link">?details_boost_tree_lightgbm</a></code>.</p>
-<p>Each of these model specs and engines have several arguments and tuning parameters that affect user experience and results greatly. We recommend reading about each of these parameters and tuning them when you find them relevant for your modeling use case.</p>
+<p>Read more about this implementation of boosted trees in
+<code><a href="https://parsnip.tidymodels.org/reference/details_boost_tree_lightgbm.html" class="external-link">?details_boost_tree_lightgbm</a></code>.</p>
+<p>Each of these model specs and engines have several arguments and
+tuning parameters that affect user experience and results greatly. We
+recommend reading about each of these parameters and tuning them when
+you find them relevant for your modeling use case.</p>
   </main>
 </div>
 
