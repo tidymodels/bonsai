@@ -224,7 +224,7 @@ make_boost_tree_lightgbm <- function() {
     model = "boost_tree",
     eng = "lightgbm",
     parsnip = "stop_iter",
-    original = "early_stopping_rounds",
+    original = "early_stopping_round",
     func = list(pkg = "dials", fun = "stop_iter"),
     has_submodel = FALSE
   )

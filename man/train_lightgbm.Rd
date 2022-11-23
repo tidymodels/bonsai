@@ -14,7 +14,7 @@ train_lightgbm(
   min_data_in_leaf = 20,
   min_gain_to_split = 0,
   bagging_fraction = 1,
-  early_stopping_rounds = NULL,
+  early_stopping_round = NULL,
   validation = 0,
   counts = TRUE,
   quiet = FALSE,
@@ -45,7 +45,7 @@ further partition on a leaf node of the tree.}
 to a non-default value will also set \code{bagging_freq = 1}. See the Bagging
 section in \code{?details_boost_tree_lightgbm} for more details.}
 
-\item{early_stopping_rounds}{Number of iterations without an improvement in
+\item{early_stopping_round}{Number of iterations without an improvement in
 the objective function occur before training should be halted.}
 
 \item{validation}{The \emph{proportion} of the training data that are used for

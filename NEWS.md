@@ -10,6 +10,8 @@ boost_tree() %>% set_engine("lightgbm", num_threads = x)
 
 Note that, when tuning hyperparameters with the tune package, detection of parallel backend will still work [as usual](https://tune.tidymodels.org/articles/extras/optimizations.html).
 
+* The `boost_tree` argument `stop_iter` now maps to the `lightgbm:::lgb.train()` argument `early_stopping_round` rather than its alias `early_stopping_rounds`. This does not affect parsnip's interface to lightgbm (i.e. via `boost_tree() %>% set_engine("lightgbm")`), though will introduce errors for code that uses the `train_lightgbm()` wrapper directly and sets the `lightgbm::lgb.train()` argument `early_stopping_round` by its alias `early_stopping_rounds` via `train_lightgbm()`'s `...`.
+
 # bonsai 0.2.0
 
 * Enabled bagging with lightgbm via the `sample_size` argument to `boost_tree` 

@@ -19,7 +19,7 @@
 #' @param bagging_fraction Subsampling proportion of rows. Setting this argument
 #'  to a non-default value will also set `bagging_freq = 1`. See the Bagging
 #'  section in `?details_boost_tree_lightgbm` for more details.
-#' @param early_stopping_rounds Number of iterations without an improvement in
+#' @param early_stopping_round Number of iterations without an improvement in
 #' the objective function occur before training should be halted.
 #' @param validation The _proportion_ of the training data that are used for
 #' performance assessment and potential early stopping.
@@ -38,7 +38,7 @@
 train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
                            feature_fraction_bynode = 1, min_data_in_leaf = 20,
                            min_gain_to_split = 0, bagging_fraction = 1,
-                           early_stopping_rounds = NULL, validation = 0,
+                           early_stopping_round = NULL, validation = 0,
                            counts = TRUE, quiet = FALSE, ...) {
 
   force(x)
@@ -63,7 +63,7 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
       bagging_fraction = bagging_fraction
     ),
     main = list(
-      early_stopping_rounds = early_stopping_rounds,
+      early_stopping_round = early_stopping_round,
       ...
     )
   )
@@ -79,7 +79,7 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
   args <- process_bagging(args, ...)
 
   args <- process_data(args, x, y, validation, missing(validation),
-                       early_stopping_rounds)
+                       early_stopping_round)
 
   args <- sort_args(args)
 
@@ -193,7 +193,7 @@ process_bagging <- function(args, ...) {
 }
 
 process_data <- function(args, x, y, validation, missing_validation,
-                         early_stopping_rounds) {
+                         early_stopping_round) {
   #                                           trn_index       | val_index
   #                                         ----------------------------------
   #  needs_validation &  missing_validation | 1:n               1:n
@@ -202,7 +202,7 @@ process_data <- function(args, x, y, validation, missing_validation,
   # !needs_validation & !missing_validation | sample(1:n, m)    setdiff(trn_index, 1:n)
 
   n <- nrow(x)
-  needs_validation <- !is.null(early_stopping_rounds)
+  needs_validation <- !is.null(early_stopping_round)
 
   if (missing_validation) {
     trn_index <- 1:n
@@ -261,7 +261,7 @@ sort_args <- function(args) {
 
   # dots are deprecated in lgb.train -- pass to param instead
   to_main   <- c("nrounds", "eval", "verbose", "record", "eval_freq",
-                 "early_stopping_rounds", "data", "valids")
+                 "early_stopping_round", "data", "valids")
 
   args$param <- c(args$param, args$main[!names(args$main) %in% to_main])
 

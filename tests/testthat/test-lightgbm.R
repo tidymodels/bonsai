@@ -435,7 +435,7 @@ test_that("tuning mtry vs mtry_prop", {
 
   # supply tune() without tuning
   expect_snapshot({
-    boost_tree(mtry = tune::tune()) %>%
+    boost_tree() %>%
       set_engine("lightgbm") %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins)},
@@ -503,10 +503,10 @@ test_that("training wrapper passes stop_iter correctly", {
   expect_warning(
     pars_fit_2 <-
       boost_tree() %>%
-      set_engine("lightgbm", early_stopping_rounds = 10) %>%
+      set_engine("lightgbm", early_stopping_round = 10) %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins),
-    "were removed: early_stopping_rounds"
+    "were removed: early_stopping_round"
   )
 
   expect_error_free(
