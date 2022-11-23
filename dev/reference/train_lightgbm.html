@@ -67,7 +67,7 @@ where all of the model arguments are in the main function.</p>
 <span>  min_data_in_leaf <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  min_gain_to_split <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  bagging_fraction <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  early_stopping_rounds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  early_stopping_round <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  validation <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  counts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -118,7 +118,7 @@ to a non-default value will also set <code>bagging_freq = 1</code>. See the Bagg
 section in <code>?details_boost_tree_lightgbm</code> for more details.</p></dd>
 
 
-<dt>early_stopping_rounds</dt>
+<dt>early_stopping_round</dt>
 <dd><p>Number of iterations without an improvement in
 the objective function occur before training should be halted.</p></dd>
 
