@@ -178,8 +178,6 @@ process_parallelism <- function(args) {
   if (!is.null(args$main["num_threads"])) {
     args$param$num_threads <- args$main[names(args$main) == "num_threads"]
     args$main[names(args$main) == "num_threads"] <- NULL
-  } else {
-    args$param$num_threads <- foreach::getDoParWorkers()
   }
 
   args

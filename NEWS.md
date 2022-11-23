@@ -2,6 +2,14 @@
 
 bonsai 0.2.0.9000 is a dev version of the package and will be released with a different version number.
 
+* Fixed a bug where lightgbm's parallelism argument `num_threads` was overridden when passed via `param` rather than as a main argument. By default, then, lightgbm will fit sequentially rather than with `num_threads = foreach::getDoParWorkers()`. The user can still set `num_threads` via engine arguments with `engine = "lightgbm"`:
+
+``` r
+boost_tree() %>% set_engine("lightgbm", num_threads = x)
+```
+
+Note that, when tuning hyperparameters with the tune package, detection of parallel backend will still work [as usual](https://tune.tidymodels.org/articles/extras/optimizations.html).
+
 # bonsai 0.2.0
 
 * Enabled bagging with lightgbm via the `sample_size` argument to `boost_tree` 
