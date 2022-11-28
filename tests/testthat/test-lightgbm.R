@@ -264,7 +264,8 @@ test_that("bonsai correctly determines objective when label is a factor", {
         bst <- train_lightgbm(
             x = penguins[, c("bill_length_mm", "bill_depth_mm")],
             y = penguins[["sex"]],
-            num_iterations = 5
+            num_iterations = 5,
+            verbose = -1L
         )
     })
     expect_equal(bst$params$objective, "binary")
@@ -274,7 +275,8 @@ test_that("bonsai correctly determines objective when label is a factor", {
         bst <- train_lightgbm(
             x = penguins[, c("bill_length_mm", "bill_depth_mm")],
             y = penguins[["species"]],
-            num_iterations = 5
+            num_iterations = 5,
+            verbose = -1L
         )
     })
     expect_equal(bst$params$objective, "multiclass")
