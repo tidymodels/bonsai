@@ -435,7 +435,7 @@ test_that("tuning mtry vs mtry_prop", {
 
   # supply tune() without tuning
   expect_snapshot({
-    boost_tree() %>%
+    boost_tree(mtry = tune::tune()) %>%
       set_engine("lightgbm") %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins)},
