@@ -324,7 +324,7 @@ predict_lightgbm_classification_class <- function(object, new_data, ...) {
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_raw <- function(object, new_data, ...) {
   if (using_newer_lightgbm_version()) {
-      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), type = "raw", ...)
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), params = list(type = "raw"), ...)
   } else {
       p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
   }
