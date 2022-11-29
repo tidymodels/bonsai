@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bonsai</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,24 @@
       <small>Source: <a href="https://github.com/tidymodels/bonsai/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1.9000" id="bonsai-0219000-developmental-version">bonsai 0.2.1.9000 (developmental version)<a class="anchor" aria-label="anchor" href="#bonsai-0219000-developmental-version"></a></h2>
+<p>v0.2.1.9000 is a developmental version of the bonsai package.</p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1" id="bonsai-021">bonsai 0.2.1<a class="anchor" aria-label="anchor" href="#bonsai-021"></a></h2>
+<ul><li>The most recent dials and parsnip releases introduced tuning integration for the lightgbm <code>num_leaves</code> engine argument! The <code>num_leaves</code> parameter sets the maximum number of nodes per tree, and is an <a href="https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html" class="external-link">important tuning parameter for lightgbm</a> (<a href="https://github.com/tidymodels/dials/pull/256" class="external-link">tidymodels/dials#256</a>, <a href="https://github.com/tidymodels/parsnip/pull/838" class="external-link">tidymodels/parsnip#838</a>). With the newest version of each of dials, parsnip, and bonsai installed, tune this argument by marking the <code>num_leaves</code> engine argument for tuning when defining your model specification:</li>
+</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://parsnip.tidymodels.org/reference/boost_tree.html" class="external-link">boost_tree</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span><span class="st">"lightgbm"</span>, num_leaves <span class="op">=</span> <span class="fu"><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<ul><li>Fixed a bug where lightgbm’s parallelism argument <code>num_threads</code> was overridden when passed via <code>param</code> rather than as a main argument. By default, then, lightgbm will fit sequentially rather than with <code>num_threads = foreach::getDoParWorkers()</code>. The user can still set <code>num_threads</code> via engine arguments with <code>engine = "lightgbm"</code>:</li>
+</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://parsnip.tidymodels.org/reference/boost_tree.html" class="external-link">boost_tree</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span><span class="st">"lightgbm"</span>, num_threads <span class="op">=</span> <span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<p>Note that, when tuning hyperparameters with the tune package, detection of parallel backend will still work <a href="https://tune.tidymodels.org/articles/extras/optimizations.html" class="external-link">as usual</a>.</p>
+<ul><li><p>The <code>boost_tree</code> argument <code>stop_iter</code> now maps to the <code>lightgbm:::lgb.train()</code> argument <code>early_stopping_round</code> rather than its alias <code>early_stopping_rounds</code>. This does not affect parsnip’s interface to lightgbm (i.e. via <code>boost_tree() %&gt;% set_engine("lightgbm")</code>), though will introduce errors for code that uses the <code><a href="../reference/train_lightgbm.html">train_lightgbm()</a></code> wrapper directly and sets the <code><a href="https://rdrr.io/pkg/lightgbm/man/lgb.train.html" class="external-link">lightgbm::lgb.train()</a></code> argument <code>early_stopping_round</code> by its alias <code>early_stopping_rounds</code> via <code><a href="../reference/train_lightgbm.html">train_lightgbm()</a></code>’s <code>...</code>.</p></li>
+<li><p>Disallowed passing main model arguments as engine arguments to <code>set_engine("lightgbm", ...)</code> via aliases. That is, if a main argument is marked for tuning and a lightgbm alias is supplied as an engine argument, bonsai will now error, rather than supplying both to lightgbm and allowing the package to handle aliases. Users can still interface with non-main <code><a href="https://parsnip.tidymodels.org/reference/boost_tree.html" class="external-link">boost_tree()</a></code> arguments via their lightgbm aliases (<a href="https://github.com/tidymodels/bonsai/issues/53" class="external-link">#53</a>).</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="bonsai-020">bonsai 0.2.0<a class="anchor" aria-label="anchor" href="#bonsai-020"></a></h2><p class="text-muted">CRAN release: 2022-08-31</p>
 <ul><li>Enabled bagging with lightgbm via the <code>sample_size</code> argument to <code>boost_tree</code> (<a href="https://github.com/tidymodels/bonsai/issues/32" class="external-link">#32</a> and tidymodels/parsnip#768). The following docs now available in <code><a href="https://parsnip.tidymodels.org/reference/details_boost_tree_lightgbm.html" class="external-link">?details_boost_tree_lightgbm</a></code> describe the interface in detail:</li>
