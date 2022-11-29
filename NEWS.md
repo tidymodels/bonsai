@@ -1,6 +1,10 @@
-# bonsai (developmental version)
+# bonsai 0.2.1
 
-bonsai 0.2.0.9000 is a dev version of the package and will be released with a different version number.
+* The most recent dials and parsnip releases introduced tuning integration for the lightgbm `num_leaves` engine argument! The `num_leaves` parameter sets the maximum number of nodes per tree, and is an [important tuning parameter for lightgbm](https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html) ([tidymodels/dials#256](https://github.com/tidymodels/dials/pull/256), [tidymodels/parsnip#838](https://github.com/tidymodels/parsnip/pull/838)). With the newest version of each of dials, parsnip, and bonsai installed, tune this argument by marking the `num_leaves` engine argument for tuning when defining your model specification:
+
+``` r
+boost_tree() %>% set_engine("lightgbm", num_leaves = tune())
+```
 
 * Fixed a bug where lightgbm's parallelism argument `num_threads` was overridden when passed via `param` rather than as a main argument. By default, then, lightgbm will fit sequentially rather than with `num_threads = foreach::getDoParWorkers()`. The user can still set `num_threads` via engine arguments with `engine = "lightgbm"`:
 
@@ -12,7 +16,7 @@ Note that, when tuning hyperparameters with the tune package, detection of paral
 
 * The `boost_tree` argument `stop_iter` now maps to the `lightgbm:::lgb.train()` argument `early_stopping_round` rather than its alias `early_stopping_rounds`. This does not affect parsnip's interface to lightgbm (i.e. via `boost_tree() %>% set_engine("lightgbm")`), though will introduce errors for code that uses the `train_lightgbm()` wrapper directly and sets the `lightgbm::lgb.train()` argument `early_stopping_round` by its alias `early_stopping_rounds` via `train_lightgbm()`'s `...`.
 
-* Disallowed passing main model arguments as engine arguments to `set_engine("lightgbm", ...)` via aliases. That is, if a main argument is marked for tuning and a lightgbm alias is supplied as an engine argument, bonsai will now error, rather than supplying both to lightgbm and allowing the package to handle aliases. Users can still interface with non-main `boost_tree()` arguments via their lightgbm aliases (#53).
+* Disallowed passing main model arguments as engine arguments to `set_engine("lightgbm", ...)` via aliases. That is, if a main argument is marked for tuning and a lightgbm alias is supplied as an engine argument, bonsai will now error, rather than supplying both to lightgbm and allowing the package to handle aliases. Users can still interface with non-main `boost_tree()` arguments via their lightgbm aliases ([#53](https://github.com/tidymodels/bonsai/issues/53)).
 
 # bonsai 0.2.0
 
