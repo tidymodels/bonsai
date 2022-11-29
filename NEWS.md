@@ -12,6 +12,8 @@ Note that, when tuning hyperparameters with the tune package, detection of paral
 
 * The `boost_tree` argument `stop_iter` now maps to the `lightgbm:::lgb.train()` argument `early_stopping_round` rather than its alias `early_stopping_rounds`. This does not affect parsnip's interface to lightgbm (i.e. via `boost_tree() %>% set_engine("lightgbm")`), though will introduce errors for code that uses the `train_lightgbm()` wrapper directly and sets the `lightgbm::lgb.train()` argument `early_stopping_round` by its alias `early_stopping_rounds` via `train_lightgbm()`'s `...`.
 
+* Disallowed passing main model arguments as engine arguments to `set_engine("lightgbm", ...)` via aliases. That is, if a main argument is marked for tuning and a lightgbm alias is supplied as an engine argument, bonsai will now error, rather than supplying both to lightgbm and allowing the package to handle aliases. Users can still interface with non-main `boost_tree()` arguments via their lightgbm aliases (#53).
+
 # bonsai 0.2.0
 
 * Enabled bagging with lightgbm via the `sample_size` argument to `boost_tree` 

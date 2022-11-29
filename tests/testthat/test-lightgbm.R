@@ -477,12 +477,43 @@ test_that("training wrapper warns on protected arguments", {
     boost_tree() %>%
       set_engine(
         "lightgbm",
-        colnames = paste0("X", 1:ncol(penguins)),
-        nrounds = 50
+        colnames = paste0("X", 1:ncol(penguins))
       ) %>%
       set_mode("regression") %>%
       fit(bill_length_mm ~ ., data = penguins),
     "guarded by bonsai.*colnames"
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    boost_tree() %>%
+      set_engine("lightgbm", n_iter = 10) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    boost_tree() %>%
+      set_engine("lightgbm", num_tree = 10) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    boost_tree() %>%
+      set_engine("lightgbm", min_split_gain = 2) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    boost_tree() %>%
+      set_engine("lightgbm", min_split_gain = 2, lambda_l2 = .5) %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins)
   )
 })
 

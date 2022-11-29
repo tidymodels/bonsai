@@ -24,6 +24,7 @@ BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
     parsnip (>= 1.0.1)
 Imports: 
+    cli,
     dials,
     dplyr,
     glue,

@@ -53,11 +53,39 @@
       
       See `?train_lightgbm` for more details.
 
-# tuning mtry vs mtry_prop
+# training wrapper warns on protected arguments
 
     Code
-      boost_tree(mtry = tune::tune()) %>% set_engine("lightgbm") %>% set_mode(
+      boost_tree() %>% set_engine("lightgbm", n_iter = 10) %>% set_mode("regression") %>%
+        fit(bill_length_mm ~ ., data = penguins)
+    Error <rlang_error>
+      ! The `n_iter` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
+      i Please instead pass this argument via the `trees` argument to `boost_tree()` (`?parsnip::boost_tree()`).
+
+---
+
+    Code
+      boost_tree() %>% set_engine("lightgbm", num_tree = 10) %>% set_mode(
         "regression") %>% fit(bill_length_mm ~ ., data = penguins)
     Error <rlang_error>
-      The supplied `mtry` parameter is a call to `tune`. Did you forget to optimize hyperparameters with a tuning function like `tune::tune_grid`?
+      ! The `num_tree` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
+      i Please instead pass this argument via the `trees` argument to `boost_tree()` (`?parsnip::boost_tree()`).
+
+---
+
+    Code
+      boost_tree() %>% set_engine("lightgbm", min_split_gain = 2) %>% set_mode(
+        "regression") %>% fit(bill_length_mm ~ ., data = penguins)
+    Error <rlang_error>
+      ! The `min_split_gain` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
+      i Please instead pass this argument via the `loss_reduction` argument to `boost_tree()` (`?parsnip::boost_tree()`).
+
+---
+
+    Code
+      boost_tree() %>% set_engine("lightgbm", min_split_gain = 2, lambda_l2 = 0.5) %>%
+        set_mode("regression") %>% fit(bill_length_mm ~ ., data = penguins)
+    Error <rlang_error>
+      ! The `min_split_gain` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
+      i Please instead pass this argument via the `loss_reduction` argument to `boost_tree()` (`?parsnip::boost_tree()`).
 
