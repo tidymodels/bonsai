@@ -10,7 +10,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0003-2402-136X")),
     person("Simon", "Couch", , "simon.couch@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5676-5107")),       
-    person(given = "Posit, PBC", role = c("cph", "fnd"))
+    person(given = "Posit Software, PBC", role = c("cph", "fnd"))
   )
 Description: Bindings for additional tree-based model engines for use with
     the 'parsnip' package. Models include gradient boosted decision trees
