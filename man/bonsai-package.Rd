@@ -21,19 +21,19 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Simon Couch \email{simonpatrickcouch@gmail.com} (\href{https://orcid.org/0000-0001-5676-5107}{ORCID})
+\strong{Maintainer}: Simon Couch \email{simon.couch@posit.co} (\href{https://orcid.org/0000-0001-5676-5107}{ORCID})
 
 Authors:
 \itemize{
   \item Daniel Falbel \email{dfalbel@curso-r.com}
   \item Athos Damiani \email{adamiani@curso-r.com}
   \item Roel M. Hogervorst \email{hogervorst.rm@gmail.com} (\href{https://orcid.org/0000-0001-7509-0328}{ORCID})
-  \item Max Kuhn \email{max@rstudio.com} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
+  \item Max Kuhn \email{max@posit.co} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item RStudio [copyright holder, funder]
+  \item Posit Software, PBC [copyright holder, funder]
 }
 
 }
