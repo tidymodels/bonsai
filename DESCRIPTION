@@ -22,6 +22,7 @@ License: MIT + file LICENSE
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
+    R (>= 3.5),
     parsnip (>= 1.0.1)
 Imports: 
     cli,
