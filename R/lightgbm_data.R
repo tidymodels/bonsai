@@ -46,7 +46,7 @@ make_boost_tree_lightgbm <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "bonsai", fun = "train_lightgbm"),
       defaults = list(
         verbose = -1,
@@ -91,7 +91,7 @@ make_boost_tree_lightgbm <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "bonsai", fun = "train_lightgbm"),
       defaults = list(
         verbose = -1,

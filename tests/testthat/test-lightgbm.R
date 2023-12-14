@@ -700,3 +700,109 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
     expect_s3_class(pred_tbl[[".pred_class"]], "factor")
     expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
 })
+
+test_that("lightgbm with case_weights",{
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("dplyr")
+  skip_if_not_installed("workflows")
+  skip_if_not_installed("recipes")
+  skip_if_not_installed("parsnip")
+
+  suppressPackageStartupMessages({
+    library(lightgbm)
+    library(dplyr)
+    library(workflows)
+    library(recipes)
+    library(parsnip)
+  })
+
+  set.seed(1234L)
+
+  # Following example here:
+  # https://github.com/microsoft/LightGBM/blob/638014d5c56fb92396bd55f344a47e3f651a3cd4/R-package/demo/weight_param.R
+
+  # Setup small weights
+  weights1 <- rep(1e-5, 6513L)
+  weights2 <- rep(1e-5, 1611L)
+
+  data(agaricus.train, package = "lightgbm")
+  dtrain <- lgb.Dataset(agaricus.train$data, label = agaricus.train$label, weight = weights1)
+  train <- data.frame(as.matrix(agaricus.train$data))
+  train$label<-agaricus.train$label
+
+  data(agaricus.test, package = "lightgbm")
+  dtest <- lgb.Dataset.create.valid(dtrain, agaricus.test$data, label = agaricus.test$label, weight = weights2)
+  test <- data.frame(as.matrix(agaricus.test$data))
+  test$label<-agaricus.test$label
+
+
+  train$wts<-importance_weights(weights1)
+  test$wts<-importance_weights(weights2)
+
+  valids <- list(test = test)
+  dvalids<-list(test=dtest)
+  # regression -----------------------------------------------------------------
+  expect_error_free({
+    pars_fit_1 <-
+      workflow() %>%
+      add_model(
+        boost_tree(trees = 50L
+                   , tree_depth = 3L
+                   , learn_rate = 1.0
+                   , stop_iter = 10L
+                   ) %>%
+                  set_engine("lightgbm"
+                             , metric = "l2"
+                             , device = "cpu"
+                             , min_sum_hessian = 1e-4
+                             , num_leaves = 7L
+                             , nthread = 1L
+                             , min_data = 1L
+                             , valids = valids
+                             , seed = 1234L
+                             , deterministic = "true"
+                             , force_col_wise = "true"
+                             ) %>%
+                  set_mode("regression")
+        ) %>%
+      add_recipe(
+        recipe(label ~ ., data = train)
+        ) %>%
+      add_case_weights(wts) %>%
+      fit(data=train)
+  })
+
+  params <- list(
+    objective = "regression"
+    , metric = "l2"
+    , device = "cpu"
+    , min_sum_hessian = 1e-4
+    , num_leaves = 7L
+    , max_depth = 3L
+    , nthread = 1L
+    , min_data = 1L
+    , learning_rate = 1.0
+    , seed = 1234L
+    , deterministic = "true"
+    , force_col_wise = "true"
+
+  )
+  model <- lgb.train(
+    params
+    , dtrain
+    , 50L
+    , dvalids
+    , early_stopping_rounds = 10L
+    , verbose = -1L
+  )
+
+  lgbm_learn<-as.numeric(model$record_evals$test$l2$eval)
+  bonsai_learn<-unlist(pars_fit_1$fit$fit$fit$record_evals$validation$l2$eval)
+
+  # Expect a close to 1:1 relationship - can't get seeds to match exactly
+  expect_true({
+    md<-lm(lgbm_learn~bonsai_learn)
+    md$coefficients["bonsai_learn"]>0.95 &  md$coefficients["bonsai_learn"]<1.05
+  })
+
+})
