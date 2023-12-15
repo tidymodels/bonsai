@@ -806,3 +806,52 @@ test_that("lightgbm with case_weights",{
   })
 
 })
+
+test_that("lightgbm with validation groups",{
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("dplyr")
+  skip_if_not_installed("workflows")
+  skip_if_not_installed("recipes")
+  skip_if_not_installed("parsnip")
+  skip_if_not_installed("rsample")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(lightgbm)
+    library(dplyr)
+    library(workflows)
+    library(recipes)
+    library(parsnip)
+    library(rsample)
+  })
+
+  data(ames, package = "modeldata")
+
+  set.seed(123)
+
+  cv_gp <- group_vfold_cv(ames, group = Neighborhood, v = 5)
+
+  expect_error_free({
+    pars_fit_1 <-
+      workflow() %>%
+      add_model(
+        boost_tree(trees = 50L
+                   , tree_depth = 3L
+                   , learn_rate = 1.0
+                   , stop_iter = 10L
+        ) %>%
+          set_engine("lightgbm"
+                     , metric = "l2"
+                     , device = "cpu"
+                     , nthread = 1L
+                     , validation = 0.2
+                     , validation_groups = "Neighborhood"
+          ) %>%
+          set_mode("regression")
+      ) %>%
+      add_recipe(
+        recipe(Sale_Price ~ ., data = ames)
+      ) %>%
+      fit(data=ames)
+  })
+})
