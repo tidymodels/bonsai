@@ -700,3 +700,74 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
     expect_s3_class(pred_tbl[[".pred_class"]], "factor")
     expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
 })
+
+test_that("lightgbm with case_weights",{
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("parsnip")
+
+  suppressPackageStartupMessages({
+    library(lightgbm)
+    library(parsnip)
+  })
+
+  set.seed(1234L)
+
+  # Following example here:
+  # https://github.com/microsoft/LightGBM/blob/638014d5c56fb92396bd55f344a47e3f651a3cd4/R-package/demo/weight_param.R
+
+  # Setup small weights
+  weights1 <- rep(1e-5, 6513L)
+  weights2 <- rep(1e-5, 1611L)
+
+  data(agaricus.train, package = "lightgbm")
+  dtrain <- lgb.Dataset(agaricus.train$data, label = agaricus.train$label, weight = weights1)
+  train <- data.frame(as.matrix(agaricus.train$data))
+  train$label<-agaricus.train$label
+
+  data(agaricus.test, package = "lightgbm")
+  dtest <- lgb.Dataset.create.valid(dtrain, agaricus.test$data, label = agaricus.test$label, weight = weights2)
+  test <- data.frame(as.matrix(agaricus.test$data))
+  test$label<-agaricus.test$label
+
+  train$wts <- weights1
+  test$wts <- weights2
+
+  valids <- list(test = test)
+  dvalids<-list(test=dtest)
+
+  expect_error_free({
+    pars_fit_1 <- train_lightgbm(
+      x = train[, !colnames(train) %in% c("label", "wts")],
+      y = train[["label"]],
+      weights = train[["wts"]],
+      num_iterations = 50L,
+      learning_rate = 3.0,
+      early_stopping_round  = 10L,
+      verbose = -1L
+    )
+  })
+
+  params <- list(
+    objective = "regression",
+    learning_rate = 3.0
+  )
+
+  model <- lgb.train(
+    params,
+    dtrain,
+    50L,
+    dvalids,
+    early_stopping_rounds = 10L,
+    verbose = -1L
+  )
+
+  lgbm_learn<-as.numeric(model$record_evals$test$l2$eval)
+  bonsai_learn<-unlist(pars_fit_1$record_evals$validation$l2$eval)
+
+  # Expect a close to 1:1 relationship - can't get seeds to match exactly
+  expect_true({
+    md<-lm(lgbm_learn~bonsai_learn)
+    md$coefficients["bonsai_learn"]>0.95 &  md$coefficients["bonsai_learn"]<1.05
+  })
+
+})
