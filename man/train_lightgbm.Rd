@@ -17,7 +17,6 @@ train_lightgbm(
   bagging_fraction = 1,
   early_stopping_round = NULL,
   validation = 0,
-  validation_groups = NULL,
   counts = TRUE,
   quiet = FALSE,
   ...
@@ -54,10 +53,6 @@ the objective function occur before training should be halted.}
 
 \item{validation}{The \emph{proportion} of the training data that are used for
 performance assessment and potential early stopping.}
-
-\item{validation_groups}{A character vector specifying one or more variables in \code{x}
-used for grouping observations with the same value to either the training or
-validation set.}
 
 \item{counts}{A logical; should \code{feature_fraction_bynode} be interpreted as the
 \emph{number} of predictors that will be randomly sampled at each split?
