@@ -36,7 +36,7 @@
 #' @return A fitted `lightgbm.Model` object.
 #' @keywords internal
 #' @export
-train_lightgbm <- function(x, y,weights=NULL, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
+train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
                            feature_fraction_bynode = 1, min_data_in_leaf = 20,
                            min_gain_to_split = 0, bagging_fraction = 1,
                            early_stopping_round = NULL, validation = 0,
@@ -81,7 +81,7 @@ train_lightgbm <- function(x, y,weights=NULL, max_depth = -1, num_iterations = 1
 
   args <- process_bagging(args, ...)
 
-  args <- process_data(args, x, y, weights,validation, missing(validation),
+  args <- process_data(args, x, y, weights, validation, missing(validation),
                        early_stopping_round)
 
   args <- sort_args(args)
