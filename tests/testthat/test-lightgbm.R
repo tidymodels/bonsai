@@ -701,7 +701,7 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
     expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
 })
 
-test_that("lightgbm with case_weights",{
+test_that("lightgbm with case_weights", {
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("parsnip")
 
@@ -722,18 +722,18 @@ test_that("lightgbm with case_weights",{
   data(agaricus.train, package = "lightgbm")
   dtrain <- lgb.Dataset(agaricus.train$data, label = agaricus.train$label, weight = weights1)
   train <- data.frame(as.matrix(agaricus.train$data))
-  train$label<-agaricus.train$label
+  train$label <- agaricus.train$label
 
   data(agaricus.test, package = "lightgbm")
   dtest <- lgb.Dataset.create.valid(dtrain, agaricus.test$data, label = agaricus.test$label, weight = weights2)
   test <- data.frame(as.matrix(agaricus.test$data))
-  test$label<-agaricus.test$label
+  test$label <- agaricus.test$label
 
   train$wts <- weights1
   test$wts <- weights2
 
   valids <- list(test = test)
-  dvalids<-list(test=dtest)
+  dvalids <- list(test = dtest)
 
   expect_error_free({
     pars_fit_1 <- train_lightgbm(
@@ -761,13 +761,13 @@ test_that("lightgbm with case_weights",{
     verbose = -1L
   )
 
-  lgbm_learn<-as.numeric(model$record_evals$test$l2$eval)
-  bonsai_learn<-unlist(pars_fit_1$record_evals$validation$l2$eval)
+  lgbm_learn <- as.numeric(model$record_evals$test$l2$eval)
+  bonsai_learn <- unlist(pars_fit_1$record_evals$validation$l2$eval)
 
   # Expect a close to 1:1 relationship - can't get seeds to match exactly
   expect_true({
-    md<-lm(lgbm_learn~bonsai_learn)
-    md$coefficients["bonsai_learn"]>0.95 &  md$coefficients["bonsai_learn"]<1.05
+    md <- lm(lgbm_learn ~ bonsai_learn)
+    md$coefficients["bonsai_learn"] > 0.95 && md$coefficients["bonsai_learn"] < 1.05
   })
 
 })
