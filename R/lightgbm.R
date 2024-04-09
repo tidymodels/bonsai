@@ -232,13 +232,13 @@ process_data <- function(args, x, y, weights, validation, missing_validation,
   if (!is.null(val_index)) {
     args$main$valids <-
       list(validation =
-             lightgbm::lgb.Dataset(
-               data = prepare_df_lgbm(x[val_index, , drop = FALSE]),
-               label = y[val_index],
-               categorical_feature = categorical_columns(x[val_index, , drop = FALSE]),
-               params = list(feature_pre_filter = FALSE),
-               weight = weights[val_index]
-             )
+          lightgbm::lgb.Dataset(
+          data = prepare_df_lgbm(x[val_index, , drop = FALSE]),
+          label = y[val_index],
+          categorical_feature = categorical_columns(x[val_index, , drop = FALSE]),
+          params = list(feature_pre_filter = FALSE),
+          weight = weights[val_index]
+          )
       )
   }
 
@@ -284,11 +284,11 @@ sort_args <- function(args) {
 # this function ensures that multiclass classification predictions are always
 # returned as a [num_observations, num_classes] matrix, regardless of lightgbm version
 reshape_lightgbm_multiclass_preds <- function(preds, num_rows) {
-  n_preds_per_case <- length(preds) / num_rows
-  if (is.vector(preds) && n_preds_per_case > 1) {
-    preds <- matrix(preds, ncol = n_preds_per_case, byrow = TRUE)
-  }
-  preds
+    n_preds_per_case <- length(preds) / num_rows
+    if (is.vector(preds) && n_preds_per_case > 1) {
+        preds <- matrix(preds, ncol = n_preds_per_case, byrow = TRUE)
+    }
+    preds
 }
 
 #' Internal functions
@@ -327,9 +327,9 @@ predict_lightgbm_classification_class <- function(object, new_data, ...) {
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_raw <- function(object, new_data, ...) {
   if (using_newer_lightgbm_version()) {
-    p <- stats::predict(object$fit, prepare_df_lgbm(new_data), type = "raw", ...)
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), type = "raw", ...)
   } else {
-    p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
+      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
   }
   reshape_lightgbm_multiclass_preds(preds = p, num_rows = nrow(new_data))
 }
@@ -433,10 +433,10 @@ check_lightgbm_aliases <- function(...) {
       main <- lightgbm_aliases$lightgbm[uses_alias]
       parsnip <- lightgbm_aliases$parsnip[uses_alias]
       cli::cli_abort(c(
-        "!" = "The {.var {param}} argument passed to \\
+      "!" = "The {.var {param}} argument passed to \\
              {.help [`set_engine()`](parsnip::set_engine)} is an alias for \\
              a main model argument.",
-        "i" = "Please instead pass this argument via the {.var {parsnip}} \\
+      "i" = "Please instead pass this argument via the {.var {parsnip}} \\
              argument to {.help [`boost_tree()`](parsnip::boost_tree)}."
       ), call = rlang::call2("fit"))
     }
