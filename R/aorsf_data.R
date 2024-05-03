@@ -117,6 +117,7 @@ make_rand_forest_aorsf <- function(){
       args =
         list(
           object = quote(object$fit),
+          new_data = quote(new_data),
           pred_type = "prob",
           verbose_progress = FALSE
         )
