@@ -1,8 +1,9 @@
 library(testthat)
 
 mtcars_orsf <- mtcars
-
 mtcars_orsf$vs <- factor(mtcars_orsf$vs)
+mtcars_na <- mtcars_orsf
+mtcars_na$cyl[1] <- NA
 
 
 test_that("regression model object", {
@@ -45,11 +46,8 @@ test_that("classification model object", {
 
   set.seed(1234)
   aorsf_clsf_fit <- aorsf::orsf(
-    # everyone's favorite
     data = mtcars_orsf, formula = vs ~ .,
-    # faster
     n_tree = 10,
-    # requested default from tidymodels
     n_thread = 1
   )
 
@@ -58,7 +56,6 @@ test_that("classification model object", {
     set_engine("aorsf") %>%
     set_mode("classification")
 
-  # not sure if the expect_error is needed, but copying from censored
   set.seed(1234)
   expect_error(
     bonsai_clsf_fit <- fit(clsf_spec, data = mtcars_orsf, vs ~ .),
@@ -75,19 +72,19 @@ test_that("classification model object", {
 
 test_that("regression predictions", {
 
-  skip_if_not_installed("aorsf", "0.1.3")
+  # bug-fix for na_action = 'pass' was pushed in this version
+  skip_if_not_installed("aorsf", "0.1.4.9001")
 
   set.seed(1234)
   aorsf_regr_fit <- aorsf::orsf(
-    # everyone's favorite
     data = mtcars_orsf, formula = mpg ~ .,
-    # faster
     n_tree = 10
   )
 
   aorsf_regr_pred <- predict(
     aorsf_regr_fit,
-    new_data = mtcars_orsf
+    new_data = mtcars_na,
+    na_action = 'pass'
   )
 
   # formula method
@@ -97,7 +94,7 @@ test_that("regression predictions", {
 
   set.seed(1234)
   bonsai_regr_fit <- fit(regr_spec, mpg ~ ., data = mtcars_orsf)
-  bonsai_regr_pred <- predict(bonsai_regr_fit, new_data = mtcars_orsf)
+  bonsai_regr_pred <- predict(bonsai_regr_fit, new_data = mtcars_na)
 
   expect_s3_class(bonsai_regr_pred, "tbl_df")
   expect_true(all(names(bonsai_regr_pred) == ".pred"))
@@ -112,20 +109,20 @@ test_that("regression predictions", {
 
 test_that("classification predictions", {
 
-  skip_if_not_installed("aorsf", "0.1.3")
+  # bug-fix for na_action = 'pass' was pushed in this version
+  skip_if_not_installed("aorsf", "0.1.4.9001")
 
   set.seed(1234)
   aorsf_clsf_fit <- aorsf::orsf(
-    # everyone's favorite
     data = mtcars_orsf, formula = vs ~ .,
-    # faster
     n_tree = 10
   )
 
   aorsf_clsf_pred <- predict(
     aorsf_clsf_fit,
-    new_data = mtcars_orsf,
-    pred_type = 'prob'
+    new_data = mtcars_na,
+    pred_type = 'prob',
+    na_action = 'pass'
   )
 
   aorsf_probs <- aorsf_clsf_pred
@@ -137,7 +134,9 @@ test_that("classification predictions", {
   # I think it's really confusing when predicted probs do not align with
   # predicted classes. I'm fine with this in aorsf but in bonsai I want
   # to minimize confusion.
-  aorsf_class <- colnames(aorsf_probs)[apply(aorsf_clsf_pred, 1, which.max)]
+  aorsf_class <- colnames(aorsf_probs)[apply(aorsf_clsf_pred[-1, ], 1, which.max)]
+  # inserting the NA from first row
+  aorsf_class <- c(NA_character_, aorsf_class)
 
   # formula method
   clsf_spec <- rand_forest(trees = 10) %>%
@@ -148,11 +147,11 @@ test_that("classification predictions", {
   bonsai_clsf_fit <- fit(clsf_spec, vs ~ ., data = mtcars_orsf)
 
   bonsai_clsf_pred_prob <- predict(bonsai_clsf_fit,
-                                   new_data = mtcars_orsf,
+                                   new_data = mtcars_na,
                                    type = 'prob')
 
   bonsai_clsf_pred_class <- predict(bonsai_clsf_fit,
-                                    new_data = mtcars_orsf,
+                                    new_data = mtcars_na,
                                     type = 'class')
 
   expect_s3_class(bonsai_clsf_pred_prob, "tbl_df")

@@ -109,15 +109,28 @@ make_rand_forest_aorsf <- function(){
     value = list(
       pre = NULL,
       # makes prob preds consistent with class ones
-      post = function(results, object)
-        colnames(results)[apply(results, 1, which.max)],
+      post = function(results, object){
+
+        missings <- apply(results, 1, function(x) any(is.na(x)))
+
+        if(!any(missings))
+          return(colnames(results)[apply(results, 1, which.max)])
+
+        obs <- which(!missings)
+
+        out <- rep(NA_character_, nrow(results))
+        out[obs] <- colnames(results)[apply(results[obs, ], 1, which.max)]
+        out
+
+      },
       func = c(fun = "predict"),
       args =
         list(
           object = quote(object$fit),
           new_data = quote(new_data),
           pred_type = "prob",
-          verbose_progress = FALSE
+          verbose_progress = FALSE,
+          na_action = 'pass'
         )
     )
   )
@@ -138,7 +151,8 @@ make_rand_forest_aorsf <- function(){
           object = quote(object$fit),
           new_data = quote(new_data),
           pred_type = 'prob',
-          verbose_progress = FALSE
+          verbose_progress = FALSE,
+          na_action = 'pass'
         )
     )
   )
@@ -156,7 +170,8 @@ make_rand_forest_aorsf <- function(){
         list(
           object = quote(object$fit),
           new_data = quote(new_data),
-          verbose_progress = FALSE
+          verbose_progress = FALSE,
+          na_action = 'pass'
         )
     )
   )
@@ -176,7 +191,8 @@ make_rand_forest_aorsf <- function(){
           object = quote(object$fit),
           new_data = quote(new_data),
           pred_type = "mean",
-          verbose_progress = FALSE
+          verbose_progress = FALSE,
+          na_action = 'pass'
         )
     )
   )
@@ -197,7 +213,8 @@ make_rand_forest_aorsf <- function(){
           object = quote(object$fit),
           new_data = quote(new_data),
           pred_type = "mean",
-          verbose_progress = FALSE
+          verbose_progress = FALSE,
+          na_action = 'pass'
         )
     )
   )
