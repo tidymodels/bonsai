@@ -55,8 +55,7 @@ make_rand_forest_aorsf <- function(){
       defaults =
         list(
           n_thread = 1,
-          verbose_progress = FALSE,
-          tree_seeds = expr(sample.int(10 ^ 5, 1))
+          verbose_progress = FALSE
         )
     )
   )
@@ -84,8 +83,7 @@ make_rand_forest_aorsf <- function(){
       defaults =
         list(
           n_thread = 1,
-          verbose_progress = FALSE,
-          tree_seeds = expr(sample.int(10 ^ 5, 1))
+          verbose_progress = FALSE
         )
     )
   )
