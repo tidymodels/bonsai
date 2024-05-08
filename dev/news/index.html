@@ -50,7 +50,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1.9000" id="bonsai-0219000-developmental-version">bonsai 0.2.1.9000 (developmental version)<a class="anchor" aria-label="anchor" href="#bonsai-0219000-developmental-version"></a></h2>
 <p>v0.2.1.9000 is a developmental version of the bonsai package.</p>
-</div>
+<ul><li>Addressed type check error when fitting lightgbm model specifications with arguments mistakenly left as <code><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune()</a></code> (<a href="https://github.com/tidymodels/bonsai/issues/79" class="external-link">#79</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="bonsai-021">bonsai 0.2.1<a class="anchor" aria-label="anchor" href="#bonsai-021"></a></h2><p class="text-muted">CRAN release: 2022-11-29</p>
 <ul><li>The most recent dials and parsnip releases introduced tuning integration for the lightgbm <code>num_leaves</code> engine argument! The <code>num_leaves</code> parameter sets the maximum number of nodes per tree, and is an <a href="https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html" class="external-link">important tuning parameter for lightgbm</a> (<a href="https://github.com/tidymodels/dials/pull/256" class="external-link">tidymodels/dials#256</a>, <a href="https://github.com/tidymodels/parsnip/pull/838" class="external-link">tidymodels/parsnip#838</a>). With the newest version of each of dials, parsnip, and bonsai installed, tune this argument by marking the <code>num_leaves</code> engine argument for tuning when defining your model specification:</li>
