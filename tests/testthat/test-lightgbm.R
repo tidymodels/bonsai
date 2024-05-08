@@ -701,73 +701,65 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
     expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
 })
 
-test_that("lightgbm with case_weights", {
+test_that("lightgbm with case weights", {
   skip_if_not_installed("lightgbm")
-  skip_if_not_installed("parsnip")
+  skip_if_not_installed("modeldata")
 
   suppressPackageStartupMessages({
     library(lightgbm)
-    library(parsnip)
+    library(dplyr)
   })
 
-  set.seed(1234L)
+  data("penguins", package = "modeldata")
 
-  # Following example here:
-  # https://github.com/microsoft/LightGBM/blob/638014d5c56fb92396bd55f344a47e3f651a3cd4/R-package/demo/weight_param.R
+  penguins <- penguins[complete.cases(penguins),]
 
-  # Setup small weights
-  weights1 <- rep(1e-5, 6513L)
-  weights2 <- rep(1e-5, 1611L)
+  set.seed(1)
+  penguins_wts <- runif(nrow(penguins))
 
-  data(agaricus.train, package = "lightgbm")
-  dtrain <- lgb.Dataset(agaricus.train$data, label = agaricus.train$label, weight = weights1)
-  train <- data.frame(as.matrix(agaricus.train$data))
-  train$label <- agaricus.train$label
-
-  data(agaricus.test, package = "lightgbm")
-  dtest <- lgb.Dataset.create.valid(dtrain, agaricus.test$data, label = agaricus.test$label, weight = weights2)
-  test <- data.frame(as.matrix(agaricus.test$data))
-  test$label <- agaricus.test$label
-
-  train$wts <- weights1
-  test$wts <- weights2
-
-  valids <- list(test = test)
-  dvalids <- list(test = dtest)
-
+  # regression -----------------------------------------------------------------
   expect_error_free({
-    pars_fit_1 <- train_lightgbm(
-      x = train[, !colnames(train) %in% c("label", "wts")],
-      y = train[["label"]],
-      weights = train[["wts"]],
-      num_iterations = 50L,
-      learning_rate = 3.0,
-      early_stopping_round  = 10L,
-      verbose = -1L
+    pars_fit_1 <-
+      boost_tree() %>%
+      set_engine("lightgbm") %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins, case_weights = importance_weights(penguins_wts))
+  })
+
+  pars_preds_1 <- predict(pars_fit_1, penguins)
+
+  peng <-
+    penguins %>%
+    mutate(across(where(is.character), ~as.factor(.x))) %>%
+    mutate(across(where(is.factor), ~as.integer(.x) - 1))
+
+  peng_y <- peng$bill_length_mm
+
+  peng_m <- peng %>%
+    select(-bill_length_mm) %>%
+    as.matrix()
+
+  peng_x <-
+    lgb.Dataset(
+      data = peng_m,
+      label = peng_y,
+      params = list(feature_pre_filter = FALSE),
+      categorical_feature = c(1L, 2L, 6L),
+      weight = penguins_wts
     )
-  })
 
-  params <- list(
-    objective = "regression",
-    learning_rate = 3.0
+  params_1 <- list(
+    objective = "regression"
   )
 
-  model <- lgb.train(
-    params,
-    dtrain,
-    50L,
-    dvalids,
-    early_stopping_rounds = 10L,
-    verbose = -1L
-  )
+  lgbm_fit_1 <-
+    lightgbm::lgb.train(
+      data = peng_x,
+      params = params_1,
+      verbose = -1
+    )
 
-  lgbm_learn <- as.numeric(model$record_evals$test$l2$eval)
-  bonsai_learn <- unlist(pars_fit_1$record_evals$validation$l2$eval)
+  lgbm_preds_1 <- predict(lgbm_fit_1, peng_m)
 
-  # Expect a close to 1:1 relationship - can't get seeds to match exactly
-  expect_true({
-    md <- lm(lgbm_learn ~ bonsai_learn)
-    md$coefficients["bonsai_learn"] > 0.95 && md$coefficients["bonsai_learn"] < 1.05
-  })
-
+  expect_equal(pars_preds_1$.pred, lgbm_preds_1)
 })
