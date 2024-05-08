@@ -7,6 +7,7 @@
 train_lightgbm(
   x,
   y,
+  weights = NULL,
   max_depth = -1,
   num_iterations = 100,
   learning_rate = 0.1,
@@ -25,6 +26,8 @@ train_lightgbm(
 \item{x}{A data frame or matrix of predictors}
 
 \item{y}{A vector (factor or numeric) or matrix (numeric) of outcome data.}
+
+\item{weights}{A numeric vector of sample weights.}
 
 \item{max_depth}{An integer for the maximum depth of the tree.}
 

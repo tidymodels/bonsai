@@ -700,3 +700,66 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
     expect_s3_class(pred_tbl[[".pred_class"]], "factor")
     expect_true(all(as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["sex"]])))
 })
+
+test_that("lightgbm with case weights", {
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(lightgbm)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+
+  penguins <- penguins[complete.cases(penguins),]
+
+  set.seed(1)
+  penguins_wts <- runif(nrow(penguins))
+
+  # regression -----------------------------------------------------------------
+  expect_error_free({
+    pars_fit_1 <-
+      boost_tree() %>%
+      set_engine("lightgbm") %>%
+      set_mode("regression") %>%
+      fit(bill_length_mm ~ ., data = penguins, case_weights = importance_weights(penguins_wts))
+  })
+
+  pars_preds_1 <- predict(pars_fit_1, penguins)
+
+  peng <-
+    penguins %>%
+    mutate(across(where(is.character), ~as.factor(.x))) %>%
+    mutate(across(where(is.factor), ~as.integer(.x) - 1))
+
+  peng_y <- peng$bill_length_mm
+
+  peng_m <- peng %>%
+    select(-bill_length_mm) %>%
+    as.matrix()
+
+  peng_x <-
+    lgb.Dataset(
+      data = peng_m,
+      label = peng_y,
+      params = list(feature_pre_filter = FALSE),
+      categorical_feature = c(1L, 2L, 6L),
+      weight = penguins_wts
+    )
+
+  params_1 <- list(
+    objective = "regression"
+  )
+
+  lgbm_fit_1 <-
+    lightgbm::lgb.train(
+      data = peng_x,
+      params = params_1,
+      verbose = -1
+    )
+
+  lgbm_preds_1 <- predict(lgbm_fit_1, peng_m)
+
+  expect_equal(pars_preds_1$.pred, lgbm_preds_1)
+})
