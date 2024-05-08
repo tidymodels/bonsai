@@ -2,6 +2,10 @@
 
 v0.2.1.9000 is a developmental version of the bonsai package.
 
+* Addressed type check error when fitting lightgbm model specifications with arguments mistakenly left as `tune()` (#79).
+
+* Fixed issues in metadata for the `"partykit"` engine for `rand_forest()` where some engine arguments were mistakenly protected (#74).
+
 # bonsai 0.2.1
 
 * The most recent dials and parsnip releases introduced tuning integration for the lightgbm `num_leaves` engine argument! The `num_leaves` parameter sets the maximum number of nodes per tree, and is an [important tuning parameter for lightgbm](https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html) ([tidymodels/dials#256](https://github.com/tidymodels/dials/pull/256), [tidymodels/parsnip#838](https://github.com/tidymodels/parsnip/pull/838)). With the newest version of each of dials, parsnip, and bonsai installed, tune this argument by marking the `num_leaves` engine argument for tuning when defining your model specification:

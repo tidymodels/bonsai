@@ -222,16 +222,6 @@ make_rand_forest_partykit <- function() {
   parsnip::set_model_arg(
     model = "rand_forest",
     eng = "partykit",
-    parsnip = "tree_depth",
-    original = "maxdepth",
-    func = list(pkg = "dials", fun = "tree_depth"),
-    has_submodel = FALSE
-  )
-
-
-  parsnip::set_model_arg(
-    model = "rand_forest",
-    eng = "partykit",
     parsnip = "mtry",
     original = "mtry",
     func = list(pkg = "dials", fun = "mtry"),

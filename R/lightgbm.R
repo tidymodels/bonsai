@@ -117,6 +117,18 @@ process_mtry <- function(feature_fraction_bynode, counts, x, is_missing) {
   interp <- if (counts) {"count"} else {"proportion"}
   opp <- if (!counts) {"count"} else {"proportion"}
 
+  if (rlang::is_call(feature_fraction_bynode)) {
+    if (rlang::call_name(feature_fraction_bynode) == "tune") {
+      rlang::abort(
+        glue::glue(
+          "The supplied `mtry` parameter is a call to `tune`. Did you forget ",
+          "to optimize hyperparameters with a tuning function like `tune::tune_grid`?"
+        ),
+        call = NULL
+      )
+    }
+  }
+
   if ((feature_fraction_bynode < 1 & counts) | (feature_fraction_bynode > 1 & !counts)) {
     rlang::abort(
       glue::glue(
@@ -129,18 +141,6 @@ process_mtry <- function(feature_fraction_bynode, counts, x, is_missing) {
       ),
       call = NULL
     )
-  }
-
-  if (rlang::is_call(feature_fraction_bynode)) {
-    if (rlang::call_name(feature_fraction_bynode) == "tune") {
-      rlang::abort(
-        glue::glue(
-          "The supplied `mtry` parameter is a call to `tune`. Did you forget ",
-          "to optimize hyperparameters with a tuning function like `tune::tune_grid`?"
-        ),
-        call = NULL
-      )
-    }
   }
 
   if (counts && !is_missing) {
