@@ -3,7 +3,6 @@
 \docType{package}
 \name{bonsai-package}
 \alias{bonsai-package}
-\alias{_PACKAGE}
 \alias{bonsai}
 \title{bonsai: Model Wrappers for Tree-Based Models}
 \description{
