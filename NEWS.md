@@ -2,6 +2,8 @@
 
 v0.2.1.9000 is a developmental version of the bonsai package.
 
+* Addressed type check error when fitting lightgbm model specifications with arguments mistakenly left as `tune()` (#79).
+
 * Fixed issues in metadata for the `"partykit"` engine for `rand_forest()` where some engine arguments were mistakenly protected (#74).
 
 # bonsai 0.2.1
