@@ -60,6 +60,7 @@ where all of the model arguments are in the main function.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">train_lightgbm</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">y</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  max_depth <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
 <span>  num_iterations <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  learning_rate <span class="op">=</span> <span class="fl">0.1</span>,</span>
@@ -83,6 +84,10 @@ where all of the model arguments are in the main function.</p>
 
 <dt>y</dt>
 <dd><p>A vector (factor or numeric) or matrix (numeric) of outcome data.</p></dd>
+
+
+<dt>weights</dt>
+<dd><p>A numeric vector of sample weights.</p></dd>
 
 
 <dt>max_depth</dt>
