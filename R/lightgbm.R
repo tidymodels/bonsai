@@ -7,6 +7,7 @@
 #'
 #' @param x A data frame or matrix of predictors
 #' @param y A vector (factor or numeric) or matrix (numeric) of outcome data.
+#' @param weights A numeric vector of sample weights.
 #' @param max_depth An integer for the maximum depth of the tree.
 #' @param num_iterations An integer for the number of boosting iterations.
 #' @param learning_rate A numeric value between zero and one to control the learning rate.
@@ -35,7 +36,7 @@
 #' @return A fitted `lightgbm.Model` object.
 #' @keywords internal
 #' @export
-train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
+train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
                            feature_fraction_bynode = 1, min_data_in_leaf = 20,
                            min_gain_to_split = 0, bagging_fraction = 1,
                            early_stopping_round = NULL, validation = 0,
@@ -80,7 +81,7 @@ train_lightgbm <- function(x, y, max_depth = -1, num_iterations = 100, learning_
 
   args <- process_bagging(args, ...)
 
-  args <- process_data(args, x, y, validation, missing(validation),
+  args <- process_data(args, x, y, weights, validation, missing(validation),
                        early_stopping_round)
 
   args <- sort_args(args)
@@ -116,6 +117,18 @@ process_mtry <- function(feature_fraction_bynode, counts, x, is_missing) {
   interp <- if (counts) {"count"} else {"proportion"}
   opp <- if (!counts) {"count"} else {"proportion"}
 
+  if (rlang::is_call(feature_fraction_bynode)) {
+    if (rlang::call_name(feature_fraction_bynode) == "tune") {
+      rlang::abort(
+        glue::glue(
+          "The supplied `mtry` parameter is a call to `tune`. Did you forget ",
+          "to optimize hyperparameters with a tuning function like `tune::tune_grid`?"
+        ),
+        call = NULL
+      )
+    }
+  }
+
   if ((feature_fraction_bynode < 1 & counts) | (feature_fraction_bynode > 1 & !counts)) {
     rlang::abort(
       glue::glue(
@@ -128,18 +141,6 @@ process_mtry <- function(feature_fraction_bynode, counts, x, is_missing) {
       ),
       call = NULL
     )
-  }
-
-  if (rlang::is_call(feature_fraction_bynode)) {
-    if (rlang::call_name(feature_fraction_bynode) == "tune") {
-      rlang::abort(
-        glue::glue(
-          "The supplied `mtry` parameter is a call to `tune`. Did you forget ",
-          "to optimize hyperparameters with a tuning function like `tune::tune_grid`?"
-        ),
-        call = NULL
-      )
-    }
   }
 
   if (counts && !is_missing) {
@@ -194,7 +195,7 @@ process_bagging <- function(args, ...) {
   args
 }
 
-process_data <- function(args, x, y, validation, missing_validation,
+process_data <- function(args, x, y, weights, validation, missing_validation,
                          early_stopping_round) {
   #                                           trn_index       | val_index
   #                                         ----------------------------------
@@ -224,7 +225,8 @@ process_data <- function(args, x, y, validation, missing_validation,
       data = prepare_df_lgbm(x[trn_index, , drop = FALSE]),
       label = y[trn_index],
       categorical_feature = categorical_columns(x[trn_index, , drop = FALSE]),
-      params = list(feature_pre_filter = FALSE)
+      params = list(feature_pre_filter = FALSE),
+      weight = weights[trn_index]
     )
 
   if (!is.null(val_index)) {
@@ -234,8 +236,9 @@ process_data <- function(args, x, y, validation, missing_validation,
           data = prepare_df_lgbm(x[val_index, , drop = FALSE]),
           label = y[val_index],
           categorical_feature = categorical_columns(x[val_index, , drop = FALSE]),
-          params = list(feature_pre_filter = FALSE)
-        )
+          params = list(feature_pre_filter = FALSE),
+          weight = weights[val_index]
+          )
       )
   }
 
