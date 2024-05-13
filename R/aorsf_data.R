@@ -113,8 +113,9 @@ make_rand_forest_aorsf <- function(){
 
         missings <- apply(results, 1, function(x) any(is.na(x)))
 
-        if(!any(missings))
+        if(!any(missings)) {
           return(colnames(results)[apply(results, 1, which.max)])
+        }
 
         obs <- which(!missings)
 
