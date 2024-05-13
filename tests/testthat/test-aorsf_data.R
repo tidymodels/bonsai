@@ -10,6 +10,9 @@ test_that("regression model object", {
 
   skip_if_not_installed("aorsf", "0.1.3")
 
+  set.seed(321)
+  wts <- sample(0:5, size = nrow(mtcars_orsf), replace = TRUE)
+
   set.seed(1234)
   aorsf_regr_fit <- aorsf::orsf(
     # everyone's favorite
@@ -20,6 +23,9 @@ test_that("regression model object", {
     n_thread = 1
   )
 
+  set.seed(1234)
+  aorsf_regr_fit_wtd <- aorsf::orsf_update(aorsf_regr_fit, weights = wts)
+
   # formula method
   regr_spec <- rand_forest(trees = 10) %>%
     set_engine("aorsf") %>%
@@ -27,12 +33,28 @@ test_that("regression model object", {
 
   set.seed(1234)
   expect_no_condition(
-    bonsai_regr_fit <- fit(regr_spec, data = mtcars_orsf, mpg ~ .)
+    bonsai_regr_fit <- fit(regr_spec,
+                           data = mtcars_orsf,
+                           formula = mpg ~ .)
+  )
+
+  set.seed(1234)
+  expect_no_condition(
+    bonsai_regr_fit_wtd <- fit(regr_spec,
+                               data = mtcars_orsf,
+                               formula = mpg ~ .,
+                               case_weights = importance_weights(wts))
   )
 
   expect_equal(
     bonsai_regr_fit$fit,
     aorsf_regr_fit,
+    ignore_formula_env = TRUE
+  )
+
+  expect_equal(
+    bonsai_regr_fit_wtd$fit,
+    aorsf_regr_fit_wtd,
     ignore_formula_env = TRUE
   )
 
@@ -42,12 +64,19 @@ test_that("classification model object", {
 
   skip_if_not_installed("aorsf", "0.1.3")
 
+  set.seed(321)
+  wts <- sample(0:5, size = nrow(mtcars_orsf), replace = TRUE)
+
   set.seed(1234)
   aorsf_clsf_fit <- aorsf::orsf(
     data = mtcars_orsf, formula = vs ~ .,
     n_tree = 10,
     n_thread = 1
   )
+
+  set.seed(1234)
+  aorsf_clsf_fit_wtd <- aorsf::orsf_update(aorsf_clsf_fit, weights = wts)
+
 
   # formula method
   clsf_spec <- rand_forest(trees = 10) %>%
@@ -56,12 +85,28 @@ test_that("classification model object", {
 
   set.seed(1234)
   expect_no_condition(
-    bonsai_clsf_fit <- fit(clsf_spec, data = mtcars_orsf, vs ~ .)
+    bonsai_clsf_fit <- fit(clsf_spec,
+                           data = mtcars_orsf,
+                           formula = vs ~ .)
+  )
+
+  set.seed(1234)
+  expect_no_condition(
+    bonsai_clsf_fit_wtd <- fit(clsf_spec,
+                               data = mtcars_orsf,
+                               formula = vs ~ .,
+                               case_weights = importance_weights(wts))
   )
 
   expect_equal(
     bonsai_clsf_fit$fit,
     aorsf_clsf_fit,
+    ignore_formula_env = TRUE
+  )
+
+  expect_equal(
+    bonsai_clsf_fit_wtd$fit,
+    aorsf_clsf_fit_wtd,
     ignore_formula_env = TRUE
   )
 
