@@ -143,9 +143,7 @@ make_rand_forest_aorsf <- function(){
     type = "prob",
     value = list(
       pre = NULL,
-      post = function(x, object) {
-        as_tibble(x)
-      },
+      post = NULL,
       func = c(fun = "predict"),
       args =
         list(
