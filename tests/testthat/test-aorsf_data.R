@@ -25,11 +25,9 @@ test_that("regression model object", {
     set_engine("aorsf") %>%
     set_mode("regression")
 
-  # not sure if the expect_error is needed, but copying from censored
   set.seed(1234)
-  expect_error(
-    bonsai_regr_fit <- fit(regr_spec, data = mtcars_orsf, mpg ~ .),
-    NA
+  expect_no_condition(
+    bonsai_regr_fit <- fit(regr_spec, data = mtcars_orsf, mpg ~ .)
   )
 
   expect_equal(
