@@ -150,7 +150,9 @@ make_rand_forest_aorsf <- function(){
     type = "prob",
     value = list(
       pre = NULL,
-      post = NULL,
+      post = function(x, object) {
+        as_tibble(x)
+      },
       func = c(fun = "predict"),
       args =
         list(
@@ -189,7 +191,7 @@ make_rand_forest_aorsf <- function(){
     type = "numeric",
     value = list(
       pre = NULL,
-      post = as.numeric
+      post = as.numeric,
       func = c(fun = "predict"),
       args =
         list(
@@ -210,8 +212,7 @@ make_rand_forest_aorsf <- function(){
     type = "raw",
     value = list(
       pre = NULL,
-      post = function(results, object)
-        as.numeric(results),
+      post = as.numeric,
       func = c(fun = "predict"),
       args =
         list(
