@@ -182,8 +182,7 @@ make_rand_forest_aorsf <- function(){
     type = "numeric",
     value = list(
       pre = NULL,
-      post = function(results, object)
-        as.numeric(results),
+      post = as.numeric
       func = c(fun = "predict"),
       args =
         list(
