@@ -108,7 +108,14 @@ make_rand_forest_aorsf <- function(){
     type = "class",
     value = list(
       pre = NULL,
-      # makes prob preds consistent with class ones
+      # makes prob preds consistent with class ones.
+      # note: the class predict method in aorsf uses the standard 'each tree
+      # gets one vote' approach, which is usually consistent with probability
+      # but not all the time. I opted to make predicted probability totally
+      # consistent with predicted class in the parsnip bindings for aorsf b/c
+      # I think it's really confusing when predicted probs do not align with
+      # predicted classes. I'm fine with this in aorsf but in bonsai I want
+      # to minimize confusion (https://github.com/tidymodels/bonsai/pull/78).
       post = function(results, object){
 
         missings <- apply(results, 1, function(x) any(is.na(x)))
