@@ -55,9 +55,8 @@ test_that("classification model object", {
     set_mode("classification")
 
   set.seed(1234)
-  expect_error(
-    bonsai_clsf_fit <- fit(clsf_spec, data = mtcars_orsf, vs ~ .),
-    NA
+  expect_no_condition(
+    bonsai_clsf_fit <- fit(clsf_spec, data = mtcars_orsf, vs ~ .)
   )
 
   expect_equal(
@@ -125,13 +124,6 @@ test_that("classification predictions", {
 
   aorsf_probs <- aorsf_clsf_pred
 
-  # note: the class predict method in aorsf uses the standard 'each tree
-  # gets one vote' approach, which is usually consistent with probability
-  # but not all the time. I opted to make predicted probability totally
-  # consistent with predicted class in the parsnip bindings for aorsf b/c
-  # I think it's really confusing when predicted probs do not align with
-  # predicted classes. I'm fine with this in aorsf but in bonsai I want
-  # to minimize confusion.
   aorsf_class <- colnames(aorsf_probs)[apply(aorsf_clsf_pred[-1, ], 1, which.max)]
   # inserting the NA from first row
   aorsf_class <- c(NA_character_, aorsf_class)
