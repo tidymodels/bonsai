@@ -2,6 +2,8 @@
 
 v0.2.1.9000 is a developmental version of the bonsai package.
 
+* Introduced support for accelerated oblique random forests for the `"classification"` and `"regression"` modes using the new [`"aorsf"` engine](https://github.com/ropensci/aorsf) (#78 by `@bcjaeger`). 
+
 * Enabled case weights with the `"lightgbm"` engine (#72 by `@p-schaefer`).
 
 * Fixed issues in metadata for the `"partykit"` engine for `rand_forest()` where some engine arguments were mistakenly protected (#74).
