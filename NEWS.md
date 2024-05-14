@@ -2,6 +2,8 @@
 
 v0.2.1.9000 is a developmental version of the bonsai package.
 
+* Introduced support for accelerated oblique random forests for the `"classification"` and `"regression"` modes using the new [`"aorsf"` engine](https://github.com/ropensci/aorsf) (#78 by `@bcjaeger`). 
+
 * Enabled passing [Dataset Parameters](https://lightgbm.readthedocs.io/en/latest/Parameters.html#dataset-parameters) to the `"lightgbm"` engine. To pass an argument that would be usually passed as an element to the `param` argument in `lightgbm::lgb.Dataset()`, pass the argument directly through the ellipses in `set_engine()`, e.g. `boost_tree() %>% set_engine("lightgbm", linear_tree = TRUE)` (#77).
 
 * Enabled case weights with the `"lightgbm"` engine (#72 by `@p-schaefer`).

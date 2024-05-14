@@ -38,6 +38,7 @@ Suggests:
     covr,
     knitr,
     lightgbm,
+    aorsf (>= 0.1.3),
     modeldata,
     partykit,
     rmarkdown,

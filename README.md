@@ -51,6 +51,8 @@ following table:
 | decision_tree | partykit | classification |
 | rand_forest   | partykit | regression     |
 | rand_forest   | partykit | classification |
+| rand_forest   | aorsf    | classification |
+| rand_forest   | aorsf    | regression     |
 
 ## Code of Conduct
 
