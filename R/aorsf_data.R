@@ -1,8 +1,6 @@
 # nocov start
 
 make_rand_forest_aorsf <- function(){
-
-
   parsnip::set_model_engine("rand_forest", "classification", "aorsf")
   parsnip::set_model_engine("rand_forest", "regression", "aorsf")
   parsnip::set_dependency("rand_forest", "aorsf", "aorsf", mode = "classification")
@@ -100,7 +98,6 @@ make_rand_forest_aorsf <- function(){
     )
   )
 
-
   parsnip::set_pred(
     model = "rand_forest",
     eng = "aorsf",
@@ -115,7 +112,7 @@ make_rand_forest_aorsf <- function(){
       # consistent with predicted class in the parsnip bindings for aorsf b/c
       # I think it's really confusing when predicted probs do not align with
       # predicted classes. I'm fine with this in aorsf but in bonsai I want
-      # to minimize confusion (https://github.com/tidymodels/bonsai/pull/78).
+      # to minimize confusion (#78).
       post = function(results, object){
 
         missings <- apply(results, 1, function(x) any(is.na(x)))
@@ -204,7 +201,6 @@ make_rand_forest_aorsf <- function(){
     )
   )
 
-
   parsnip::set_pred(
     model = "rand_forest",
     eng = "aorsf",
@@ -224,8 +220,6 @@ make_rand_forest_aorsf <- function(){
         )
     )
   )
-
-
 }
 
 # nocov end
