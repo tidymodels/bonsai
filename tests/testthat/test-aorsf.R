@@ -6,7 +6,7 @@ mtcars_na <- mtcars_orsf
 mtcars_na$cyl[1] <- NA
 
 test_that("regression model object", {
-  skip_if_not_installed("aorsf", "0.1.3")
+  skip_if_not_installed("aorsf")
 
   set.seed(321)
   wts <- sample(0:5, size = nrow(mtcars_orsf), replace = TRUE)
@@ -66,7 +66,7 @@ test_that("regression model object", {
 })
 
 test_that("classification model object", {
-  skip_if_not_installed("aorsf", "0.1.3")
+  skip_if_not_installed("aorsf")
 
   set.seed(321)
   wts <- sample(0:5, size = nrow(mtcars_orsf), replace = TRUE)
@@ -123,8 +123,7 @@ test_that("classification model object", {
 })
 
 test_that("regression predictions", {
-  # bug-fix for na_action = 'pass' was pushed in this version
-  skip_if_not_installed("aorsf", "0.1.4.9001")
+  skip_if_not_installed("aorsf")
 
   set.seed(1234)
   aorsf_regr_fit <-
@@ -162,8 +161,7 @@ test_that("regression predictions", {
 })
 
 test_that("classification predictions", {
-  # bug-fix for na_action = 'pass' was pushed in this version
-  skip_if_not_installed("aorsf", "0.1.4.9001")
+  skip_if_not_installed("aorsf")
 
   set.seed(1234)
   aorsf_clsf_fit <-
