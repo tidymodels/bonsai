@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Bindings for additional tree-based model engines for use with the 'parsnip' package. Models include gradient boosted decision trees with 'LightGBM' (Ke et al, 2017.) and conditional inference trees and conditional random forests with 'partykit' (Hothorn and Zeileis, 2015. and Hothorn et al, 2006. \doi{10.1198/106186006X133933}).
+Bindings for additional tree-based model engines for use with the 'parsnip' package. Models include gradient boosted decision trees with 'LightGBM' (Ke et al, 2017.), conditional inference trees and conditional random forests with 'partykit' (Hothorn and Zeileis, 2015. and Hothorn et al, 2006. \doi{10.1198/106186006X133933}), and accelerated oblique random forests with 'aorsf' (Jaeger et al, 2022 \doi{10.5281/zenodo.7116854}).
 }
 \seealso{
 Useful links:
