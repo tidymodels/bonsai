@@ -3,8 +3,13 @@
 make_rand_forest_aorsf <- function(){
   parsnip::set_model_engine("rand_forest", "classification", "aorsf")
   parsnip::set_model_engine("rand_forest", "regression", "aorsf")
+
   parsnip::set_dependency("rand_forest", "aorsf", "aorsf", mode = "classification")
+  parsnip::set_dependency("rand_forest", "aorsf", "bonsai", mode = "classification")
+
   parsnip::set_dependency("rand_forest", "aorsf", "aorsf", mode = "regression")
+  parsnip::set_dependency("rand_forest", "aorsf", "bonsai", mode = "regression")
+
 
   parsnip::set_model_arg(
     model = "rand_forest",
