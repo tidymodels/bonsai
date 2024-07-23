@@ -1,10 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   bonsai: bonsai.html
-last_built: 2024-06-24T14:32Z
+last_built: 2024-07-23T15:51Z
 urls:
   reference: https://bonsai.tidymodels.org/reference
   article: https://bonsai.tidymodels.org/articles
-
