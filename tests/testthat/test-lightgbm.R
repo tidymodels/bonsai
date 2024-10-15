@@ -825,3 +825,38 @@ test_that("lightgbm with case weights", {
 
   expect_equal(pars_preds_1$.pred, lgbm_preds_1)
 })
+
+test_that("sparse data with lightgbm",{
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("modeldata")
+  skip_if_not_installed("Matrix")
+
+  library(Matrix)
+  library(dplyr)
+
+  hep <- modeldata::hepatic_injury_qsar
+
+  lgb_spec <- boost_tree() %>% set_mode("classification") %>% set_engine("lightgbm")
+
+  # ------------------------------------------------------------------------------
+
+  hepatic_x_sp <- as.matrix(hep[,-1])
+  hepatic_x_sp <- as(hepatic_x_sp, "sparseMatrix")
+
+  sprs_fit <- fit_xy(lgb_spec, hepatic_x_sp, hep$class)
+  sprs_prob <- predict(sprs_fit, new_data = hepatic_x_sp, type = "prob")
+  sprs_cls <- predict(sprs_fit, new_data = hepatic_x_sp, type = "class")
+
+  # ------------------------------------------------------------------------------
+
+  hepatic_x <- hep[,-1]
+
+  dens_fit <- fit_xy(lgb_spec, hepatic_x, hep$class)
+  dens_prob <- predict(dens_fit, new_data = hepatic_x, type = "prob")
+  dens_cls <- predict(dens_fit, new_data = hepatic_x, type = "class")
+
+  # ------------------------------------------------------------------------------
+
+  expect_equal(sprs_prob, dens_prob)
+  expect_equal(sprs_cls, dens_cls)
+})
