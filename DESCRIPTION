@@ -9,23 +9,22 @@ Authors@R: c(
     person("Max", "Kuhn", , "max@posit.co", role = "aut",
            comment = c(ORCID = "0000-0003-2402-136X")),
     person("Simon", "Couch", , "simon.couch@posit.co", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-5676-5107")),       
-    person(given = "Posit Software, PBC", role = c("cph", "fnd"))
+           comment = c(ORCID = "0000-0001-5676-5107")),
+    person("Posit Software, PBC", role = c("cph", "fnd"))
   )
 Description: Bindings for additional tree-based model engines for use with
     the 'parsnip' package. Models include gradient boosted decision trees
-    with 'LightGBM' (Ke et al, 2017.),
-    conditional inference trees and conditional random forests with
-    'partykit' (Hothorn and Zeileis, 2015. and
-    Hothorn et al, 2006. <doi:10.1198/106186006X133933>), and accelerated
-    oblique random forests with 'aorsf' (Jaeger et al, 2022 
+    with 'LightGBM' (Ke et al, 2017.), conditional inference trees and
+    conditional random forests with 'partykit' (Hothorn and Zeileis, 2015.
+    and Hothorn et al, 2006. <doi:10.1198/106186006X133933>), and
+    accelerated oblique random forests with 'aorsf' (Jaeger et al, 2022
     <doi:10.5281/zenodo.7116854>).
 License: MIT + file LICENSE
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
-    R (>= 4.0),
-    parsnip (>= 1.0.1)
+    parsnip (>= 1.0.1),
+    R (>= 4.0)
 Imports: 
     cli,
     dials,
@@ -37,10 +36,11 @@ Imports:
     tibble,
     utils
 Suggests: 
+    aorsf (>= 0.1.5),
     covr,
     knitr,
     lightgbm,
-    aorsf (>= 0.1.5),
+    Matrix,
     modeldata,
     partykit,
     rmarkdown,
@@ -53,4 +53,4 @@ Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
