@@ -840,7 +840,8 @@ test_that("sparse data with lightgbm",{
 
   # ------------------------------------------------------------------------------
 
-  hepatic_x_sp <- as(hep[,-1], "sparseMatrix")
+  hepatic_x_sp <- as.matrix(hep[,-1])
+  hepatic_x_sp <- as(hepatic_x_sp, "sparseMatrix")
 
   sprs_fit <- fit_xy(lgb_spec, hepatic_x_sp, hep$class)
   sprs_prob <- predict(sprs_fit, new_data = hepatic_x_sp, type = "prob")
