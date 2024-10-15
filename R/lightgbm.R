@@ -420,13 +420,16 @@ prepare_df_lgbm <- function(x, y = NULL) {
 
   x <- categorical_features_to_int(x, categorical_cols)
 
-  x <- as.matrix(x)
+  x <- parsnip::maybe_matrix(x)
 
   return(x)
 }
 
 categorical_columns <- function(x){
   categorical_cols <- NULL
+  if (inherits(x, c("matrix", "Matrix"))) {
+    return(categorical_cols)
+  }
   for (i in seq_along(x)) {
     if (is.factor(x[[i]])) {
       categorical_cols <- c(categorical_cols, i)
@@ -436,6 +439,9 @@ categorical_columns <- function(x){
 }
 
 categorical_features_to_int <- function(x, cat_indices){
+  if (inherits(x, c("matrix", "Matrix"))) {
+    return(x)
+  }
   for (i in cat_indices){
     x[[i]] <- as.integer(x[[i]]) -1
   }
