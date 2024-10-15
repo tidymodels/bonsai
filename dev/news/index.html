@@ -34,7 +34,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="bonsai-development-version">bonsai (development version)<a class="anchor" aria-label="anchor" href="#bonsai-development-version"></a></h2>
-</div>
+<ul><li>lightgbm models can now accept sparse matrices for training and prediction (<a href="https://github.com/tidymodels/bonsai/issues/91" class="external-link">#91</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="bonsai-031">bonsai 0.3.1<a class="anchor" aria-label="anchor" href="#bonsai-031"></a></h2><p class="text-muted">CRAN release: 2024-07-23</p>
 <ul><li>Fixed bug where <code>"aorsf"</code> models would not successfully fit in socket cluster workers (i.e. with <code>plan(multisession)</code>) unless another engine requiring bonsai had been fitted in the worker (<a href="https://github.com/tidymodels/bonsai/issues/85" class="external-link">#85</a>).</li>
@@ -88,7 +89,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
   </div></footer></body></html>
