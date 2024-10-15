@@ -1,5 +1,7 @@
 # bonsai (development version)
 
+* lightgbm models can now accept sparse matrices for training and prediction (#91).
+
 # bonsai 0.3.1
 
 * Fixed bug where `"aorsf"` models would not successfully fit in socket cluster workers (i.e. with `plan(multisession)`) unless another engine requiring bonsai had been fitted in the worker (#85).
