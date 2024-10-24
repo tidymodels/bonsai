@@ -24,19 +24,17 @@
 
 # bonsai handles mtry vs mtry_prop gracefully
 
-    The supplied argument `mtry = 0.5` must be greater than or equal to 1. 
-    
-    `mtry` is currently being interpreted as a count rather than a proportion. Supply `counts = FALSE` to `set_engine` to supply this argument as a proportion rather than a count. 
-    
-    See `?train_lightgbm` for more details.
+    `mtry` must be greater than or equal to 1, not 0.5.
+    i `mtry` is currently being interpreted as a count rather than a proportion.
+    i Supply `counts = FALSE` to `set_engine()` to supply this argument as a proportion rather than a count.
+    i See `?train_lightgbm()` for more details.
 
 ---
 
-    The supplied argument `mtry = 3` must be less than or equal to 1. 
-    
-    `mtry` is currently being interpreted as a proportion rather than a count. Supply `counts = TRUE` to `set_engine` to supply this argument as a count rather than a proportion. 
-    
-    See `?train_lightgbm` for more details.
+    `mtry` must be less than or equal to 1, not 3.
+    i `mtry` is currently being interpreted as a proportion rather than a count.
+    i Supply `counts = TRUE` to `set_engine()` to supply this argument as a count rather than a proportion.
+    i See `?train_lightgbm()` for more details.
 
 ---
 
@@ -47,12 +45,11 @@
     Condition
       Warning:
       The argument `feature_fraction_bynode` cannot be manually modified and was removed.
-      Error:
-      ! The supplied argument `mtry = 0.5` must be greater than or equal to 1. 
-      
-      `mtry` is currently being interpreted as a count rather than a proportion. Supply `counts = FALSE` to `set_engine` to supply this argument as a proportion rather than a count. 
-      
-      See `?train_lightgbm` for more details.
+      Error in `fit()`:
+      ! `mtry` must be greater than or equal to 1, not 0.5.
+      i `mtry` is currently being interpreted as a count rather than a proportion.
+      i Supply `counts = FALSE` to `set_engine()` to supply this argument as a proportion rather than a count.
+      i See `?train_lightgbm()` for more details.
 
 # tuning mtry vs mtry_prop
 
@@ -60,8 +57,8 @@
       boost_tree(mtry = tune::tune()) %>% set_engine("lightgbm") %>% set_mode(
         "regression") %>% fit(bill_length_mm ~ ., data = penguins)
     Condition
-      Error:
-      ! The supplied `mtry` parameter is a call to `tune`. Did you forget to optimize hyperparameters with a tuning function like `tune::tune_grid`?
+      Error in `fit()`:
+      ! `feature_fraction_bynode` must be a number, not a call.
 
 # training wrapper warns on protected arguments
 

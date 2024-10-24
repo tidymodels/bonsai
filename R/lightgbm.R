@@ -45,9 +45,18 @@ train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations 
   force(x)
   force(y)
 
-  if (!is.logical(quiet)) {
-    rlang::abort("'quiet' should be a logical value.")
-  }
+  call <- call2("fit")
+
+  check_number_whole(max_depth, call = call)
+  check_number_whole(num_iterations, call = call)
+  check_number_decimal(learning_rate, call = call)
+  check_number_decimal(feature_fraction_bynode, call = call)
+  check_number_whole(min_data_in_leaf, call = call)
+  check_number_decimal(min_gain_to_split, call = call)
+  check_number_decimal(bagging_fraction, call = call)
+  check_number_decimal(early_stopping_round, allow_null = TRUE, call = call)
+  check_bool(counts, call = call)
+  check_bool(quiet, call = call)
 
   feature_fraction_bynode <-
     process_mtry(feature_fraction_bynode = feature_fraction_bynode,
@@ -101,38 +110,24 @@ train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations 
   res
 }
 
-process_mtry <- function(feature_fraction_bynode, counts, x, is_missing) {
-  if (!is.logical(counts)) {
-    rlang::abort("'counts' should be a logical value.")
-  }
+process_mtry <- function(feature_fraction_bynode, counts, x, is_missing, call = call2("fit")) {
+  check_bool(counts, call = call)
 
   ineq <- if (counts) {"greater"} else {"less"}
   interp <- if (counts) {"count"} else {"proportion"}
   opp <- if (!counts) {"count"} else {"proportion"}
 
-  if (rlang::is_call(feature_fraction_bynode)) {
-    if (rlang::call_name(feature_fraction_bynode) == "tune") {
-      rlang::abort(
-        glue::glue(
-          "The supplied `mtry` parameter is a call to `tune`. Did you forget ",
-          "to optimize hyperparameters with a tuning function like `tune::tune_grid`?"
-        ),
-        call = NULL
-      )
-    }
-  }
-
   if ((feature_fraction_bynode < 1 & counts) | (feature_fraction_bynode > 1 & !counts)) {
-    rlang::abort(
-      glue::glue(
-        "The supplied argument `mtry = {feature_fraction_bynode}` must be ",
-        "{ineq} than or equal to 1. \n\n`mtry` is currently being interpreted ",
-        "as a {interp} rather than a {opp}. Supply `counts = {!counts}` to ",
-        "`set_engine` to supply this argument as a {opp} rather than ",
-        # TODO: link to parsnip's lightgbm docs instead here
-        "a {interp}. \n\nSee `?train_lightgbm` for more details."
+    cli::cli_abort(
+      c(
+        "{.arg mtry} must be {ineq} than or equal to 1, not {feature_fraction_bynode}.",
+        "i" = "{.arg mtry} is currently being interpreted as a {interp}
+               rather than a {opp}.",
+        "i" = "Supply {.code counts = {!counts}} to {.fn set_engine} to supply
+               this argument as a {opp} rather than a {interp}.",
+        "i" = "See {.help train_lightgbm} for more details."
       ),
-      call = NULL
+      call = call
     )
   }
 
@@ -373,7 +368,9 @@ predict_lightgbm_regression_numeric <- function(object, new_data, ...) {
 #' @rdname lightgbm_helpers
 multi_predict._lgb.Booster <- function(object, new_data, type = NULL, trees = NULL, ...) {
   if (any(names(rlang::enquos(...)) == "newdata")) {
-    rlang::abort("Did you mean to use `new_data` instead of `newdata`?")
+    cli::cli_abort(
+      "Did you mean to use {.code new_data} instead of {.code newdata}?"
+    )
   }
 
   trees <- sort(trees)
