@@ -3,3 +3,6 @@
 #' @docType package
 #' @aliases bonsai
 "_PACKAGE"
+
+#' @import rlang
+NULL
