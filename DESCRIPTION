@@ -31,7 +31,7 @@ Imports:
     dplyr,
     glue,
     purrr,
-    rlang,
+    rlang (>= 1.1.0),
     stats,
     tibble,
     utils
