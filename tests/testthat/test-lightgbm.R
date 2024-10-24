@@ -515,35 +515,33 @@ test_that("training wrapper warns on protected arguments", {
 
   penguins <- penguins[complete.cases(penguins),]
 
-  expect_warning(
-    boost_tree() %>%
+  expect_snapshot(
+    .res <- boost_tree() %>%
       set_engine("lightgbm", colnames = paste0("X", 1:ncol(penguins))) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins),
-    "guarded by bonsai.*colnames"
+      fit(bill_length_mm ~ ., data = penguins)
   )
 
-  expect_warning(
-    boost_tree() %>%
+  expect_snapshot(
+    .res <- boost_tree() %>%
       set_engine(
         "lightgbm",
         colnames = paste0("X", 1:ncol(penguins)),
         callbacks = list(p = print)
       ) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins),
-    "guarded by bonsai.*colnames, callbacks"
+      fit(bill_length_mm ~ ., data = penguins)
   )
 
-  expect_warning(
-    boost_tree() %>%
+  expect_snapshot(
+    .res <-
+      boost_tree() %>%
       set_engine(
         "lightgbm",
         colnames = paste0("X", 1:ncol(penguins))
       ) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins),
-    "guarded by bonsai.*colnames"
+      fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(

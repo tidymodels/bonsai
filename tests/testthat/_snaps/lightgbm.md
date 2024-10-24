@@ -46,7 +46,7 @@
         bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
-      The following arguments cannot be manually modified and were removed: feature_fraction_bynode.
+      The argument `feature_fraction_bynode` cannot be manually modified and was removed.
       Error:
       ! The supplied argument `mtry = 0.5` must be greater than or equal to 1. 
       
@@ -64,6 +64,34 @@
       ! The supplied `mtry` parameter is a call to `tune`. Did you forget to optimize hyperparameters with a tuning function like `tune::tune_grid`?
 
 # training wrapper warns on protected arguments
+
+    Code
+      .res <- boost_tree() %>% set_engine("lightgbm", colnames = paste0("X", 1:ncol(
+        penguins))) %>% set_mode("regression") %>% fit(bill_length_mm ~ ., data = penguins)
+    Condition
+      Warning:
+      The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames
+
+---
+
+    Code
+      .res <- boost_tree() %>% set_engine("lightgbm", colnames = paste0("X", 1:ncol(
+        penguins)), callbacks = list(p = print)) %>% set_mode("regression") %>% fit(
+        bill_length_mm ~ ., data = penguins)
+    Condition
+      Warning:
+      The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames, callbacks
+
+---
+
+    Code
+      .res <- boost_tree() %>% set_engine("lightgbm", colnames = paste0("X", 1:ncol(
+        penguins))) %>% set_mode("regression") %>% fit(bill_length_mm ~ ., data = penguins)
+    Condition
+      Warning:
+      The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames
+
+---
 
     Code
       boost_tree() %>% set_engine("lightgbm", n_iter = 10) %>% set_mode("regression") %>%
