@@ -429,13 +429,13 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # supply a feature fraction argument rather than mtry
   # TODO: is there any way to extend parsnip's warning here to
   # point users to mtry?
-  expect_warning({
+  # will see "The argument `feature_fraction_bynode` cannot be..." (#95)
+  suppressWarnings(
     pars_fit_7 <-
       boost_tree() %>%
       set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins)},
-    "manually modified and were removed: feature_fraction_bynode."
+      fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_equal(
@@ -453,13 +453,13 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
     error = TRUE
   )
 
-  expect_warning({
+  # will see "The argument `feature_fraction_bynode` cannot be..." (#95)
+  suppressWarnings(
     pars_fit_9 <-
       boost_tree(mtry = 2) %>%
       set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins)},
-    "manually modified and were removed: feature_fraction_bynode."
+      fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_equal(
@@ -593,13 +593,13 @@ test_that("training wrapper passes stop_iter correctly", {
       fit(bill_length_mm ~ ., data = penguins)
   )
 
-  expect_warning(
+  # will see "The argument `early_stopping_round` cannot be..." (#95)
+  suppressWarnings(
     pars_fit_2 <-
       boost_tree() %>%
       set_engine("lightgbm", early_stopping_round = 10) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins),
-    "were removed: early_stopping_round"
+      fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_no_error(
