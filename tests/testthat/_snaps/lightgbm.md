@@ -36,21 +36,6 @@
     i Supply `counts = TRUE` to `set_engine()` to supply this argument as a count rather than a proportion.
     i See `?train_lightgbm()` for more details.
 
----
-
-    Code
-      pars_fit_8 <- boost_tree(mtry = 0.5) %>% set_engine("lightgbm",
-        feature_fraction_bynode = 0.5) %>% set_mode("regression") %>% fit(
-        bill_length_mm ~ ., data = penguins)
-    Condition
-      Warning:
-      The argument `feature_fraction_bynode` cannot be manually modified and was removed.
-      Error in `fit()`:
-      ! `mtry` must be greater than or equal to 1, not 0.5.
-      i `mtry` is currently being interpreted as a count rather than a proportion.
-      i Supply `counts = FALSE` to `set_engine()` to supply this argument as a proportion rather than a count.
-      i See `?train_lightgbm()` for more details.
-
 # tuning mtry vs mtry_prop
 
     Code

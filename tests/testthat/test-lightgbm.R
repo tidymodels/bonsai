@@ -443,15 +443,14 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
     1
   )
 
-  # supply both feature fraction and mtry
-  expect_snapshot({
+  # supply both feature fraction and mtry (#95)
+  suppressWarnings(expect_error({
     pars_fit_8 <-
       boost_tree(mtry = .5) %>%
       set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins)},
-    error = TRUE
-  )
+      fit(bill_length_mm ~ ., data = penguins)
+  }))
 
   # will see "The argument `feature_fraction_bynode` cannot be..." (#95)
   suppressWarnings(
