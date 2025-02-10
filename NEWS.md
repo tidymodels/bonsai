@@ -1,5 +1,7 @@
 # bonsai (development version)
 
+* Resolves a test failure ahead of an upcoming parsnip release (#95).
+
 * lightgbm models can now accept sparse matrices for training and prediction (#91).
 
 # bonsai 0.3.1
