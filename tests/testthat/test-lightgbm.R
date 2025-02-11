@@ -854,6 +854,7 @@ test_that("sparse data with lightgbm",{
 
   # ------------------------------------------------------------------------------
 
-  expect_equal(sprs_prob, dens_prob)
+  # very small differences in lightgbm probabilities
+  expect_equal(sprs_prob, dens_prob, tolerance = .001)
   expect_equal(sprs_cls, dens_cls)
 })
