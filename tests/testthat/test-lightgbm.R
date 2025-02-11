@@ -1,3 +1,5 @@
+withr::local_envvar("OMP_THREAD_LIMIT" = 1)
+
 test_that("boost_tree with lightgbm",{
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
