@@ -824,6 +824,7 @@ test_that("lightgbm with case weights", {
 })
 
 test_that("sparse data with lightgbm",{
+  skip_on_cran()
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("Matrix")
