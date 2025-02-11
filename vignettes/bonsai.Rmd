@@ -15,7 +15,8 @@ knitr::opts_chunk$set(
 
 if (rlang::is_installed("partykit") && 
     rlang::is_installed("lightgbm") &&
-    rlang::is_installed("modeldata")) {
+    rlang::is_installed("modeldata") &&
+    (identical(Sys.getenv("IN_PKGDOWN"), "true") || interactive())) {
   run <- TRUE
 } else {
   run <- FALSE
