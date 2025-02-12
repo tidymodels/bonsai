@@ -1,5 +1,7 @@
 library(testthat)
 
+withr::local_envvar("OMP_THREAD_LIMIT" = 1)
+
 mtcars_orsf <- mtcars
 mtcars_orsf$vs <- factor(mtcars_orsf$vs)
 mtcars_na <- mtcars_orsf

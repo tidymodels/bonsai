@@ -13,6 +13,8 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
+withr::local_envvar("OMP_THREAD_LIMIT" = 1)
+
 if (rlang::is_installed("partykit") && 
     rlang::is_installed("lightgbm") &&
     rlang::is_installed("modeldata")) {

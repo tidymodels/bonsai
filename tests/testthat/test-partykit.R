@@ -1,3 +1,5 @@
+withr::local_envvar("OMP_THREAD_LIMIT" = 1)
+
 test_that("condition inference trees",{
   skip_if_not_installed("partykit")
   skip_if_not_installed("modeldata")

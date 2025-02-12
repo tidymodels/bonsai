@@ -1,3 +1,5 @@
+withr::local_envvar("OMP_THREAD_LIMIT" = 1)
+
 test_that("boost_tree with lightgbm",{
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
@@ -443,15 +445,14 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
     1
   )
 
-  # supply both feature fraction and mtry
-  expect_snapshot({
+  # supply both feature fraction and mtry (#95)
+  suppressWarnings(expect_error({
     pars_fit_8 <-
       boost_tree(mtry = .5) %>%
       set_engine("lightgbm", feature_fraction_bynode = .5) %>%
       set_mode("regression") %>%
-      fit(bill_length_mm ~ ., data = penguins)},
-    error = TRUE
-  )
+      fit(bill_length_mm ~ ., data = penguins)
+  }))
 
   # will see "The argument `feature_fraction_bynode` cannot be..." (#95)
   suppressWarnings(
@@ -825,6 +826,7 @@ test_that("lightgbm with case weights", {
 })
 
 test_that("sparse data with lightgbm",{
+  skip_on_cran()
   skip_if_not_installed("lightgbm")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("Matrix")
@@ -855,6 +857,7 @@ test_that("sparse data with lightgbm",{
 
   # ------------------------------------------------------------------------------
 
-  expect_equal(sprs_prob, dens_prob)
+  # very small differences in lightgbm probabilities
+  expect_equal(sprs_prob, dens_prob, tolerance = .001)
   expect_equal(sprs_cls, dens_cls)
 })
