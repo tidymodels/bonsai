@@ -17,8 +17,7 @@ withr::local_envvar("OMP_THREAD_LIMIT" = 1)
 
 if (rlang::is_installed("partykit") && 
     rlang::is_installed("lightgbm") &&
-    rlang::is_installed("modeldata") &&
-    (identical(Sys.getenv("IN_PKGDOWN"), "true") || interactive())) {
+    rlang::is_installed("modeldata")) {
   run <- TRUE
 } else {
   run <- FALSE
