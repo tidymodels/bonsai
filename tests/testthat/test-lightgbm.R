@@ -38,8 +38,8 @@ test_that("boost_tree with lightgbm", {
 
   peng <-
     penguins |>
-    mutate(across(where(is.character), ~ as.factor(.x))) |>
-    mutate(across(where(is.factor), ~ as.integer(.x) - 1))
+    mutate(across(where(is.character), \(x) as.factor(x))) |>
+    mutate(across(where(is.factor), \(x) as.integer(x) - 1))
 
   peng_y <- peng$bill_length_mm
 
@@ -279,8 +279,8 @@ test_that("bonsai applies dataset parameters (#77)", {
 
   peng <-
     penguins |>
-    mutate(across(where(is.character), ~ as.factor(.x))) |>
-    mutate(across(where(is.factor), ~ as.integer(.x) - 1))
+    mutate(across(where(is.character), \(x) as.factor(x))) |>
+    mutate(across(where(is.factor), \(x) as.integer(x) - 1))
 
   peng_y <- peng$bill_length_mm
 
@@ -695,8 +695,8 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
   penguins_subset <- penguins[1:10, ]
   penguins_subset_numeric <-
     penguins_subset |>
-    mutate(across(where(is.character), ~ as.factor(.x))) |>
-    mutate(across(where(is.factor), ~ as.integer(.x) - 1))
+    mutate(across(where(is.character), \(x) as.factor(x))) |>
+    mutate(across(where(is.factor), \(x) as.integer(x) - 1))
 
   num_iterations <- 5
 
@@ -800,8 +800,8 @@ test_that("lightgbm with case weights", {
 
   peng <-
     penguins |>
-    mutate(across(where(is.character), ~ as.factor(.x))) |>
-    mutate(across(where(is.factor), ~ as.integer(.x) - 1))
+    mutate(across(where(is.character), \(x) as.factor(x))) |>
+    mutate(across(where(is.factor), \(x) as.integer(x) - 1))
 
   peng_y <- peng$bill_length_mm
 
