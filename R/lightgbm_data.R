@@ -102,7 +102,6 @@ make_boost_tree_lightgbm <- function() {
     )
   )
 
-
   parsnip::set_encoding(
     model = "boost_tree",
     mode = "classification",
@@ -231,4 +230,3 @@ make_boost_tree_lightgbm <- function() {
 }
 
 # nocov end
-
