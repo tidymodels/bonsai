@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   bonsai: bonsai.html
-last_built: 2025-02-12T13:50Z
+last_built: 2025-04-25T15:01Z
 urls:
   reference: https://bonsai.tidymodels.org/reference
   article: https://bonsai.tidymodels.org/articles
