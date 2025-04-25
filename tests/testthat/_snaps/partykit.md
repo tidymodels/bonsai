@@ -1,7 +1,7 @@
 # condition inference trees
 
     Code
-      decision_tree() %>% set_engine("partykit") %>% set_mode("regression")
+      set_mode(set_engine(decision_tree(), "partykit"), "regression")
     Output
       Decision Tree Model Specification (regression)
       
@@ -11,8 +11,8 @@
 ---
 
     Code
-      decision_tree() %>% set_engine("partykit", teststat = "maximum") %>% set_mode(
-        "classification")
+      set_mode(set_engine(decision_tree(), "partykit", teststat = "maximum"),
+      "classification")
     Output
       Decision Tree Model Specification (classification)
       
@@ -25,7 +25,7 @@
 # condition inference forests
 
     Code
-      rand_forest() %>% set_engine("partykit") %>% set_mode("regression")
+      set_mode(set_engine(rand_forest(), "partykit"), "regression")
     Output
       Random Forest Model Specification (regression)
       
@@ -35,8 +35,8 @@
 ---
 
     Code
-      rand_forest() %>% set_engine("partykit", teststat = "maximum") %>% set_mode(
-        "classification")
+      set_mode(set_engine(rand_forest(), "partykit", teststat = "maximum"),
+      "classification")
     Output
       Random Forest Model Specification (classification)
       

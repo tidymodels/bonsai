@@ -30,8 +30,8 @@ test_that("regression model object", {
 
   # formula method
   regr_spec <-
-    rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+    rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("regression")
 
   set.seed(1234)
@@ -87,8 +87,8 @@ test_that("classification model object", {
   aorsf_clsf_fit_wtd <- aorsf::orsf_update(aorsf_clsf_fit, weights = wts)
 
   # formula method
-  clsf_spec <- rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+  clsf_spec <- rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("classification")
 
   set.seed(1234)
@@ -145,8 +145,8 @@ test_that("regression predictions", {
 
   # formula method
   regr_spec <-
-    rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+    rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("regression")
 
   set.seed(1234)
@@ -194,8 +194,8 @@ test_that("classification predictions", {
   aorsf_class <- c(NA_character_, aorsf_class)
 
   # formula method
-  clsf_spec <- rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+  clsf_spec <- rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("classification")
 
   set.seed(1234)

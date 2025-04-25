@@ -14,20 +14,20 @@ test_that("boost_tree with lightgbm", {
   penguins <- penguins[complete.cases(penguins), ]
 
   expect_snapshot(
-    boost_tree() %>% set_engine("lightgbm") %>% set_mode("regression")
+    boost_tree() |> set_engine("lightgbm") |> set_mode("regression")
   )
   expect_snapshot(
-    boost_tree() %>%
-      set_engine("lightgbm", nrounds = 100) %>%
+    boost_tree() |>
+      set_engine("lightgbm", nrounds = 100) |>
       set_mode("classification")
   )
 
   # regression -----------------------------------------------------------------
   expect_no_error({
     pars_fit_1 <-
-      boost_tree() %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -37,14 +37,14 @@ test_that("boost_tree with lightgbm", {
   })
 
   peng <-
-    penguins %>%
-    mutate(across(where(is.character), ~ as.factor(.x))) %>%
+    penguins |>
+    mutate(across(where(is.character), ~ as.factor(.x))) |>
     mutate(across(where(is.factor), ~ as.integer(.x) - 1))
 
   peng_y <- peng$bill_length_mm
 
-  peng_m <- peng %>%
-    select(-bill_length_mm) %>%
+  peng_m <- peng |>
+    select(-bill_length_mm) |>
     as.matrix()
 
   peng_x <-
@@ -73,9 +73,9 @@ test_that("boost_tree with lightgbm", {
   # regression, adjusting a primary argument
   expect_no_error({
     pars_fit_2 <-
-      boost_tree(trees = 20) %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree(trees = 20) |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -103,9 +103,9 @@ test_that("boost_tree with lightgbm", {
   # regression, adjusting an engine argument
   expect_no_error({
     pars_fit_3 <-
-      boost_tree() %>%
-      set_engine("lightgbm", lambda_l2 = .5) %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm", lambda_l2 = .5) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -135,9 +135,9 @@ test_that("boost_tree with lightgbm", {
   # multiclass
   expect_no_error({
     pars_fit_4 <-
-      boost_tree() %>%
-      set_engine("lightgbm") %>%
-      set_mode("classification") %>%
+      boost_tree() |>
+      set_engine("lightgbm") |>
+      set_mode("classification") |>
       fit(species ~ ., data = penguins)
   })
 
@@ -156,8 +156,8 @@ test_that("boost_tree with lightgbm", {
 
   peng_y_c <- peng$species
 
-  peng_m_c <- peng %>%
-    select(-species) %>%
+  peng_m_c <- peng |>
+    select(-species) |>
     as.matrix()
 
   peng_x_c <-
@@ -181,19 +181,19 @@ test_that("boost_tree with lightgbm", {
     )
 
   lgbm_preds_4 <-
-    predict(lgbm_fit_4, peng_m_c) %>%
+    predict(lgbm_fit_4, peng_m_c) |>
     reshape_lightgbm_multiclass_preds(num_rows = nrow(peng_m_c))
 
   expect_equal(pars_preds_4_mtx, lgbm_preds_4)
 
   # check class predictions
   pars_preds_5 <-
-    predict(pars_fit_4, penguins, type = "class") %>%
-    `[[`(".pred_class") %>%
+    predict(pars_fit_4, penguins, type = "class") |>
+    (\(x) x[[".pred_class"]])() |>
     as.character()
 
-  lgbm_preds_5 <- apply(pars_preds_4_mtx, 1, function(x) which.max(x)) %>%
-    factor(labels = c("Adelie", "Chinstrap", "Gentoo")) %>%
+  lgbm_preds_5 <- apply(pars_preds_4_mtx, 1, function(x) which.max(x)) |>
+    factor(labels = c("Adelie", "Chinstrap", "Gentoo")) |>
     as.character()
 
   expect_equal(pars_preds_5, lgbm_preds_5)
@@ -201,9 +201,9 @@ test_that("boost_tree with lightgbm", {
   # classification on a two-level outcome
   expect_no_error({
     pars_fit_6 <-
-      boost_tree() %>%
-      set_engine("lightgbm") %>%
-      set_mode("classification") %>%
+      boost_tree() |>
+      set_engine("lightgbm") |>
+      set_mode("classification") |>
       fit(sex ~ ., data = penguins)
   })
 
@@ -221,8 +221,8 @@ test_that("boost_tree with lightgbm", {
 
   peng_y_b <- peng$sex
 
-  peng_m_b <- peng %>%
-    select(-sex) %>%
+  peng_m_b <- peng |>
+    select(-sex) |>
     as.matrix()
 
   peng_x_b <-
@@ -266,9 +266,9 @@ test_that("bonsai applies dataset parameters (#77)", {
   # regression -----------------------------------------------------------------
   expect_no_error({
     pars_fit_1 <-
-      boost_tree() %>%
-      set_engine("lightgbm", linear_tree = TRUE) %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm", linear_tree = TRUE) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -278,14 +278,14 @@ test_that("bonsai applies dataset parameters (#77)", {
   })
 
   peng <-
-    penguins %>%
-    mutate(across(where(is.character), ~ as.factor(.x))) %>%
+    penguins |>
+    mutate(across(where(is.character), ~ as.factor(.x))) |>
     mutate(across(where(is.factor), ~ as.integer(.x) - 1))
 
   peng_y <- peng$bill_length_mm
 
-  peng_m <- peng %>%
-    select(-bill_length_mm) %>%
+  peng_m <- peng |>
+    select(-bill_length_mm) |>
     as.matrix()
 
   peng_x <-
@@ -359,9 +359,9 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # supply no mtry
   expect_no_error({
     pars_fit_1 <-
-      boost_tree() %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -373,9 +373,9 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # supply mtry = 1 (edge cases)
   expect_no_error({
     pars_fit_2 <-
-      boost_tree(mtry = 1) %>%
-      set_engine("lightgbm", counts = TRUE) %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = 1) |>
+      set_engine("lightgbm", counts = TRUE) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -386,9 +386,9 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
 
   expect_no_error({
     pars_fit_3 <-
-      boost_tree(mtry = 1) %>%
-      set_engine("lightgbm", counts = FALSE) %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = 1) |>
+      set_engine("lightgbm", counts = FALSE) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -400,9 +400,9 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # supply a count (with default counts = TRUE)
   expect_no_error({
     pars_fit_4 <-
-      boost_tree(mtry = 3) %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = 3) |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -414,18 +414,18 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # supply a proportion when count expected
   expect_snapshot_error({
     pars_fit_5 <-
-      boost_tree(mtry = .5) %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = .5) |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
   # supply a count when proportion expected
   expect_snapshot_error({
     pars_fit_6 <-
-      boost_tree(mtry = 3) %>%
-      set_engine("lightgbm", counts = FALSE) %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = 3) |>
+      set_engine("lightgbm", counts = FALSE) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
 
@@ -435,9 +435,9 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # will see "The argument `feature_fraction_bynode` cannot be..." (#95)
   suppressWarnings(
     pars_fit_7 <-
-      boost_tree() %>%
-      set_engine("lightgbm", feature_fraction_bynode = .5) %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm", feature_fraction_bynode = .5) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
@@ -449,18 +449,18 @@ test_that("bonsai handles mtry vs mtry_prop gracefully", {
   # supply both feature fraction and mtry (#95)
   suppressWarnings(expect_error({
     pars_fit_8 <-
-      boost_tree(mtry = .5) %>%
-      set_engine("lightgbm", feature_fraction_bynode = .5) %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = .5) |>
+      set_engine("lightgbm", feature_fraction_bynode = .5) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   }))
 
   # will see "The argument `feature_fraction_bynode` cannot be..." (#95)
   suppressWarnings(
     pars_fit_9 <-
-      boost_tree(mtry = 2) %>%
-      set_engine("lightgbm", feature_fraction_bynode = .5) %>%
-      set_mode("regression") %>%
+      boost_tree(mtry = 2) |>
+      set_engine("lightgbm", feature_fraction_bynode = .5) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
@@ -484,8 +484,8 @@ test_that("tuning mtry vs mtry_prop", {
   suppressMessages(
     expect_no_error({
       gbm_tune <- tune::tune_grid(
-        boost_tree(mtry = tune::tune()) %>%
-          set_engine("lightgbm") %>%
+        boost_tree(mtry = tune::tune()) |>
+          set_engine("lightgbm") |>
           set_mode("regression"),
         grid = 4,
         preprocessor = bill_length_mm ~ .,
@@ -502,9 +502,9 @@ test_that("tuning mtry vs mtry_prop", {
   # supply tune() without tuning
   expect_snapshot(
     {
-      boost_tree(mtry = tune::tune()) %>%
-        set_engine("lightgbm") %>%
-        set_mode("regression") %>%
+      boost_tree(mtry = tune::tune()) |>
+        set_engine("lightgbm") |>
+        set_mode("regression") |>
         fit(bill_length_mm ~ ., data = penguins)
     },
     error = TRUE
@@ -520,63 +520,63 @@ test_that("training wrapper warns on protected arguments", {
   penguins <- penguins[complete.cases(penguins), ]
 
   expect_snapshot(
-    .res <- boost_tree() %>%
-      set_engine("lightgbm", colnames = paste0("X", 1:ncol(penguins))) %>%
-      set_mode("regression") %>%
+    .res <- boost_tree() |>
+      set_engine("lightgbm", colnames = paste0("X", 1:ncol(penguins))) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(
-    .res <- boost_tree() %>%
+    .res <- boost_tree() |>
       set_engine(
         "lightgbm",
         colnames = paste0("X", 1:ncol(penguins)),
         callbacks = list(p = print)
-      ) %>%
-      set_mode("regression") %>%
+      ) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(
     .res <-
-      boost_tree() %>%
+      boost_tree() |>
       set_engine(
         "lightgbm",
         colnames = paste0("X", 1:ncol(penguins))
-      ) %>%
-      set_mode("regression") %>%
+      ) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(
     error = TRUE,
-    boost_tree() %>%
-      set_engine("lightgbm", n_iter = 10) %>%
-      set_mode("regression") %>%
+    boost_tree() |>
+      set_engine("lightgbm", n_iter = 10) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(
     error = TRUE,
-    boost_tree() %>%
-      set_engine("lightgbm", num_tree = 10) %>%
-      set_mode("regression") %>%
+    boost_tree() |>
+      set_engine("lightgbm", num_tree = 10) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(
     error = TRUE,
-    boost_tree() %>%
-      set_engine("lightgbm", min_split_gain = 2) %>%
-      set_mode("regression") %>%
+    boost_tree() |>
+      set_engine("lightgbm", min_split_gain = 2) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_snapshot(
     error = TRUE,
-    boost_tree() %>%
-      set_engine("lightgbm", min_split_gain = 2, lambda_l2 = .5) %>%
-      set_mode("regression") %>%
+    boost_tree() |>
+      set_engine("lightgbm", min_split_gain = 2, lambda_l2 = .5) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 })
@@ -591,42 +591,42 @@ test_that("training wrapper passes stop_iter correctly", {
 
   expect_no_error(
     pars_fit_1 <-
-      boost_tree(stop_iter = 10) %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree(stop_iter = 10) |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   # will see "The argument `early_stopping_round` cannot be..." (#95)
   suppressWarnings(
     pars_fit_2 <-
-      boost_tree() %>%
-      set_engine("lightgbm", early_stopping_round = 10) %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm", early_stopping_round = 10) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_no_error(
     pars_fit_3 <-
-      boost_tree() %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_no_error(
     pars_fit_4 <-
-      boost_tree() %>%
-      set_engine("lightgbm", validation = .2) %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm", validation = .2) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
   expect_no_error(
     pars_fit_5 <-
-      boost_tree(stop_iter = 10) %>%
-      set_engine("lightgbm", validation = .2) %>%
-      set_mode("regression") %>%
+      boost_tree(stop_iter = 10) |>
+      set_engine("lightgbm", validation = .2) |>
+      set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   )
 
@@ -654,21 +654,21 @@ test_that("training wrapper handles bagging correctly", {
   penguins <- penguins[complete.cases(penguins), ]
 
   pars_fit_1 <-
-    boost_tree() %>%
-    set_engine("lightgbm") %>%
-    set_mode("regression") %>%
+    boost_tree() |>
+    set_engine("lightgbm") |>
+    set_mode("regression") |>
     fit(bill_length_mm ~ ., data = penguins)
 
   pars_fit_2 <-
-    boost_tree(sample_size = .5) %>%
-    set_engine("lightgbm") %>%
-    set_mode("regression") %>%
+    boost_tree(sample_size = .5) |>
+    set_engine("lightgbm") |>
+    set_mode("regression") |>
     fit(bill_length_mm ~ ., data = penguins)
 
   pars_fit_3 <-
-    boost_tree(sample_size = .5) %>%
-    set_engine("lightgbm", bagging_freq = 2) %>%
-    set_mode("regression") %>%
+    boost_tree(sample_size = .5) |>
+    set_engine("lightgbm", bagging_freq = 2) |>
+    set_mode("regression") |>
     fit(bill_length_mm ~ ., data = penguins)
 
   expect_equal(pars_fit_1$fit$params$bagging_fraction, 1)
@@ -694,8 +694,8 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
   penguins <- penguins[complete.cases(penguins), ]
   penguins_subset <- penguins[1:10, ]
   penguins_subset_numeric <-
-    penguins_subset %>%
-    mutate(across(where(is.character), ~ as.factor(.x))) %>%
+    penguins_subset |>
+    mutate(across(where(is.character), ~ as.factor(.x))) |>
     mutate(across(where(is.factor), ~ as.integer(.x) - 1))
 
   num_iterations <- 5
@@ -703,16 +703,16 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
   # classification (multiclass) ------------------------------------------------
   expect_no_error({
     clf_multiclass_fit <-
-      boost_tree(trees = num_iterations) %>%
-      set_engine("lightgbm") %>%
-      set_mode("classification") %>%
+      boost_tree(trees = num_iterations) |>
+      set_engine("lightgbm") |>
+      set_mode("classification") |>
       fit(species ~ ., data = penguins)
   })
   expect_equal(clf_multiclass_fit$fit$current_iter(), num_iterations)
 
   new_data <-
-    penguins_subset_numeric %>%
-    select(-species) %>%
+    penguins_subset_numeric |>
+    select(-species) |>
     as.matrix()
 
   multi_preds <-
@@ -736,16 +736,16 @@ test_that("multi_predict() predicts classes if 'type' not given ", {
   # classification (binary) ------------------------------------------------
   expect_no_error({
     clf_binary_fit <-
-      boost_tree(trees = num_iterations) %>%
-      set_engine("lightgbm") %>%
-      set_mode("classification") %>%
+      boost_tree(trees = num_iterations) |>
+      set_engine("lightgbm") |>
+      set_mode("classification") |>
       fit(sex ~ ., data = penguins)
   })
   expect_equal(clf_binary_fit$fit$current_iter(), num_iterations)
 
   new_data <-
-    penguins_subset_numeric %>%
-    select(-sex) %>%
+    penguins_subset_numeric |>
+    select(-sex) |>
     as.matrix()
 
   multi_preds <-
@@ -786,9 +786,9 @@ test_that("lightgbm with case weights", {
   # regression -----------------------------------------------------------------
   expect_no_error({
     pars_fit_1 <-
-      boost_tree() %>%
-      set_engine("lightgbm") %>%
-      set_mode("regression") %>%
+      boost_tree() |>
+      set_engine("lightgbm") |>
+      set_mode("regression") |>
       fit(
         bill_length_mm ~ .,
         data = penguins,
@@ -799,14 +799,14 @@ test_that("lightgbm with case weights", {
   pars_preds_1 <- predict(pars_fit_1, penguins)
 
   peng <-
-    penguins %>%
-    mutate(across(where(is.character), ~ as.factor(.x))) %>%
+    penguins |>
+    mutate(across(where(is.character), ~ as.factor(.x))) |>
     mutate(across(where(is.factor), ~ as.integer(.x) - 1))
 
   peng_y <- peng$bill_length_mm
 
-  peng_m <- peng %>%
-    select(-bill_length_mm) %>%
+  peng_m <- peng |>
+    select(-bill_length_mm) |>
     as.matrix()
 
   peng_x <-
@@ -845,8 +845,8 @@ test_that("sparse data with lightgbm", {
 
   hep <- modeldata::hepatic_injury_qsar
 
-  lgb_spec <- boost_tree() %>%
-    set_mode("classification") %>%
+  lgb_spec <- boost_tree() |>
+    set_mode("classification") |>
     set_engine("lightgbm")
 
   # ------------------------------------------------------------------------------

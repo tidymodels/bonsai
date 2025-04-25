@@ -1,7 +1,7 @@
 # boost_tree with lightgbm
 
     Code
-      boost_tree() %>% set_engine("lightgbm") %>% set_mode("regression")
+      set_mode(set_engine(boost_tree(), "lightgbm"), "regression")
     Output
       Boosted Tree Model Specification (regression)
       
@@ -11,8 +11,7 @@
 ---
 
     Code
-      boost_tree() %>% set_engine("lightgbm", nrounds = 100) %>% set_mode(
-        "classification")
+      set_mode(set_engine(boost_tree(), "lightgbm", nrounds = 100), "classification")
     Output
       Boosted Tree Model Specification (classification)
       
@@ -39,8 +38,8 @@
 # tuning mtry vs mtry_prop
 
     Code
-      boost_tree(mtry = tune::tune()) %>% set_engine("lightgbm") %>% set_mode(
-        "regression") %>% fit(bill_length_mm ~ ., data = penguins)
+      fit(set_mode(set_engine(boost_tree(mtry = tune::tune()), "lightgbm"),
+      "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Error in `fit()`:
       ! `feature_fraction_bynode` must be a number, not a call.
@@ -48,8 +47,8 @@
 # training wrapper warns on protected arguments
 
     Code
-      .res <- boost_tree() %>% set_engine("lightgbm", colnames = paste0("X", 1:ncol(
-        penguins))) %>% set_mode("regression") %>% fit(bill_length_mm ~ ., data = penguins)
+      .res <- fit(set_mode(set_engine(boost_tree(), "lightgbm", colnames = paste0("X",
+        1:ncol(penguins))), "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
       The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames
@@ -57,9 +56,9 @@
 ---
 
     Code
-      .res <- boost_tree() %>% set_engine("lightgbm", colnames = paste0("X", 1:ncol(
-        penguins)), callbacks = list(p = print)) %>% set_mode("regression") %>% fit(
-        bill_length_mm ~ ., data = penguins)
+      .res <- fit(set_mode(set_engine(boost_tree(), "lightgbm", colnames = paste0("X",
+        1:ncol(penguins)), callbacks = list(p = print)), "regression"),
+      bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
       The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames, callbacks
@@ -67,8 +66,8 @@
 ---
 
     Code
-      .res <- boost_tree() %>% set_engine("lightgbm", colnames = paste0("X", 1:ncol(
-        penguins))) %>% set_mode("regression") %>% fit(bill_length_mm ~ ., data = penguins)
+      .res <- fit(set_mode(set_engine(boost_tree(), "lightgbm", colnames = paste0("X",
+        1:ncol(penguins))), "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
       The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames
@@ -76,8 +75,8 @@
 ---
 
     Code
-      boost_tree() %>% set_engine("lightgbm", n_iter = 10) %>% set_mode("regression") %>%
-        fit(bill_length_mm ~ ., data = penguins)
+      fit(set_mode(set_engine(boost_tree(), "lightgbm", n_iter = 10), "regression"),
+      bill_length_mm ~ ., data = penguins)
     Condition
       Error in `fit()`:
       ! The `n_iter` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
@@ -86,8 +85,8 @@
 ---
 
     Code
-      boost_tree() %>% set_engine("lightgbm", num_tree = 10) %>% set_mode(
-        "regression") %>% fit(bill_length_mm ~ ., data = penguins)
+      fit(set_mode(set_engine(boost_tree(), "lightgbm", num_tree = 10), "regression"),
+      bill_length_mm ~ ., data = penguins)
     Condition
       Error in `fit()`:
       ! The `num_tree` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
@@ -96,8 +95,8 @@
 ---
 
     Code
-      boost_tree() %>% set_engine("lightgbm", min_split_gain = 2) %>% set_mode(
-        "regression") %>% fit(bill_length_mm ~ ., data = penguins)
+      fit(set_mode(set_engine(boost_tree(), "lightgbm", min_split_gain = 2),
+      "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Error in `fit()`:
       ! The `min_split_gain` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
@@ -106,8 +105,8 @@
 ---
 
     Code
-      boost_tree() %>% set_engine("lightgbm", min_split_gain = 2, lambda_l2 = 0.5) %>%
-        set_mode("regression") %>% fit(bill_length_mm ~ ., data = penguins)
+      fit(set_mode(set_engine(boost_tree(), "lightgbm", min_split_gain = 2,
+      lambda_l2 = 0.5), "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Error in `fit()`:
       ! The `min_split_gain` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.

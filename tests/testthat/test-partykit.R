@@ -7,11 +7,11 @@ test_that("condition inference trees", {
   suppressPackageStartupMessages(library(partykit))
 
   expect_snapshot(
-    decision_tree() %>% set_engine("partykit") %>% set_mode("regression")
+    decision_tree() |> set_engine("partykit") |> set_mode("regression")
   )
   expect_snapshot(
-    decision_tree() %>%
-      set_engine("partykit", teststat = "maximum") %>%
+    decision_tree() |>
+      set_engine("partykit", teststat = "maximum") |>
       set_mode("classification")
   )
 
@@ -20,9 +20,9 @@ test_that("condition inference trees", {
 
   expect_no_error({
     ct_fit_1 <-
-      decision_tree() %>%
-      set_engine("partykit") %>%
-      set_mode("regression") %>%
+      decision_tree() |>
+      set_engine("partykit") |>
+      set_mode("regression") |>
       fit(mpg ~ ., data = mtcars)
   })
   pk_fit_1 <- ctree(mpg ~ ., data = mtcars)
@@ -34,9 +34,9 @@ test_that("condition inference trees", {
 
   expect_no_error({
     ct_fit_2 <-
-      decision_tree(tree_depth = 1) %>%
-      set_engine("partykit") %>%
-      set_mode("regression") %>%
+      decision_tree(tree_depth = 1) |>
+      set_engine("partykit") |>
+      set_mode("regression") |>
       fit(mpg ~ ., data = mtcars)
   })
   pk_fit_2 <- ctree(
@@ -52,9 +52,9 @@ test_that("condition inference trees", {
 
   expect_no_error({
     ct_fit_3 <-
-      decision_tree() %>%
-      set_engine("partykit", mincriterion = .99) %>%
-      set_mode("regression") %>%
+      decision_tree() |>
+      set_engine("partykit", mincriterion = .99) |>
+      set_mode("regression") |>
       fit(mpg ~ ., data = mtcars)
   })
   pk_fit_3 <- ctree(
@@ -75,9 +75,9 @@ test_that("condition inference trees", {
 
   expect_no_error({
     ct_fit_4 <-
-      decision_tree() %>%
-      set_engine("partykit") %>%
-      set_mode("classification") %>%
+      decision_tree() |>
+      set_engine("partykit") |>
+      set_mode("classification") |>
       fit(Class ~ ., data = ad_data)
   })
   pk_fit_4 <- ctree(Class ~ ., data = ad_data)
@@ -100,11 +100,11 @@ test_that("condition inference forests", {
   suppressPackageStartupMessages(library(partykit))
 
   expect_snapshot(
-    rand_forest() %>% set_engine("partykit") %>% set_mode("regression")
+    rand_forest() |> set_engine("partykit") |> set_mode("regression")
   )
   expect_snapshot(
-    rand_forest() %>%
-      set_engine("partykit", teststat = "maximum") %>%
+    rand_forest() |>
+      set_engine("partykit", teststat = "maximum") |>
       set_mode("classification")
   )
 
@@ -114,9 +114,9 @@ test_that("condition inference forests", {
   expect_no_error({
     set.seed(1)
     cf_fit_1 <-
-      rand_forest(trees = 5) %>%
-      set_engine("partykit") %>%
-      set_mode("regression") %>%
+      rand_forest(trees = 5) |>
+      set_engine("partykit") |>
+      set_mode("regression") |>
       fit(mpg ~ ., data = mtcars)
   })
   set.seed(1)
@@ -130,9 +130,9 @@ test_that("condition inference forests", {
   expect_no_error({
     set.seed(1)
     cf_fit_2 <-
-      rand_forest(trees = 5, mtry = 2) %>%
-      set_engine("partykit") %>%
-      set_mode("regression") %>%
+      rand_forest(trees = 5, mtry = 2) |>
+      set_engine("partykit") |>
+      set_mode("regression") |>
       fit(mpg ~ ., data = mtcars)
   })
   set.seed(1)
@@ -146,9 +146,9 @@ test_that("condition inference forests", {
   expect_no_error({
     set.seed(1)
     cf_fit_3 <-
-      rand_forest(trees = 5) %>%
-      set_engine("partykit", mincriterion = .99) %>%
-      set_mode("regression") %>%
+      rand_forest(trees = 5) |>
+      set_engine("partykit", mincriterion = .99) |>
+      set_mode("regression") |>
       fit(mpg ~ ., data = mtcars)
   })
   set.seed(1)
@@ -172,9 +172,9 @@ test_that("condition inference forests", {
   expect_no_error({
     set.seed(1)
     cf_fit_4 <-
-      rand_forest(trees = 5) %>%
-      set_engine("partykit") %>%
-      set_mode("classification") %>%
+      rand_forest(trees = 5) |>
+      set_engine("partykit") |>
+      set_mode("classification") |>
       fit(Class ~ ., data = ad_data)
   })
   set.seed(1)
