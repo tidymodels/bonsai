@@ -1,5 +1,7 @@
 # bonsai (development version)
 
+* Increased the minimum R version to R 4.1.
+
 # bonsai 0.3.2
 
 * Resolves a test failure ahead of an upcoming parsnip release (#95).

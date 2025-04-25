@@ -17,7 +17,8 @@ test_that("regression model object", {
   aorsf_regr_fit <-
     aorsf::orsf(
       # everyone's favorite
-      data = mtcars_orsf, formula = mpg ~ .,
+      data = mtcars_orsf,
+      formula = mpg ~ .,
       # faster
       n_tree = 10,
       # requested default from tidymodels
@@ -29,8 +30,8 @@ test_that("regression model object", {
 
   # formula method
   regr_spec <-
-    rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+    rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("regression")
 
   set.seed(1234)
@@ -86,8 +87,8 @@ test_that("classification model object", {
   aorsf_clsf_fit_wtd <- aorsf::orsf_update(aorsf_clsf_fit, weights = wts)
 
   # formula method
-  clsf_spec <- rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+  clsf_spec <- rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("classification")
 
   set.seed(1234)
@@ -144,8 +145,8 @@ test_that("regression predictions", {
 
   # formula method
   regr_spec <-
-    rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+    rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("regression")
 
   set.seed(1234)
@@ -158,7 +159,7 @@ test_that("regression predictions", {
   expect_equal(nrow(bonsai_regr_pred), nrow(mtcars_orsf))
 
   # single observation
-  pred_1row <- predict(bonsai_regr_fit, mtcars_orsf[2,])
+  pred_1row <- predict(bonsai_regr_fit, mtcars_orsf[2, ])
   expect_identical(nrow(pred_1row), 1L)
 })
 
@@ -184,13 +185,17 @@ test_that("classification predictions", {
   aorsf_probs <- aorsf_clsf_pred
 
   # see #78--do not expect predictions to align exactly
-  aorsf_class <- colnames(aorsf_probs)[apply(aorsf_clsf_pred[-1, ], 1, which.max)]
+  aorsf_class <- colnames(aorsf_probs)[apply(
+    aorsf_clsf_pred[-1, ],
+    1,
+    which.max
+  )]
   # inserting the NA from first row
   aorsf_class <- c(NA_character_, aorsf_class)
 
   # formula method
-  clsf_spec <- rand_forest(trees = 10) %>%
-    set_engine("aorsf") %>%
+  clsf_spec <- rand_forest(trees = 10) |>
+    set_engine("aorsf") |>
     set_mode("classification")
 
   set.seed(1234)
@@ -216,8 +221,8 @@ test_that("classification predictions", {
   expect_true(all(names(bonsai_clsf_pred_prob) == c(".pred_0", ".pred_1")))
   expect_true(all(names(bonsai_clsf_pred_class) == ".pred_class"))
 
-  expect_equal(bonsai_clsf_pred_prob$.pred_0, as.vector(aorsf_probs[,1]))
-  expect_equal(bonsai_clsf_pred_prob$.pred_1, as.vector(aorsf_probs[,2]))
+  expect_equal(bonsai_clsf_pred_prob$.pred_0, as.vector(aorsf_probs[, 1]))
+  expect_equal(bonsai_clsf_pred_prob$.pred_1, as.vector(aorsf_probs[, 2]))
 
   expect_equal(bonsai_clsf_pred_class$.pred_class, factor(aorsf_class))
 
@@ -225,6 +230,6 @@ test_that("classification predictions", {
   expect_equal(nrow(bonsai_clsf_pred_class), nrow(mtcars_orsf))
 
   # single observation
-  pred_1row <- predict(bonsai_clsf_fit, mtcars_orsf[2,])
+  pred_1row <- predict(bonsai_clsf_fit, mtcars_orsf[2, ])
   expect_identical(nrow(pred_1row), 1L)
 })

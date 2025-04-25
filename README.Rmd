@@ -49,20 +49,20 @@ The bonsai package provides additional engines for the models in the following t
 ```{r, echo = FALSE, message = FALSE}
 library(parsnip)
 
-parsnip_models <- get_from_env("models") %>%
-  setNames(., .) %>%
+parsnip_models <- 
+  setNames(nm = get_from_env("models")) |>
   purrr::map_dfr(get_from_env, .id = "model")
 
 library(bonsai)
 
-bonsai_models <- get_from_env("models") %>%
-  setNames(., .) %>%
+bonsai_models <- 
+  setNames(nm = get_from_env("models")) |>
   purrr::map_dfr(get_from_env, .id = "model")
 
 dplyr::anti_join(
   bonsai_models, parsnip_models, 
   by = c("model", "engine", "mode")
-) %>%
+) |>
   knitr::kable()
 ```
 

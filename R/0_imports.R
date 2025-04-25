@@ -20,8 +20,10 @@ dials::min_n()
 
 utils::globalVariables(
   c(
-    "categorical_columns", "categorical_features_to_int",
-    "new_data", "object"
+    "categorical_columns",
+    "categorical_features_to_int",
+    "new_data",
+    "object"
   )
 )
 
@@ -30,6 +32,6 @@ utils::globalVariables(
 # lightgbm had significant breaking changes following release v3.3.2.
 # this function is used by patches that make bonsai backward-compatible with
 # older lightgbm versions
-using_newer_lightgbm_version <- function(){
-    utils::packageVersion("lightgbm") > package_version("3.3.2")
+using_newer_lightgbm_version <- function() {
+  utils::packageVersion("lightgbm") > package_version("3.3.2")
 }

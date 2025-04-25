@@ -7,7 +7,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r}
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -34,7 +35,8 @@ If you're not familiar with parsnip, you can read more about the package on it's
 
 To get started, load bonsai with:
 
-```{r setup}
+```{r}
+#| label: setup
 library(bonsai)
 ```
 
@@ -56,9 +58,9 @@ set.seed(1)
 
 # specify and fit model
 dt_mod <- 
-  decision_tree() %>%
-  set_engine(engine = "rpart") %>%
-  set_mode(mode = "classification") %>%
+  decision_tree() |>
+  set_engine(engine = "rpart") |>
+  set_mode(mode = "classification") |>
   fit(
     formula = species ~ flipper_length_mm + island, 
     data = penguins
@@ -72,9 +74,9 @@ From this output, we can see that the model generally first looks to `island` to
 A benefit of using parsnip and bonsai is that, to use a different implementation of decision trees, we simply change the engine argument to `set_engine`; all other elements of the interface stay the same. For instance, using `"partykit"`—which implements a type of decision tree called a _conditional inference tree_—as our backend instead:
 
 ```{r}
-decision_tree() %>%
-  set_engine(engine = "partykit") %>%
-  set_mode(mode = "classification") %>%
+decision_tree() |>
+  set_engine(engine = "partykit") |>
+  set_mode(mode = "classification") |>
   fit(
     formula = species ~ flipper_length_mm + island, 
     data = penguins
@@ -91,9 +93,9 @@ To fit a conditional random forest with partykit, our code looks pretty similar 
 
 ```{r}
 rf_mod <- 
-  rand_forest() %>%
-  set_engine(engine = "partykit") %>%
-  set_mode(mode = "classification") %>%
+  rand_forest() |>
+  set_engine(engine = "partykit") |>
+  set_mode(mode = "classification") |>
   fit(
     formula = species ~ flipper_length_mm + island, 
     data = penguins
@@ -106,9 +108,9 @@ Another generalization of a decision tree is a series of decision trees where _e
 
 ```{r}
 bt_mod <- 
-  boost_tree() %>%
-  set_engine(engine = "lightgbm") %>%
-  set_mode(mode = "classification") %>%
+  boost_tree() |>
+  set_engine(engine = "lightgbm") |>
+  set_mode(mode = "classification") |>
   fit(
     formula = species ~ flipper_length_mm + island, 
     data = penguins

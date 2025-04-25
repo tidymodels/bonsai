@@ -13,5 +13,4 @@
   make_rand_forest_aorsf()
 }
 
-
 # nocov end

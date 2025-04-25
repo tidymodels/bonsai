@@ -1,7 +1,11 @@
 # nocov start
 
 make_decision_tree_partykit <- function() {
-  parsnip::set_model_engine("decision_tree", mode = "regression", eng = "partykit")
+  parsnip::set_model_engine(
+    "decision_tree",
+    mode = "regression",
+    eng = "partykit"
+  )
 
   parsnip::set_dependency(
     model = "decision_tree",
@@ -68,18 +72,21 @@ make_decision_tree_partykit <- function() {
       pre = NULL,
       post = NULL,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = rlang::expr(object$fit),
-          newdata = rlang::expr(new_data),
-          type = "response"
-        )
+      args = list(
+        object = rlang::expr(object$fit),
+        newdata = rlang::expr(new_data),
+        type = "response"
+      )
     )
   )
 
   # ----------------------------------------------------------------------------
 
-  parsnip::set_model_engine("decision_tree", mode = "classification", eng = "partykit")
+  parsnip::set_model_engine(
+    "decision_tree",
+    mode = "classification",
+    eng = "partykit"
+  )
 
   parsnip::set_dependency(
     model = "decision_tree",
@@ -145,12 +152,11 @@ make_decision_tree_partykit <- function() {
       pre = NULL,
       post = NULL,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = rlang::expr(object$fit),
-          newdata = rlang::expr(new_data),
-          type = "response"
-        )
+      args = list(
+        object = rlang::expr(object$fit),
+        newdata = rlang::expr(new_data),
+        type = "response"
+      )
     )
   )
 
@@ -163,28 +169,34 @@ make_decision_tree_partykit <- function() {
       pre = NULL,
       post = function(result, object) tibble::as_tibble(result),
       func = c(fun = "predict"),
-      args =
-        list(
-          object = rlang::expr(object$fit),
-          newdata = rlang::expr(new_data),
-          type = "prob"
-        )
+      args = list(
+        object = rlang::expr(object$fit),
+        newdata = rlang::expr(new_data),
+        type = "prob"
+      )
     )
   )
-
 }
 
 make_rand_forest_partykit <- function() {
-  parsnip::set_model_engine("rand_forest", mode = "regression", eng = "partykit")
+  parsnip::set_model_engine(
+    "rand_forest",
+    mode = "regression",
+    eng = "partykit"
+  )
 
-  parsnip::set_dependency("rand_forest",
-                          eng = "partykit",
-                          pkg = "partykit",
-                          mode = "regression")
-  parsnip::set_dependency("rand_forest",
-                          eng = "partykit",
-                          pkg = "bonsai",
-                          mode = "regression")
+  parsnip::set_dependency(
+    "rand_forest",
+    eng = "partykit",
+    pkg = "partykit",
+    mode = "regression"
+  )
+  parsnip::set_dependency(
+    "rand_forest",
+    eng = "partykit",
+    pkg = "bonsai",
+    mode = "regression"
+  )
 
   parsnip::set_encoding(
     model = "rand_forest",
@@ -246,27 +258,34 @@ make_rand_forest_partykit <- function() {
       pre = NULL,
       post = NULL,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = rlang::expr(object$fit),
-          newdata = rlang::expr(new_data),
-          type = "response"
-        )
+      args = list(
+        object = rlang::expr(object$fit),
+        newdata = rlang::expr(new_data),
+        type = "response"
+      )
     )
   )
 
   # ----------------------------------------------------------------------------
 
-  parsnip::set_model_engine("rand_forest", mode = "classification", eng = "partykit")
+  parsnip::set_model_engine(
+    "rand_forest",
+    mode = "classification",
+    eng = "partykit"
+  )
 
-  parsnip::set_dependency("rand_forest",
-                          eng = "partykit",
-                          pkg = "partykit",
-                          mode = "classification")
-  parsnip::set_dependency("rand_forest",
-                          eng = "partykit",
-                          pkg = "bonsai",
-                          mode = "classification")
+  parsnip::set_dependency(
+    "rand_forest",
+    eng = "partykit",
+    pkg = "partykit",
+    mode = "classification"
+  )
+  parsnip::set_dependency(
+    "rand_forest",
+    eng = "partykit",
+    pkg = "bonsai",
+    mode = "classification"
+  )
 
   parsnip::set_encoding(
     model = "rand_forest",
@@ -319,12 +338,11 @@ make_rand_forest_partykit <- function() {
       pre = NULL,
       post = NULL,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = rlang::expr(object$fit),
-          newdata = rlang::expr(new_data),
-          type = "response"
-        )
+      args = list(
+        object = rlang::expr(object$fit),
+        newdata = rlang::expr(new_data),
+        type = "response"
+      )
     )
   )
 
@@ -337,15 +355,13 @@ make_rand_forest_partykit <- function() {
       pre = NULL,
       post = function(result, object) tibble::as_tibble(result),
       func = c(fun = "predict"),
-      args =
-        list(
-          object = rlang::expr(object$fit),
-          newdata = rlang::expr(new_data),
-          type = "prob"
-        )
+      args = list(
+        object = rlang::expr(object$fit),
+        newdata = rlang::expr(new_data),
+        type = "prob"
+      )
     )
   )
-
 }
 
 # nocov end

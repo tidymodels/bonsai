@@ -54,6 +54,7 @@ following table:
 | rand_forest   | aorsf    | classification |
 | rand_forest   | aorsf    | regression     |
 
+
 ## Code of Conduct
 
 Please note that the bonsai project is released with a [Contributor Code

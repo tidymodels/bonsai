@@ -1,15 +1,24 @@
 # nocov start
 
-make_rand_forest_aorsf <- function(){
+make_rand_forest_aorsf <- function() {
   parsnip::set_model_engine("rand_forest", "classification", "aorsf")
   parsnip::set_model_engine("rand_forest", "regression", "aorsf")
 
-  parsnip::set_dependency("rand_forest", "aorsf", "aorsf", mode = "classification")
-  parsnip::set_dependency("rand_forest", "aorsf", "bonsai", mode = "classification")
+  parsnip::set_dependency(
+    "rand_forest",
+    "aorsf",
+    "aorsf",
+    mode = "classification"
+  )
+  parsnip::set_dependency(
+    "rand_forest",
+    "aorsf",
+    "bonsai",
+    mode = "classification"
+  )
 
   parsnip::set_dependency("rand_forest", "aorsf", "aorsf", mode = "regression")
   parsnip::set_dependency("rand_forest", "aorsf", "bonsai", mode = "regression")
-
 
   parsnip::set_model_arg(
     model = "rand_forest",
@@ -55,11 +64,10 @@ make_rand_forest_aorsf <- function(){
       interface = "formula",
       protect = c("formula", "data", "weights"),
       func = c(pkg = "aorsf", fun = "orsf"),
-      defaults =
-        list(
-          n_thread = 1,
-          verbose_progress = FALSE
-        )
+      defaults = list(
+        n_thread = 1,
+        verbose_progress = FALSE
+      )
     )
   )
 
@@ -83,11 +91,10 @@ make_rand_forest_aorsf <- function(){
       interface = "formula",
       protect = c("formula", "data", "weights"),
       func = c(pkg = "aorsf", fun = "orsf"),
-      defaults =
-        list(
-          n_thread = 1,
-          verbose_progress = FALSE
-        )
+      defaults = list(
+        n_thread = 1,
+        verbose_progress = FALSE
+      )
     )
   )
 
@@ -118,11 +125,10 @@ make_rand_forest_aorsf <- function(){
       # I think it's really confusing when predicted probs do not align with
       # predicted classes. I'm fine with this in aorsf but in bonsai I want
       # to minimize confusion (#78).
-      post = function(results, object){
-
+      post = function(results, object) {
         missings <- apply(results, 1, function(x) any(is.na(x)))
 
-        if(!any(missings)) {
+        if (!any(missings)) {
           return(colnames(results)[apply(results, 1, which.max)])
         }
 
@@ -131,17 +137,15 @@ make_rand_forest_aorsf <- function(){
         out <- rep(NA_character_, nrow(results))
         out[obs] <- colnames(results)[apply(results[obs, ], 1, which.max)]
         out
-
       },
       func = c(fun = "predict"),
-      args =
-        list(
-          object = quote(object$fit),
-          new_data = quote(new_data),
-          pred_type = "prob",
-          verbose_progress = FALSE,
-          na_action = 'pass'
-        )
+      args = list(
+        object = quote(object$fit),
+        new_data = quote(new_data),
+        pred_type = "prob",
+        verbose_progress = FALSE,
+        na_action = 'pass'
+      )
     )
   )
 
@@ -156,14 +160,13 @@ make_rand_forest_aorsf <- function(){
         as_tibble(x)
       },
       func = c(fun = "predict"),
-      args =
-        list(
-          object = quote(object$fit),
-          new_data = quote(new_data),
-          pred_type = 'prob',
-          verbose_progress = FALSE,
-          na_action = 'pass'
-        )
+      args = list(
+        object = quote(object$fit),
+        new_data = quote(new_data),
+        pred_type = 'prob',
+        verbose_progress = FALSE,
+        na_action = 'pass'
+      )
     )
   )
 
@@ -176,13 +179,12 @@ make_rand_forest_aorsf <- function(){
       pre = NULL,
       post = NULL,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = quote(object$fit),
-          new_data = quote(new_data),
-          verbose_progress = FALSE,
-          na_action = 'pass'
-        )
+      args = list(
+        object = quote(object$fit),
+        new_data = quote(new_data),
+        verbose_progress = FALSE,
+        na_action = 'pass'
+      )
     )
   )
 
@@ -195,14 +197,13 @@ make_rand_forest_aorsf <- function(){
       pre = NULL,
       post = as.numeric,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = quote(object$fit),
-          new_data = quote(new_data),
-          pred_type = "mean",
-          verbose_progress = FALSE,
-          na_action = 'pass'
-        )
+      args = list(
+        object = quote(object$fit),
+        new_data = quote(new_data),
+        pred_type = "mean",
+        verbose_progress = FALSE,
+        na_action = 'pass'
+      )
     )
   )
 
@@ -215,14 +216,13 @@ make_rand_forest_aorsf <- function(){
       pre = NULL,
       post = as.numeric,
       func = c(fun = "predict"),
-      args =
-        list(
-          object = quote(object$fit),
-          new_data = quote(new_data),
-          pred_type = "mean",
-          verbose_progress = FALSE,
-          na_action = 'pass'
-        )
+      args = list(
+        object = quote(object$fit),
+        new_data = quote(new_data),
+        pred_type = "mean",
+        verbose_progress = FALSE,
+        na_action = 'pass'
+      )
     )
   )
 }

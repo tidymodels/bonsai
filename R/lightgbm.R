@@ -36,12 +36,23 @@
 #' @return A fitted `lightgbm.Model` object.
 #' @keywords internal
 #' @export
-train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations = 100, learning_rate = 0.1,
-                           feature_fraction_bynode = 1, min_data_in_leaf = 20,
-                           min_gain_to_split = 0, bagging_fraction = 1,
-                           early_stopping_round = NULL, validation = 0,
-                           counts = TRUE, quiet = FALSE, ...) {
-
+train_lightgbm <- function(
+  x,
+  y,
+  weights = NULL,
+  max_depth = -1,
+  num_iterations = 100,
+  learning_rate = 0.1,
+  feature_fraction_bynode = 1,
+  min_data_in_leaf = 20,
+  min_gain_to_split = 0,
+  bagging_fraction = 1,
+  early_stopping_round = NULL,
+  validation = 0,
+  counts = TRUE,
+  quiet = FALSE,
+  ...
+) {
   force(x)
   force(y)
 
@@ -59,8 +70,12 @@ train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations 
   check_bool(quiet, call = call)
 
   feature_fraction_bynode <-
-    process_mtry(feature_fraction_bynode = feature_fraction_bynode,
-                 counts = counts, x = x, is_missing = missing(feature_fraction_bynode))
+    process_mtry(
+      feature_fraction_bynode = feature_fraction_bynode,
+      counts = counts,
+      x = x,
+      is_missing = missing(feature_fraction_bynode)
+    )
 
   check_lightgbm_aliases(...)
 
@@ -102,7 +117,9 @@ train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations 
   call <- rlang::call2("lgb.train", !!!compacted, .ns = "lightgbm")
 
   if (quiet) {
-    junk <- utils::capture.output(res <- rlang::eval_tidy(call, env = rlang::current_env()))
+    junk <- utils::capture.output(
+      res <- rlang::eval_tidy(call, env = rlang::current_env())
+    )
   } else {
     res <- rlang::eval_tidy(call, env = rlang::current_env())
   }
@@ -110,14 +127,35 @@ train_lightgbm <- function(x, y, weights = NULL, max_depth = -1, num_iterations 
   res
 }
 
-process_mtry <- function(feature_fraction_bynode, counts, x, is_missing, call = call2("fit")) {
+process_mtry <- function(
+  feature_fraction_bynode,
+  counts,
+  x,
+  is_missing,
+  call = call2("fit")
+) {
   check_bool(counts, call = call)
 
-  ineq <- if (counts) {"greater"} else {"less"}
-  interp <- if (counts) {"count"} else {"proportion"}
-  opp <- if (!counts) {"count"} else {"proportion"}
+  ineq <- if (counts) {
+    "greater"
+  } else {
+    "less"
+  }
+  interp <- if (counts) {
+    "count"
+  } else {
+    "proportion"
+  }
+  opp <- if (!counts) {
+    "count"
+  } else {
+    "proportion"
+  }
 
-  if ((feature_fraction_bynode < 1 & counts) | (feature_fraction_bynode > 1 & !counts)) {
+  if (
+    (feature_fraction_bynode < 1 & counts) |
+      (feature_fraction_bynode > 1 & !counts)
+  ) {
     cli::cli_abort(
       c(
         "{.arg mtry} must be {ineq} than or equal to 1, not {feature_fraction_bynode}.",
@@ -171,8 +209,10 @@ process_parallelism <- function(args) {
 }
 
 process_bagging <- function(args) {
-  if (args$bagging_fraction != 1 &&
-      (!"bagging_freq" %in% names(args))) {
+  if (
+    args$bagging_fraction != 1 &&
+      (!"bagging_freq" %in% names(args))
+  ) {
     args$bagging_freq <- 1
   }
 
@@ -231,7 +271,11 @@ process_data <- function(args, x, y, weights, validation, missing_validation) {
         list(
           data = prepare_df_lgbm(x[val_index, , drop = FALSE]),
           label = y[val_index],
-          categorical_feature = categorical_columns(x[val_index, , drop = FALSE]),
+          categorical_feature = categorical_columns(x[
+            val_index,
+            ,
+            drop = FALSE
+          ]),
           params = list(feature_pre_filter = FALSE, args$params),
           weight = weights[val_index]
         ),
@@ -240,10 +284,9 @@ process_data <- function(args, x, y, weights, validation, missing_validation) {
 
     args$main_args_train$valids <-
       list(
-        validation =
-          rlang::eval_bare(
-            rlang::call2("lgb.Dataset", !!!valids_args, .ns = "lightgbm")
-          )
+        validation = rlang::eval_bare(
+          rlang::call2("lgb.Dataset", !!!valids_args, .ns = "lightgbm")
+        )
       )
   }
 
@@ -254,8 +297,14 @@ process_data <- function(args, x, y, weights, validation, missing_validation) {
 # or the `params` argument to both of the above (#77).
 sort_args <- function(args) {
   # warn on arguments that won't be passed along
-  protected <- c("obj", "init_model", "colnames",
-                 "categorical_feature", "callbacks", "reset_data")
+  protected <- c(
+    "obj",
+    "init_model",
+    "colnames",
+    "categorical_feature",
+    "callbacks",
+    "reset_data"
+  )
 
   if (any(names(args) %in% protected)) {
     protected_args <- names(args[names(args) %in% protected])
@@ -297,11 +346,11 @@ main_args <- function(fn) {
 # this function ensures that multiclass classification predictions are always
 # returned as a [num_observations, num_classes] matrix, regardless of lightgbm version
 reshape_lightgbm_multiclass_preds <- function(preds, num_rows) {
-    n_preds_per_case <- length(preds) / num_rows
-    if (is.vector(preds) && n_preds_per_case > 1) {
-        preds <- matrix(preds, ncol = n_preds_per_case, byrow = TRUE)
-    }
-    preds
+  n_preds_per_case <- length(preds) / num_rows
+  if (is.vector(preds) && n_preds_per_case > 1) {
+    preds <- matrix(preds, ncol = n_preds_per_case, byrow = TRUE)
+  }
+  preds
 }
 
 #' Internal functions
@@ -315,7 +364,7 @@ predict_lightgbm_classification_prob <- function(object, new_data, ...) {
   p <- stats::predict(object$fit, prepare_df_lgbm(new_data), ...)
   p <- reshape_lightgbm_multiclass_preds(preds = p, num_rows = nrow(new_data))
 
-  if(is.vector(p)) {
+  if (is.vector(p)) {
     p <- tibble::tibble(p1 = 1 - p, p2 = p)
   }
 
@@ -328,7 +377,11 @@ predict_lightgbm_classification_prob <- function(object, new_data, ...) {
 #' @export
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_class <- function(object, new_data, ...) {
-  p <- predict_lightgbm_classification_prob(object, prepare_df_lgbm(new_data), ...)
+  p <- predict_lightgbm_classification_prob(
+    object,
+    prepare_df_lgbm(new_data),
+    ...
+  )
 
   q <- apply(p, 1, function(x) which.max(x))
 
@@ -340,9 +393,19 @@ predict_lightgbm_classification_class <- function(object, new_data, ...) {
 #' @rdname lightgbm_helpers
 predict_lightgbm_classification_raw <- function(object, new_data, ...) {
   if (using_newer_lightgbm_version()) {
-      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), type = "raw", ...)
+    p <- stats::predict(
+      object$fit,
+      prepare_df_lgbm(new_data),
+      type = "raw",
+      ...
+    )
   } else {
-      p <- stats::predict(object$fit, prepare_df_lgbm(new_data), rawscore = TRUE, ...)
+    p <- stats::predict(
+      object$fit,
+      prepare_df_lgbm(new_data),
+      rawscore = TRUE,
+      ...
+    )
   }
   reshape_lightgbm_multiclass_preds(preds = p, num_rows = nrow(new_data))
 }
@@ -362,11 +425,16 @@ predict_lightgbm_regression_numeric <- function(object, new_data, ...) {
 }
 
 
-
 #' @keywords internal
 #' @export
 #' @rdname lightgbm_helpers
-multi_predict._lgb.Booster <- function(object, new_data, type = NULL, trees = NULL, ...) {
+multi_predict._lgb.Booster <- function(
+  object,
+  new_data,
+  type = NULL,
+  trees = NULL,
+  ...
+) {
   if (any(names(rlang::enquos(...)) == "newdata")) {
     cli::cli_abort(
       "Did you mean to use {.code new_data} instead of {.code newdata}?"
@@ -375,31 +443,47 @@ multi_predict._lgb.Booster <- function(object, new_data, type = NULL, trees = NU
 
   trees <- sort(trees)
 
-  res <- map_df(trees, lightgbm_by_tree,
-                object = object, new_data = new_data, type = type)
+  res <- map_df(
+    trees,
+    lightgbm_by_tree,
+    object = object,
+    new_data = new_data,
+    type = type
+  )
   res <- dplyr::arrange(res, .row, trees)
   res <- split(res[, -1], res$.row)
   names(res) <- NULL
 
   tibble::tibble(.pred = res)
-
 }
 
 lightgbm_by_tree <- function(tree, object, new_data, type = NULL) {
   # switch based on prediction type
   if (object$spec$mode == "regression") {
-    pred <- predict_lightgbm_regression_numeric(object, new_data, num_iteration = tree)
+    pred <- predict_lightgbm_regression_numeric(
+      object,
+      new_data,
+      num_iteration = tree
+    )
 
     pred <- tibble::tibble(.pred = pred)
 
     nms <- names(pred)
   } else {
     if (is.null(type) || type == "class") {
-      pred <- predict_lightgbm_classification_class(object, new_data, num_iteration = tree)
+      pred <- predict_lightgbm_classification_class(
+        object,
+        new_data,
+        num_iteration = tree
+      )
 
       pred <- tibble::tibble(.pred_class = factor(pred, levels = object$lvl))
     } else {
-      pred <- predict_lightgbm_classification_prob(object, new_data, num_iteration = tree)
+      pred <- predict_lightgbm_classification_prob(
+        object,
+        new_data,
+        num_iteration = tree
+      )
 
       names(pred) <- paste0(".pred_", names(pred))
     }
@@ -422,7 +506,7 @@ prepare_df_lgbm <- function(x, y = NULL) {
   return(x)
 }
 
-categorical_columns <- function(x){
+categorical_columns <- function(x) {
   categorical_cols <- NULL
   if (inherits(x, c("matrix", "Matrix"))) {
     return(categorical_cols)
@@ -435,12 +519,12 @@ categorical_columns <- function(x){
   categorical_cols
 }
 
-categorical_features_to_int <- function(x, cat_indices){
+categorical_features_to_int <- function(x, cat_indices) {
   if (inherits(x, c("matrix", "Matrix"))) {
     return(x)
   }
-  for (i in cat_indices){
-    x[[i]] <- as.integer(x[[i]]) -1
+  for (i in cat_indices) {
+    x[[i]] <- as.integer(x[[i]]) - 1
   }
   x
 }
@@ -453,13 +537,16 @@ check_lightgbm_aliases <- function(...) {
     if (any(uses_alias)) {
       main <- lightgbm_aliases$lightgbm[uses_alias]
       parsnip <- lightgbm_aliases$parsnip[uses_alias]
-      cli::cli_abort(c(
-      "!" = "The {.var {param}} argument passed to \\
+      cli::cli_abort(
+        c(
+          "!" = "The {.var {param}} argument passed to \\
              {.help [`set_engine()`](parsnip::set_engine)} is an alias for \\
              a main model argument.",
-      "i" = "Please instead pass this argument via the {.var {parsnip}} \\
+          "i" = "Please instead pass this argument via the {.var {parsnip}} \\
              argument to {.help [`boost_tree()`](parsnip::boost_tree)}."
-      ), call = rlang::call2("fit"))
+        ),
+        call = rlang::call2("fit")
+      )
     }
   }
 
@@ -468,31 +555,83 @@ check_lightgbm_aliases <- function(...) {
 
 lightgbm_aliases <-
   tibble::tribble(
-    ~parsnip,         ~lightgbm,                 ~alias,
+    ~parsnip,
+    ~lightgbm,
+    ~alias,
     # note that "tree_depth" -> "max_depth" has no aliases
-    "trees",          "num_iterations",          "num_iteration",
-    "trees",          "num_iterations",          "n_iter",
-    "trees",          "num_iterations",          "num_tree",
-    "trees",          "num_iterations",          "num_trees",
-    "trees",          "num_iterations",          "num_round",
-    "trees",          "num_iterations",          "num_rounds",
-    "trees",          "num_iterations",          "nrounds",
-    "trees",          "num_iterations",          "num_boost_round",
-    "trees",          "num_iterations",          "n_estimators",
-    "trees",          "num_iterations",          "max_iter",
-    "learn_rate",     "learning_rate",           "shrinkage_rate",
-    "learn_rate",     "learning_rate",           "eta",
-    "mtry",           "feature_fraction_bynode", "sub_feature_bynode",
-    "mtry",           "feature_fraction_bynode", "colsample_bynode",
-    "min_n",          "min_data_in_leaf",        "min_data_per_leaf",
-    "min_n",          "min_data_in_leaf",        "min_data",
-    "min_n",          "min_data_in_leaf",        "min_child_samples",
-    "min_n",          "min_data_in_leaf",        "min_samples_leaf",
-    "loss_reduction", "min_gain_to_split",       "min_split_gain",
-    "sample_size",    "bagging_fraction",        "sub_row",
-    "sample_size",    "bagging_fraction",        "subsample",
-    "sample_size",    "bagging_fraction",        "bagging",
-    "stop_iter",      "early_stopping_round",    "early_stopping_rounds",
-    "stop_iter",      "early_stopping_round",    "early_stopping",
-    "stop_iter",      "early_stopping_round",    "n_iter_no_change"
+    "trees",
+    "num_iterations",
+    "num_iteration",
+    "trees",
+    "num_iterations",
+    "n_iter",
+    "trees",
+    "num_iterations",
+    "num_tree",
+    "trees",
+    "num_iterations",
+    "num_trees",
+    "trees",
+    "num_iterations",
+    "num_round",
+    "trees",
+    "num_iterations",
+    "num_rounds",
+    "trees",
+    "num_iterations",
+    "nrounds",
+    "trees",
+    "num_iterations",
+    "num_boost_round",
+    "trees",
+    "num_iterations",
+    "n_estimators",
+    "trees",
+    "num_iterations",
+    "max_iter",
+    "learn_rate",
+    "learning_rate",
+    "shrinkage_rate",
+    "learn_rate",
+    "learning_rate",
+    "eta",
+    "mtry",
+    "feature_fraction_bynode",
+    "sub_feature_bynode",
+    "mtry",
+    "feature_fraction_bynode",
+    "colsample_bynode",
+    "min_n",
+    "min_data_in_leaf",
+    "min_data_per_leaf",
+    "min_n",
+    "min_data_in_leaf",
+    "min_data",
+    "min_n",
+    "min_data_in_leaf",
+    "min_child_samples",
+    "min_n",
+    "min_data_in_leaf",
+    "min_samples_leaf",
+    "loss_reduction",
+    "min_gain_to_split",
+    "min_split_gain",
+    "sample_size",
+    "bagging_fraction",
+    "sub_row",
+    "sample_size",
+    "bagging_fraction",
+    "subsample",
+    "sample_size",
+    "bagging_fraction",
+    "bagging",
+    "stop_iter",
+    "early_stopping_round",
+    "early_stopping_rounds",
+    "stop_iter",
+    "early_stopping_round",
+    "early_stopping",
+    "stop_iter",
+    "early_stopping_round",
+    "n_iter_no_change"
   )
