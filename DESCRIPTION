@@ -24,7 +24,7 @@ URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
     parsnip (>= 1.0.1),
-    R (>= 4.0)
+    R (>= 4.1)
 Imports: 
     cli,
     dials,
