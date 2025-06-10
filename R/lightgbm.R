@@ -309,11 +309,9 @@ sort_args <- function(args) {
   if (any(names(args) %in% protected)) {
     protected_args <- names(args[names(args) %in% protected])
 
-    rlang::warn(
-      glue::glue(
-        "The following argument(s) are guarded by bonsai and will not ",
-        "be passed to LightGBM: {glue::glue_collapse(protected_args, sep = ', ')}"
-      )
+    cli::cli_warn(
+      "The following argument{?s} are guarded by bonsai and will not be passed 
+      to LightGBM: {protected_args}."
     )
 
     args[protected_args] <- NULL
