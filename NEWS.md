@@ -2,7 +2,7 @@
 
 * Increased the minimum R version to R 4.1.
 
-* Fixed bug where `num_threads` argument were ignored for lightgbm engine. (#105)
+* Fixed bug where `num_threads` argument were ignored for lightgbm engine (#105).
 
 # bonsai 0.3.2
 
