@@ -194,7 +194,7 @@ process_objective_function <- function(args, y) {
   }
 
   if (args$objective == "binary" && is.null(args$num_class)) {
-    args$num_class <- 1
+    args$num_class <- 1L
   }
 
   multiclass_obj <- c(
