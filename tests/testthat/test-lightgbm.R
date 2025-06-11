@@ -348,6 +348,30 @@ test_that("bonsai correctly determines objective when label is a factor", {
   expect_equal(bst$params$num_class, 3)
 })
 
+test_that("bonsai correctly determines num_classes when objective is set", {
+  skip_if_not_installed("lightgbm")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(lightgbm)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  expect_no_error({
+    bst <- train_lightgbm(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["species"]],
+      num_iterations = 5,
+      verbose = -1L,
+      objective = "multiclassova"
+    )
+  })
+  expect_identical(bst$params$objective, "multiclassova")
+  expect_identical(bst$params$num_class, 3L)
+})
 
 test_that("bonsai handles mtry vs mtry_prop gracefully", {
   skip_if_not_installed("modeldata")
