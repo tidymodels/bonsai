@@ -44,6 +44,21 @@
       Error in `fit()`:
       ! `feature_fraction_bynode` must be a number, not a call.
 
+# lightgbm warns if user uses `param` argument in set_engine()
+
+    Code
+      fit(mod_spec, mpg ~ ., mtcars)
+    Condition
+      Warning:
+      Arguments passed in through `params` as a list will be ignored.
+      Instead pass the arguments directly to the `...`.
+    Output
+      parsnip model object
+      
+      LightGBM Model (1 tree)
+      Objective: regression
+      Fitted to dataset with 10 columns
+
 # training wrapper warns on protected arguments
 
     Code
