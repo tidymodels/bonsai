@@ -1,5 +1,7 @@
 # bonsai (development version)
 
+* The lightgbm engine now warns that arguments passed to `params` argument in `set_engine()` are ignored (#110).
+
 * Automatic handling of `num_classes` argument when specifying a multiclass classification objective for the lightgbm engine (#109).
 
 * Increased the minimum R version to R 4.1.

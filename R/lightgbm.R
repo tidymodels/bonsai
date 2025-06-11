@@ -100,6 +100,13 @@ train_lightgbm <- function(
       ...
     )
 
+  if (!is.null(args$params) && is.list(args$params)) {
+    cli::cli_warn(c(
+      "Arguments passed in through {.arg params} as a list will be ignored.",
+      "Instead pass the arguments directly to the {.code ...}."
+    ))
+  }
+
   args <- process_bagging(args)
   args <- process_objective_function(args, y)
 
