@@ -101,7 +101,7 @@ train_lightgbm <- function(
     )
 
   args <- process_bagging(args)
-  args <- process_objective_function(args, x, y)
+  args <- process_objective_function(args, y)
 
   args <- sort_args(args)
 
@@ -175,22 +175,38 @@ process_mtry <- function(
   feature_fraction_bynode
 }
 
-process_objective_function <- function(args, x, y) {
+# https://lightgbm.readthedocs.io/en/latest/Parameters.html#core-parameters
+process_objective_function <- function(args, y) {
+  lvl <- levels(y)
+  lvls <- length(lvl)
   # set the "objective" param argument, clear it out from main args
   if (!any(names(args) %in% c("objective"))) {
     if (is.numeric(y)) {
       args$objective <- "regression"
     } else {
-      lvl <- levels(y)
-      lvls <- length(lvl)
       if (lvls == 2) {
-        args$num_class <- 1
         args$objective <- "binary"
       } else {
-        args$num_class <- lvls
         args$objective <- "multiclass"
       }
     }
+  }
+
+  if (args$objective == "binary" && is.null(args$num_class)) {
+    args$num_class <- 1L
+  }
+
+  multiclass_obj <- c(
+    "multiclass",
+    "softmax",
+    "multiclassova",
+    "multiclass_ova",
+    "ova",
+    "ovr"
+  )
+
+  if (args$objective %in% multiclass_obj && is.null(args$num_class)) {
+    args$num_class <- lvls
   }
 
   args
