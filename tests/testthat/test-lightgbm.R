@@ -512,6 +512,8 @@ test_that("tuning mtry vs mtry_prop", {
 })
 
 test_that("lightgbm warns if user uses `param` argument in set_engine()", {
+  skip_if_not_installed("lightgbm")
+
   mod_spec <- boost_tree() |>
     set_engine("lightgbm", params = list(objective = "multiclassova")) |>
     set_mode("regression")
