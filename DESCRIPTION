@@ -30,7 +30,6 @@ Imports:
     cli,
     dials,
     dplyr,
-    glue,
     purrr,
     rlang (>= 1.1.0),
     stats,

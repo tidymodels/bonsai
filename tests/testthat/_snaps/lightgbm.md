@@ -51,7 +51,7 @@
         1:ncol(penguins))), "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
-      The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames
+      The following argument is guarded by bonsai and will not be passed to LightGBM: colnames.
 
 ---
 
@@ -61,7 +61,7 @@
       bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
-      The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames, callbacks
+      The following arguments are guarded by bonsai and will not be passed to LightGBM: colnames and callbacks.
 
 ---
 
@@ -70,7 +70,7 @@
         1:ncol(penguins))), "regression"), bill_length_mm ~ ., data = penguins)
     Condition
       Warning:
-      The following argument(s) are guarded by bonsai and will not be passed to LightGBM: colnames
+      The following argument is guarded by bonsai and will not be passed to LightGBM: colnames.
 
 ---
 
