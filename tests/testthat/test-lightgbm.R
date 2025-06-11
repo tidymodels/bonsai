@@ -26,7 +26,7 @@ test_that("boost_tree with lightgbm", {
   expect_no_error({
     pars_fit_1 <-
       boost_tree() |>
-      set_engine("lightgbm", num_threads = 3) |>
+      set_engine("lightgbm") |>
       set_mode("regression") |>
       fit(bill_length_mm ~ ., data = penguins)
   })
