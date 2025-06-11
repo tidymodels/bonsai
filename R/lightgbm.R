@@ -102,7 +102,7 @@ train_lightgbm <- function(
 
   args <- process_bagging(args)
   args <- process_parallelism(args)
-  args <- process_objective_function(args, x, y)
+  args <- process_objective_function(args, y)
 
   args <- sort_args(args)
 
@@ -177,7 +177,7 @@ process_mtry <- function(
 }
 
 # https://lightgbm.readthedocs.io/en/latest/Parameters.html#core-parameters
-process_objective_function <- function(args, x, y) {
+process_objective_function <- function(args, y) {
   lvl <- levels(y)
   lvls <- length(lvl)
   # set the "objective" param argument, clear it out from main args
