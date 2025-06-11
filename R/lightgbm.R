@@ -310,8 +310,8 @@ sort_args <- function(args) {
     protected_args <- names(args[names(args) %in% protected])
 
     cli::cli_warn(
-      "The following argument{?s} are guarded by bonsai and will not be passed 
-      to LightGBM: {protected_args}."
+      "The following argument{?s} {?is/are} guarded by bonsai and will not be 
+      passed to LightGBM: {protected_args}."
     )
 
     args[protected_args] <- NULL
