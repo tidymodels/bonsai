@@ -101,7 +101,6 @@ train_lightgbm <- function(
     )
 
   args <- process_bagging(args)
-  args <- process_parallelism(args)
   args <- process_objective_function(args, y)
 
   args <- sort_args(args)
@@ -208,17 +207,6 @@ process_objective_function <- function(args, y) {
 
   if (args$objective %in% multiclass_obj && is.null(args$num_class)) {
     args$num_class <- lvls
-  }
-
-  args
-}
-
-# supply the number of threads as num_threads in params, clear out
-# any other thread args that might be passed as main arguments
-process_parallelism <- function(args) {
-  if (!is.null(args["num_threads"])) {
-    args$num_threads <- args[names(args) == "num_threads"]
-    args[names(args) == "num_threads"] <- NULL
   }
 
   args
