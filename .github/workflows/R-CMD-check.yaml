@@ -39,6 +39,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      GHA_OS: ${{ matrix.config.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -55,6 +56,25 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+
+      - name: Install catboost
+        run: |
+          install.packages('remotes')
+          os <- Sys.getenv("GHA_OS")
+          if (os == "macos-latest") {
+            name <- "Darwin"
+          } else if (os == "windows-latest") {
+            name <- "Windows"
+          } else {
+            name <- "Linux"
+          }
+          url <- paste0(
+            'https://github.com/catboost/catboost/releases/download/v1.2.8/catboost-R-", 
+            name,
+            "-1.2.8.tgz'
+          )
+          remotes::install_url(, INSTALL_opts = c("--no-multiarch", "--no-test-load", "--no-staged-install"))
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
