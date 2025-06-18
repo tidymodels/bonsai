@@ -49,14 +49,14 @@ test_that("boost_tree with catboost", {
     learning_rate = 0.03
   )
 
-  lgbm_fit_1 <- catboost::catboost.train(
+  cat_fit_1 <- catboost::catboost.train(
     learn_pool = peng_x,
     params = params_1
   )
 
-  lgbm_preds_1 <- catboost::catboost.predict(lgbm_fit_1, peng_x)
+  cat_preds_1 <- catboost::catboost.predict(cat_fit_1, peng_x)
 
-  expect_equal(pars_preds_1$.pred, lgbm_preds_1)
+  expect_equal(pars_preds_1$.pred, cat_preds_1)
 
   # regression, adjusting a primary argument
   expect_no_error({
@@ -80,14 +80,14 @@ test_that("boost_tree with catboost", {
     iterations = 20
   )
 
-  lgbm_fit_2 <- catboost::catboost.train(
+  cat_fit_2 <- catboost::catboost.train(
     learn_pool = peng_x,
     params = params_2
   )
 
-  lgbm_preds_2 <- catboost::catboost.predict(lgbm_fit_2, peng_x)
+  cat_preds_2 <- catboost::catboost.predict(cat_fit_2, peng_x)
 
-  expect_equal(pars_preds_2$.pred, lgbm_preds_2)
+  expect_equal(pars_preds_2$.pred, cat_preds_2)
 
   # regression, adjusting an engine argument
   expect_no_error({
@@ -111,14 +111,14 @@ test_that("boost_tree with catboost", {
     l2_leaf_reg = 16
   )
 
-  lgbm_fit_3 <- catboost::catboost.train(
+  cat_fit_3 <- catboost::catboost.train(
     learn_pool = peng_x,
     params = params_3
   )
 
-  lgbm_preds_3 <- catboost::catboost.predict(lgbm_fit_3, peng_x)
+  cat_preds_3 <- catboost::catboost.predict(cat_fit_3, peng_x)
 
-  expect_equal(pars_preds_3$.pred, lgbm_preds_3)
+  expect_equal(pars_preds_3$.pred, cat_preds_3)
 
   # classification -------------------------------------------------------------
 
@@ -162,18 +162,18 @@ test_that("boost_tree with catboost", {
     learning_rate = 0.03
   )
 
-  lgbm_fit_4 <- catboost::catboost.train(
+  cat_fit_4 <- catboost::catboost.train(
     learn_pool = peng_x_c,
     params = params_4
   )
 
-  lgbm_preds_4 <- catboost::catboost.predict(
-    lgbm_fit_4,
+  cat_preds_4 <- catboost::catboost.predict(
+    cat_fit_4,
     peng_x_c,
     prediction_type = "Probability"
   )
 
-  expect_equal(pars_preds_4_mtx, lgbm_preds_4)
+  expect_equal(pars_preds_4_mtx, cat_preds_4)
 
   # check class predictions
   pars_preds_5 <-
@@ -181,11 +181,11 @@ test_that("boost_tree with catboost", {
     (\(x) x[[".pred_class"]])() |>
     as.character()
 
-  lgbm_preds_5 <- apply(pars_preds_4_mtx, 1, function(x) which.max(x)) |>
+  cat_preds_5 <- apply(pars_preds_4_mtx, 1, function(x) which.max(x)) |>
     factor(labels = c("Adelie", "Chinstrap", "Gentoo")) |>
     as.character()
 
-  expect_equal(pars_preds_5, lgbm_preds_5)
+  expect_equal(pars_preds_5, cat_preds_5)
 
   # classification on a two-level outcome
   expect_no_error({
@@ -226,19 +226,19 @@ test_that("boost_tree with catboost", {
     learning_rate = 0.03
   )
 
-  lgbm_fit_6 <-
+  cat_fit_6 <-
     catboost::catboost.train(
       learn_pool = peng_x_b,
       params = params_6
     )
 
-  lgbm_preds_6 <- catboost::catboost.predict(
-    lgbm_fit_6,
+  cat_preds_6 <- catboost::catboost.predict(
+    cat_fit_6,
     peng_x_b,
     prediction_type = "Probability"
   )
 
-  expect_equal(pars_preds_6_b, lgbm_preds_6)
+  expect_equal(pars_preds_6_b, cat_preds_6)
 })
 
 test_that("bonsai correctly determines loss_function when label is a factor", {
@@ -344,13 +344,13 @@ test_that("catboost with case weights", {
     learning_rate = 0.03
   )
 
-  lgbm_fit_1 <-
+  cat_fit_1 <-
     catboost::catboost.train(
       learn_pool = peng_x,
       params = params_1
     )
 
-  lgbm_preds_1 <- catboost::catboost.predict(lgbm_fit_1, peng_x)
+  cat_preds_1 <- catboost::catboost.predict(cat_fit_1, peng_x)
 
-  expect_equal(pars_preds_1$.pred, lgbm_preds_1)
+  expect_equal(pars_preds_1$.pred, cat_preds_1)
 })
