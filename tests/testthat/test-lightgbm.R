@@ -348,7 +348,6 @@ test_that("bonsai correctly determines objective when label is a factor", {
   expect_equal(bst$params$num_class, 3)
 })
 
-
 test_that("bonsai handles mtry vs mtry_prop gracefully", {
   skip_if_not_installed("modeldata")
 
