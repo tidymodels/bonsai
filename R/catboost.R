@@ -81,6 +81,7 @@ train_catboost <- function(
       "Arguments passed in through {.arg params} as a list will be ignored.",
       "Instead pass the arguments directly to the {.code ...}."
     ))
+    arg_params$params <- NULL
   }
 
   learn_pool <- rlang::call2(

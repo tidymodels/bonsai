@@ -240,3 +240,117 @@ test_that("boost_tree with catboost", {
 
   expect_equal(pars_preds_6_b, lgbm_preds_6)
 })
+
+test_that("bonsai correctly determines loss_function when label is a factor", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(catboost)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  expect_no_error({
+    bst <- train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["sex"]],
+      iterations = 5,
+      allow_writing_files = FALSE
+    )
+  })
+
+  expect_equal(
+    catboost::catboost.get_model_params(bst)$flat_params$loss_function,
+    "Logloss"
+  )
+
+  expect_no_error({
+    bst <- train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["species"]],
+      iterations = 5,
+      allow_writing_files = FALSE
+    )
+  })
+  expect_equal(
+    catboost::catboost.get_model_params(bst)$flat_params$loss_function,
+    "MultiClass"
+  )
+})
+
+test_that("catboost warns if user uses `param` argument in set_engine()", {
+  skip_if_not_installed("catboost")
+
+  mod_spec <- boost_tree() |>
+    set_engine("catboost", params = list(loss_function = "MAPE")) |>
+    set_mode("regression")
+
+  expect_snapshot(
+    mod_spec |>
+      fit(mpg ~ ., mtcars)
+  )
+})
+
+test_that("catboost with case weights", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(catboost)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+
+  penguins <- penguins[complete.cases(penguins), ]
+
+  set.seed(1)
+  penguins_wts <- runif(nrow(penguins))
+
+  # regression -----------------------------------------------------------------
+  expect_no_error({
+    pars_fit_1 <-
+      boost_tree() |>
+      set_engine("catboost", random_seed = 1) |>
+      set_mode("regression") |>
+      fit(
+        bill_length_mm ~ .,
+        data = penguins,
+        case_weights = importance_weights(penguins_wts)
+      )
+  })
+
+  pars_preds_1 <- predict(pars_fit_1, penguins)
+
+  peng_y <- penguins$bill_length_mm
+
+  peng_m <- penguins |>
+    select(-bill_length_mm)
+
+  peng_x <-
+    catboost::catboost.load_pool(
+      data = peng_m,
+      label = peng_y,
+      weight = penguins_wts
+    )
+
+  params_1 <- list(
+    verbose = 0,
+    allow_writing_files = FALSE,
+    random_seed = 1,
+    learning_rate = 0.03
+  )
+
+  lgbm_fit_1 <-
+    catboost::catboost.train(
+      learn_pool = peng_x,
+      params = params_1
+    )
+
+  lgbm_preds_1 <- catboost::catboost.predict(lgbm_fit_1, peng_x)
+
+  expect_equal(pars_preds_1$.pred, lgbm_preds_1)
+})

@@ -22,3 +22,18 @@
       Computational engine: catboost 
       
 
+# catboost warns if user uses `param` argument in set_engine()
+
+    Code
+      fit(mod_spec, mpg ~ ., mtcars)
+    Condition
+      Warning:
+      Arguments passed in through `params` as a list will be ignored.
+      Instead pass the arguments directly to the `...`.
+    Output
+      parsnip model object
+      
+      CatBoost model (1000 trees)
+      Loss function: RMSE
+      Fit to 10 feature(s)
+

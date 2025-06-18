@@ -184,9 +184,9 @@ make_boost_tree_catboost <- function() {
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "catboost",
-    parsnip = "mtry",
+    parsnip = "mtry_prop",
     original = "rsm",
-    func = list(pkg = "dials", fun = "mtry"),
+    func = list(pkg = "dials", fun = "mtry_prop"),
     has_submodel = FALSE
   )
 }
