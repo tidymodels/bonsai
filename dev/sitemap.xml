@@ -10,9 +10,11 @@
 <url><loc>https://bonsai.tidymodels.org/dev/index.html</loc></url>
 <url><loc>https://bonsai.tidymodels.org/dev/news/index.html</loc></url>
 <url><loc>https://bonsai.tidymodels.org/dev/reference/bonsai-package.html</loc></url>
+<url><loc>https://bonsai.tidymodels.org/dev/reference/catboost_helpers.html</loc></url>
 <url><loc>https://bonsai.tidymodels.org/dev/reference/index.html</loc></url>
 <url><loc>https://bonsai.tidymodels.org/dev/reference/lightgbm_helpers.html</loc></url>
 <url><loc>https://bonsai.tidymodels.org/dev/reference/reexports.html</loc></url>
+<url><loc>https://bonsai.tidymodels.org/dev/reference/train_catboost.html</loc></url>
 <url><loc>https://bonsai.tidymodels.org/dev/reference/train_lightgbm.html</loc></url>
 </urlset>
 
