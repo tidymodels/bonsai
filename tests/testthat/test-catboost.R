@@ -119,4 +119,124 @@ test_that("boost_tree with catboost", {
   lgbm_preds_3 <- catboost::catboost.predict(lgbm_fit_3, peng_x)
 
   expect_equal(pars_preds_3$.pred, lgbm_preds_3)
+
+  # classification -------------------------------------------------------------
+
+  # multiclass
+  expect_no_error({
+    pars_fit_4 <-
+      boost_tree() |>
+      set_engine("catboost", random_seed = 1) |>
+      set_mode("classification") |>
+      fit(species ~ ., data = penguins)
+  })
+
+  expect_no_error({
+    pars_preds_4 <-
+      predict(pars_fit_4, penguins, type = "prob")
+    pars_preds_raw_4 <-
+      predict(pars_fit_4, penguins, type = "raw")
+  })
+
+  expect_equal(nrow(pars_preds_raw_4), nrow(penguins))
+  expect_equal(ncol(pars_preds_raw_4), 3)
+
+  pars_preds_4_mtx <- as.matrix(pars_preds_4)
+  dimnames(pars_preds_4_mtx) <- NULL
+
+  peng_y_c <- penguins$species
+
+  peng_m_c <- penguins |>
+    select(-species)
+
+  peng_x_c <- catboost::catboost.load_pool(
+    data = peng_m_c,
+    label = peng_y_c
+  )
+
+  params_4 <- list(
+    objective = "MultiClass",
+    verbose = 0,
+    allow_writing_files = FALSE,
+    random_seed = 1,
+    learning_rate = 0.03
+  )
+
+  lgbm_fit_4 <- catboost::catboost.train(
+    learn_pool = peng_x_c,
+    params = params_4
+  )
+
+  lgbm_preds_4 <- catboost::catboost.predict(
+    lgbm_fit_4,
+    peng_x_c,
+    prediction_type = "Probability"
+  )
+
+  expect_equal(pars_preds_4_mtx, lgbm_preds_4)
+
+  # check class predictions
+  pars_preds_5 <-
+    predict(pars_fit_4, penguins, type = "class") |>
+    (\(x) x[[".pred_class"]])() |>
+    as.character()
+
+  lgbm_preds_5 <- apply(pars_preds_4_mtx, 1, function(x) which.max(x)) |>
+    factor(labels = c("Adelie", "Chinstrap", "Gentoo")) |>
+    as.character()
+
+  expect_equal(pars_preds_5, lgbm_preds_5)
+
+  # classification on a two-level outcome
+  expect_no_error({
+    pars_fit_6 <-
+      boost_tree() |>
+      set_engine("catboost", random_seed = 1) |>
+      set_mode("classification") |>
+      fit(sex ~ ., data = penguins)
+  })
+
+  expect_no_error({
+    pars_preds_6 <-
+      predict(pars_fit_6, penguins, type = "prob")
+    pars_preds_raw_6 <-
+      predict(pars_fit_6, penguins, type = "raw")
+  })
+
+  expect_equal(length(pars_preds_raw_6), nrow(penguins))
+  expect_false(identical(pars_preds_6, pars_preds_raw_6))
+
+  pars_preds_6_b <- pars_preds_6$.pred_male
+
+  peng_y_b <- penguins$sex
+
+  peng_m_b <- penguins |>
+    select(-sex)
+
+  peng_x_b <- catboost::catboost.load_pool(
+    data = peng_m_b,
+    label = peng_y_b
+  )
+
+  params_6 <- list(
+    objective = "Logloss",
+    verbose = 0,
+    allow_writing_files = FALSE,
+    random_seed = 1,
+    learning_rate = 0.03
+  )
+
+  lgbm_fit_6 <-
+    catboost::catboost.train(
+      learn_pool = peng_x_b,
+      params = params_6
+    )
+
+  lgbm_preds_6 <- catboost::catboost.predict(
+    lgbm_fit_6,
+    peng_x_b,
+    prediction_type = "Probability"
+  )
+
+  expect_equal(pars_preds_6_b, lgbm_preds_6)
 })

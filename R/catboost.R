@@ -74,6 +74,8 @@ train_catboost <- function(
     ...
   )
 
+  arg_params <- process_loss_function(arg_params, y)
+
   if (!is.null(arg_params$params) && is.list(arg_params$params)) {
     cli::cli_warn(c(
       "Arguments passed in through {.arg params} as a list will be ignored.",
@@ -88,6 +90,7 @@ train_catboost <- function(
     weight = weights,
     .ns = "catboost"
   )
+  learn_pool <- rlang::eval_tidy(learn_pool, env = rlang::current_env())
 
   args <- list(
     learn_pool = learn_pool,
@@ -128,4 +131,91 @@ predict_catboost_regression_numeric <- function(object, new_data, ...) {
     .ns = "catboost"
   ))
   p
+}
+
+#' @keywords internal
+#' @export
+#' @rdname catboost_helpers
+predict_catboost_classification_class <- function(object, new_data, ...) {
+  pool <- rlang::eval_tidy(rlang::call2(
+    "catboost.load_pool",
+    data = new_data,
+    .ns = "catboost"
+  ))
+
+  p <- rlang::eval_tidy(rlang::call2(
+    "catboost.predict",
+    model = object$fit,
+    pool = pool,
+    prediction_type = "Class",
+    .ns = "catboost"
+  ))
+
+  object$lvl[p + 1]
+}
+
+#' @keywords internal
+#' @export
+#' @rdname catboost_helpers
+predict_catboost_classification_prob <- function(object, new_data, ...) {
+  pool <- rlang::eval_tidy(rlang::call2(
+    "catboost.load_pool",
+    data = new_data,
+    .ns = "catboost"
+  ))
+
+  p <- rlang::eval_tidy(rlang::call2(
+    "catboost.predict",
+    model = object$fit,
+    pool = pool,
+    prediction_type = "Probability",
+    .ns = "catboost"
+  ))
+
+  if (is.vector(p)) {
+    p <- tibble::tibble(p1 = 1 - p, p2 = p)
+  }
+
+  colnames(p) <- object$lvl
+
+  tibble::as_tibble(p)
+}
+
+#' @keywords internal
+#' @export
+#' @rdname catboost_helpers
+predict_catboost_classification_raw <- function(object, new_data, ...) {
+  pool <- rlang::eval_tidy(rlang::call2(
+    "catboost.load_pool",
+    data = new_data,
+    .ns = "catboost"
+  ))
+
+  p <- rlang::eval_tidy(rlang::call2(
+    "catboost.predict",
+    model = object$fit,
+    pool = pool,
+    .ns = "catboost"
+  ))
+  p
+}
+
+# https://catboost.ai/docs/en/concepts/loss-functions
+process_loss_function <- function(args, y) {
+  lvl <- levels(y)
+  lvls <- length(lvl)
+  # set the "loss_function" param argument, clear it out from main args
+  if (!any(names(args) %in% c("loss_function"))) {
+    if (is.numeric(y)) {
+      args$loss_function <- "RMSE"
+    } else {
+      if (lvls == 2) {
+        args$loss_function <- "Logloss"
+      } else {
+        args$loss_function <- "MultiClass"
+      }
+    }
+  }
+
+  args
 }
