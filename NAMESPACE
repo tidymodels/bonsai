@@ -2,6 +2,7 @@
 
 S3method(multi_predict,"_lgb.Booster")
 export("%>%")
+export(predict_catboost_regression_numeric)
 export(predict_lightgbm_classification_class)
 export(predict_lightgbm_classification_prob)
 export(predict_lightgbm_classification_raw)

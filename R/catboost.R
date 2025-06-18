@@ -106,3 +106,26 @@ train_catboost <- function(
 
   res
 }
+
+#' Internal functions
+#'
+#' Not intended for direct use.
+#'
+#' @keywords internal
+#' @export
+#' @rdname catboost_helpers
+predict_catboost_regression_numeric <- function(object, new_data, ...) {
+  pool <- rlang::eval_tidy(rlang::call2(
+    "catboost.load_pool",
+    data = new_data,
+    .ns = "catboost"
+  ))
+
+  p <- rlang::eval_tidy(rlang::call2(
+    "catboost.predict",
+    model = object$fit,
+    pool = pool,
+    .ns = "catboost"
+  ))
+  p
+}
