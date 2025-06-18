@@ -8,6 +8,8 @@
 
 * Fixed bug where `num_threads` argument were ignored for lightgbm engine (#105).
 
+* Added catboost engine to `boost_tree()` (#70).
+
 # bonsai 0.3.2
 
 * Resolves a test failure ahead of an upcoming parsnip release (#95).

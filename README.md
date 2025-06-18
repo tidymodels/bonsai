@@ -47,6 +47,8 @@ following table:
 |:--------------|:---------|:---------------|
 | boost_tree    | lightgbm | regression     |
 | boost_tree    | lightgbm | classification |
+| boost_tree    | catboost | regression     |
+| boost_tree    | catboost | classification |
 | decision_tree | partykit | regression     |
 | decision_tree | partykit | classification |
 | rand_forest   | partykit | regression     |
@@ -54,6 +56,9 @@ following table:
 | rand_forest   | aorsf    | classification |
 | rand_forest   | aorsf    | regression     |
 
+Note that the catboost engine package isn’t available on CRAN, and
+should thus be installed according to [their
+documentation](https://catboost.ai/docs/en/installation/r-installation-binary-installation).
 
 ## Code of Conduct
 
