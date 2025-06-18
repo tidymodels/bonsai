@@ -73,7 +73,7 @@ jobs:
             name,
             "-1.2.8.tgz'
           )
-          remotes::install_url(, INSTALL_opts = c("--no-multiarch", "--no-test-load", "--no-staged-install"))
+          remotes::install_url(url, INSTALL_opts = c("--no-multiarch", "--no-test-load", "--no-staged-install"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
