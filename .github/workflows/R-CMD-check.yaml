@@ -69,9 +69,9 @@ jobs:
             name <- "Linux"
           }
           url <- paste0(
-            'https://github.com/catboost/catboost/releases/download/v1.2.8/catboost-R-", 
+            'https://github.com/catboost/catboost/releases/download/v1.2.8/catboost-R-', 
             name,
-            "-1.2.8.tgz'
+            '-1.2.8.tgz'
           )
           remotes::install_url(url, INSTALL_opts = c("--no-multiarch", "--no-test-load", "--no-staged-install"))
         shell: Rscript {0}
