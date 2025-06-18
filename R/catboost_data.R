@@ -49,7 +49,8 @@ make_boost_tree_catboost <- function() {
       protect = c("x", "y", "weights"),
       func = c(pkg = "bonsai", fun = "train_catboost"),
       defaults = list(
-        num_threads = 1,
+        thread_count = 1,
+        allow_writing_files = FALSE,
         random_seed = quote(sample.int(10^5, 1))
       )
     )
@@ -92,7 +93,8 @@ make_boost_tree_catboost <- function() {
       protect = c("x", "y", "weights"),
       func = c(pkg = "bonsai", fun = "train_catboost"),
       defaults = list(
-        num_threads = 1,
+        thread_count = 1,
+        allow_writing_files = FALSE,
         random_seed = quote(sample.int(10^5, 1))
       )
     )
