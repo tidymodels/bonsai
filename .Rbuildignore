@@ -12,3 +12,4 @@ inst/figs/
 ^README\.Rmd$
 ^[\.]?air\.toml$
 ^\.vscode$
+^revdep$
