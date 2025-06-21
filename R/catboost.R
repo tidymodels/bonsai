@@ -30,7 +30,7 @@
 #' will be correctly routed to the `param` argument, or as a main argument,
 #' depending on their name.
 #'
-#' @source \url{https://catboost.ai/docs/en/references/training-parameters/}.
+#' @source https://catboost.ai/docs/en/references/training-parameters/.
 #'
 #' @return A fitted `catboost.Model` object.
 #' @keywords internal

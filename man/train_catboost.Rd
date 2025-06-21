@@ -4,7 +4,7 @@
 \alias{train_catboost}
 \title{Boosted trees with catboost}
 \source{
-\url{https://catboost.ai/docs/en/references/training-parameters/}.
+https://catboost.ai/docs/en/references/training-parameters/.
 }
 \usage{
 train_catboost(
