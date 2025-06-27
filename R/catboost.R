@@ -24,9 +24,9 @@
 #' @param rsm A numeric value between 0 and 1, random subspace method. The
 #' percentage of features to use at each iteration of building trees. At each
 #' iteration, features are selected over again at random. Defaults to 1.
-#' @param quiet A logical; should logging by [catboost::catboost.train()] be
+#' @param quiet A logical; should logging by catboost::catboost.train() be
 #' muted?
-#' @param ... Other options to pass to [catboost::catboost.train()]. Arguments
+#' @param ... Other options to pass to catboost::catboost.train(). Arguments
 #' will be correctly routed to the `param` argument, or as a main argument,
 #' depending on their name.
 #'

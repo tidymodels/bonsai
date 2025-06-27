@@ -52,10 +52,10 @@ to 1.}
 percentage of features to use at each iteration of building trees. At each
 iteration, features are selected over again at random. Defaults to 1.}
 
-\item{quiet}{A logical; should logging by \code{\link[catboost:catboost.train]{catboost::catboost.train()}} be
+\item{quiet}{A logical; should logging by catboost::catboost.train() be
 muted?}
 
-\item{...}{Other options to pass to \code{\link[catboost:catboost.train]{catboost::catboost.train()}}. Arguments
+\item{...}{Other options to pass to catboost::catboost.train(). Arguments
 will be correctly routed to the \code{param} argument, or as a main argument,
 depending on their name.}
 }
