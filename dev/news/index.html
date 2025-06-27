@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bonsai</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.2.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.4.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,12 +34,24 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="bonsai-development-version">bonsai (development version)<a class="anchor" aria-label="anchor" href="#bonsai-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="bonsai-040">bonsai 0.4.0<a class="anchor" aria-label="anchor" href="#bonsai-040"></a></h2><p class="text-muted">CRAN release: 2025-06-25</p>
+<div class="section level3">
+<h3 id="new-engines-0-4-0">New Engines<a class="anchor" aria-label="anchor" href="#new-engines-0-4-0"></a></h3>
+<ul><li>Added catboost engine to <code><a href="https://parsnip.tidymodels.org/reference/boost_tree.html" class="external-link">boost_tree()</a></code> (<a href="https://github.com/tidymodels/bonsai/issues/70" class="external-link">#70</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-0-4-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-0"></a></h3>
 <ul><li><p>The lightgbm engine now warns that arguments passed to <code>params</code> argument in <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine()</a></code> are ignored (<a href="https://github.com/tidymodels/bonsai/issues/110" class="external-link">#110</a>).</p></li>
 <li><p>Automatic handling of <code>num_classes</code> argument when specifying a multiclass classification objective for the lightgbm engine (<a href="https://github.com/tidymodels/bonsai/issues/109" class="external-link">#109</a>).</p></li>
 <li><p>Increased the minimum R version to R 4.1.</p></li>
-<li><p>Fixed bug where <code>num_threads</code> argument were ignored for lightgbm engine (<a href="https://github.com/tidymodels/bonsai/issues/105" class="external-link">#105</a>).</p></li>
-<li><p>Added catboost engine to <code><a href="https://parsnip.tidymodels.org/reference/boost_tree.html" class="external-link">boost_tree()</a></code> (<a href="https://github.com/tidymodels/bonsai/issues/70" class="external-link">#70</a>).</p></li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-4-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h3>
+<ul><li>Fixed bug where <code>num_threads</code> argument were ignored for lightgbm engine (<a href="https://github.com/tidymodels/bonsai/issues/105" class="external-link">#105</a>).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.2" id="bonsai-032">bonsai 0.3.2<a class="anchor" aria-label="anchor" href="#bonsai-032"></a></h2><p class="text-muted">CRAN release: 2025-02-11</p>
 <ul><li><p>Resolves a test failure ahead of an upcoming parsnip release (<a href="https://github.com/tidymodels/bonsai/issues/95" class="external-link">#95</a>).</p></li>
@@ -94,7 +106,7 @@
    </div>
   <footer><div class="container">
   <div class="pkgdown-footer-left">
-  <p>Developed by Daniel Falbel, Athos Damiani, Roel M. Hogervorst, <a href="https://github.com/topepo" class="external-link">Max Kuhn</a>, Simon Couch, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" width="62" style="margin-bottom: 3px;"></a>.</p>
+  <p>Developed by Daniel Falbel, Athos Damiani, Roel M. Hogervorst, <a href="https://github.com/topepo" class="external-link">Max Kuhn</a>, Simon Couch, Emil Hvitfeldt, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" width="62" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
