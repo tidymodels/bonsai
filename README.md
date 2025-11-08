@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bonsai <img src="man/figures/logo.png" align="right" width=280 />
+# bonsai <a href="https://bonsai.tidymodels.org/"><img src="man/figures/logo.png" align="right" height="138" alt="bonsai website" /></a>
 
 <!-- badges: start -->
 
