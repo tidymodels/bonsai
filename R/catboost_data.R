@@ -184,9 +184,36 @@ make_boost_tree_catboost <- function() {
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "catboost",
-    parsnip = "mtry_prop",
+    parsnip = "mtry",
     original = "rsm",
     func = list(pkg = "dials", fun = "mtry_prop"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "catboost",
+    parsnip = "min_n",
+    original = "min_data_in_leaf",
+    func = list(pkg = "dials", fun = "min_n"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "catboost",
+    parsnip = "sample_size",
+    original = "subsample",
+    func = list(pkg = "dials", fun = "sample_prop"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "catboost",
+    parsnip = "stop_iter",
+    original = "early_stopping_rounds",
+    func = list(pkg = "dials", fun = "stop_iter"),
     has_submodel = FALSE
   )
 }
