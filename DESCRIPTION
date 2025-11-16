@@ -50,6 +50,8 @@ Suggests:
     rsample,
     testthat (>= 3.0.0),
     tune
+Remotes:
+    parsnip (>= 1.3.3.9000),
 VignetteBuilder: 
     knitr
 Config/Needs/website: tidyverse/tidytemplate
