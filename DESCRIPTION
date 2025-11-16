@@ -26,7 +26,7 @@ License: MIT + file LICENSE
 URL: https://bonsai.tidymodels.org/, https://github.com/tidymodels/bonsai
 BugReports: https://github.com/tidymodels/bonsai/issues
 Depends:
-    parsnip (>= 1.0.1),
+    parsnip (>= 1.3.3.9000),
     R (>= 4.1)
 Imports: 
     cli,
@@ -50,10 +50,10 @@ Suggests:
     rsample,
     testthat (>= 3.0.0),
     tune
-Remotes:
-    parsnip (>= 1.3.3.9000),
 VignetteBuilder: 
     knitr
+Remotes:
+    tidymodels/parsnip
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/usethis/last-upkeep: 2025-04-25
