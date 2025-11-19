@@ -13,3 +13,4 @@ inst/figs/
 ^[\.]?air\.toml$
 ^\.vscode$
 ^revdep$
+^train_dir$

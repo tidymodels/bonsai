@@ -11,3 +11,4 @@ revdep/library.noindex
 revdep/data.sqlite
 .httr-oauth
 revdep/cloud.noindex/*
+train_dir/
