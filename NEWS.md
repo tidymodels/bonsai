@@ -1,6 +1,6 @@
 # bonsai (development version)
 
-* catboost tuning parameters were updates:
+* catboost tuning parameters were updates: (#119)
   - Fixed a bug in `mtry`; it used the parsnip name `mtry_prop`.
   - Enabled model arguments for `min_n`, `sample_size`, and `stop_iter`. `min_n` is only enabled for GPU computations. 
   
