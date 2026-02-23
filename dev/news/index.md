@@ -2,8 +2,14 @@
 
 ## bonsai (development version)
 
+- Added
+  [`multi_predict()`](https://parsnip.tidymodels.org/reference/multi_predict.html)
+  method for catboost engine, enabling efficient tuning of the `trees`
+  parameter ([\#115](https://github.com/tidymodels/bonsai/issues/115)).
+
 - catboost tuning parameters were updates:
   ([\#119](https://github.com/tidymodels/bonsai/issues/119))
+
   - Fixed a bug in `mtry`; it used the parsnip name `mtry_prop`.
   - Enabled model arguments for `min_n`, `sample_size`, and `stop_iter`.
     `min_n` is only enabled for GPU computations.
@@ -87,7 +93,7 @@ CRAN release: 2024-06-23
 
 - Addressed type check error when fitting lightgbm model specifications
   with arguments mistakenly left as
-  [`tune()`](https://hardhat.tidymodels.org/reference/tune.html)
+  [`tune()`](https://rdrr.io/pkg/hardhat/man/tune.html)
   ([\#79](https://github.com/tidymodels/bonsai/issues/79)).
 
 ## bonsai 0.2.1
