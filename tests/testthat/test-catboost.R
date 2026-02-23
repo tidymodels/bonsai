@@ -443,3 +443,138 @@ test_that("catboost predict functions pass ... to catboost.predict", {
   colnames(cat_preds_prob_subset) <- clf_fit$lvl
   expect_equal(as.matrix(preds_prob_subset), cat_preds_prob_subset)
 })
+
+test_that("multi_predict() works for catboost regression", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(catboost)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  num_trees <- 5
+
+  expect_no_error({
+    reg_fit <-
+      boost_tree(trees = num_trees) |>
+      set_engine("catboost", random_seed = 1) |>
+      set_mode("regression") |>
+      fit(bill_length_mm ~ ., data = penguins)
+  })
+
+  new_data <- penguins[1:3, ]
+
+  multi_preds <-
+    multi_predict(
+      reg_fit,
+      new_data = new_data,
+      trees = seq_len(num_trees)
+    )
+
+  # should have one row per observation
+
+  expect_equal(nrow(multi_preds), nrow(new_data))
+
+  # each .pred should be a tibble with num_trees rows
+  pred_tbl <- multi_preds$.pred[[1]]
+  expect_s3_class(pred_tbl, "tbl_df")
+  expect_equal(nrow(pred_tbl), num_trees)
+
+  # should look like regression predictions
+  expect_named(pred_tbl, c("trees", ".pred"))
+  expect_type(pred_tbl[[".pred"]], "double")
+
+  # predictions should vary by number of trees
+  expect_false(all(pred_tbl$.pred == pred_tbl$.pred[1]))
+})
+
+test_that("multi_predict() works for catboost classification", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(catboost)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  num_trees <- 5
+
+  # multiclass ----------------------------------------------------------------
+  expect_no_error({
+    clf_multiclass_fit <-
+      boost_tree(trees = num_trees) |>
+      set_engine("catboost", random_seed = 1) |>
+      set_mode("classification") |>
+      fit(species ~ ., data = penguins)
+  })
+
+  new_data <- penguins[1:3, ]
+
+  # test class predictions (default type)
+  multi_preds_class <-
+    multi_predict(
+      clf_multiclass_fit,
+      new_data = new_data,
+      trees = seq_len(num_trees)
+    )
+
+  expect_equal(nrow(multi_preds_class), nrow(new_data))
+
+  pred_tbl <- multi_preds_class$.pred[[1]]
+  expect_s3_class(pred_tbl, "tbl_df")
+  expect_equal(nrow(pred_tbl), num_trees)
+  expect_named(pred_tbl, c("trees", ".pred_class"))
+  expect_s3_class(pred_tbl[[".pred_class"]], "factor")
+  expect_true(all(
+    as.character(pred_tbl[[".pred_class"]]) %in% levels(penguins[["species"]])
+  ))
+
+  # test probability predictions
+  multi_preds_prob <-
+    multi_predict(
+      clf_multiclass_fit,
+      new_data = new_data,
+      trees = seq_len(num_trees),
+      type = "prob"
+    )
+
+  pred_tbl_prob <- multi_preds_prob$.pred[[1]]
+  expect_s3_class(pred_tbl_prob, "tbl_df")
+  expect_equal(nrow(pred_tbl_prob), num_trees)
+  expect_true("trees" %in% names(pred_tbl_prob))
+  expect_true(all(
+    paste0(".pred_", levels(penguins$species)) %in% names(pred_tbl_prob)
+  ))
+
+  # binary --------------------------------------------------------------------
+  expect_no_error({
+    clf_binary_fit <-
+      boost_tree(trees = num_trees) |>
+      set_engine("catboost", random_seed = 1) |>
+      set_mode("classification") |>
+      fit(sex ~ ., data = penguins)
+  })
+
+  multi_preds_binary <-
+    multi_predict(
+      clf_binary_fit,
+      new_data = new_data,
+      trees = seq_len(num_trees)
+    )
+
+  pred_tbl_binary <- multi_preds_binary$.pred[[1]]
+  expect_s3_class(pred_tbl_binary, "tbl_df")
+  expect_named(pred_tbl_binary, c("trees", ".pred_class"))
+  expect_s3_class(pred_tbl_binary[[".pred_class"]], "factor")
+  expect_true(all(
+    as.character(pred_tbl_binary[[".pred_class"]]) %in%
+      levels(penguins[["sex"]])
+  ))
+})

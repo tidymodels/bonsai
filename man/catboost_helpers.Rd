@@ -5,6 +5,7 @@
 \alias{predict_catboost_classification_class}
 \alias{predict_catboost_classification_prob}
 \alias{predict_catboost_classification_raw}
+\alias{multi_predict._catboost.Model}
 \title{Internal functions}
 \usage{
 predict_catboost_regression_numeric(object, new_data, ...)
@@ -14,6 +15,8 @@ predict_catboost_classification_class(object, new_data, ...)
 predict_catboost_classification_prob(object, new_data, ...)
 
 predict_catboost_classification_raw(object, new_data, ...)
+
+\method{multi_predict}{`_catboost.Model`}(object, new_data, type = NULL, trees = NULL, ...)
 }
 \description{
 Not intended for direct use.
