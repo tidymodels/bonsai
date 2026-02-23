@@ -129,6 +129,7 @@ predict_catboost_regression_numeric <- function(object, new_data, ...) {
     "catboost.predict",
     model = object$fit,
     pool = pool,
+    !!!list(...),
     .ns = "catboost"
   ))
   p
@@ -149,6 +150,7 @@ predict_catboost_classification_class <- function(object, new_data, ...) {
     model = object$fit,
     pool = pool,
     prediction_type = "Class",
+    !!!list(...),
     .ns = "catboost"
   ))
 
@@ -170,6 +172,7 @@ predict_catboost_classification_prob <- function(object, new_data, ...) {
     model = object$fit,
     pool = pool,
     prediction_type = "Probability",
+    !!!list(...),
     .ns = "catboost"
   ))
 
@@ -196,6 +199,7 @@ predict_catboost_classification_raw <- function(object, new_data, ...) {
     "catboost.predict",
     model = object$fit,
     pool = pool,
+    !!!list(...),
     .ns = "catboost"
   ))
   p
@@ -219,4 +223,75 @@ process_loss_function <- function(args, y) {
   }
 
   args
+}
+
+#' @keywords internal
+#' @export
+#' @rdname catboost_helpers
+`multi_predict._catboost.Model` <- function(
+  object,
+  new_data,
+  type = NULL,
+  trees = NULL,
+  ...
+) {
+  if (any(names(rlang::enquos(...)) == "newdata")) {
+    cli::cli_abort(
+      "Did you mean to use {.code new_data} instead of {.code newdata}?"
+    )
+  }
+
+  trees <- sort(trees)
+
+  res <- purrr::map_df(
+    trees,
+    catboost_by_tree,
+    object = object,
+    new_data = new_data,
+    type = type
+  )
+  res <- dplyr::arrange(res, .row, trees)
+  res <- split(res[, -1], res$.row)
+  names(res) <- NULL
+
+  tibble::tibble(.pred = res)
+}
+
+catboost_by_tree <- function(tree, object, new_data, type = NULL) {
+  # switch based on prediction type
+  if (object$spec$mode == "regression") {
+    pred <- predict_catboost_regression_numeric(
+      object,
+      new_data,
+      ntree_end = tree
+    )
+
+    pred <- tibble::tibble(.pred = pred)
+
+    nms <- names(pred)
+  } else {
+    if (is.null(type) || type == "class") {
+      pred <- predict_catboost_classification_class(
+        object,
+        new_data,
+        ntree_end = tree
+      )
+
+      pred <- tibble::tibble(.pred_class = factor(pred, levels = object$lvl))
+    } else {
+      pred <- predict_catboost_classification_prob(
+        object,
+        new_data,
+        ntree_end = tree
+      )
+
+      names(pred) <- paste0(".pred_", names(pred))
+    }
+
+    nms <- names(pred)
+  }
+
+  pred[["trees"]] <- tree
+  pred[[".row"]] <- 1:nrow(new_data)
+  pred[, c(".row", "trees", nms)]
 }
