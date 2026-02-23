@@ -354,3 +354,92 @@ test_that("catboost with case weights", {
 
   expect_equal(pars_preds_1$.pred, cat_preds_1)
 })
+
+test_that("catboost predict functions pass ... to catboost.predict", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  suppressPackageStartupMessages({
+    library(catboost)
+    library(dplyr)
+  })
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  num_trees <- 10
+
+  # regression ----------------------------------------------------------------
+  reg_fit <-
+    boost_tree(trees = num_trees) |>
+    set_engine("catboost", random_seed = 1) |>
+    set_mode("regression") |>
+    fit(bill_length_mm ~ ., data = penguins)
+
+  new_data <- penguins[1:5, ]
+
+  # predictions with all trees
+
+  preds_all <- predict_catboost_regression_numeric(reg_fit, new_data)
+
+  # predictions with ntree_end = 3 (uses first 3 trees)
+  preds_subset <- predict_catboost_regression_numeric(
+    reg_fit,
+    new_data,
+    ntree_end = 3
+  )
+
+  # should be different (proving ntree_end was passed through)
+  expect_false(identical(preds_all, preds_subset))
+
+  # verify against direct catboost call
+  pool <- catboost::catboost.load_pool(data = new_data)
+  cat_preds_subset <- catboost::catboost.predict(
+    reg_fit$fit,
+    pool,
+    ntree_end = 3
+  )
+  expect_equal(preds_subset, cat_preds_subset)
+
+  # classification ------------------------------------------------------------
+  clf_fit <-
+    boost_tree(trees = num_trees) |>
+    set_engine("catboost", random_seed = 1) |>
+    set_mode("classification") |>
+    fit(species ~ ., data = penguins)
+
+  new_data_clf <- penguins[1:5, ]
+
+  # class predictions
+  preds_class_all <- predict_catboost_classification_class(
+    clf_fit,
+    new_data_clf
+  )
+  preds_class_subset <- predict_catboost_classification_class(
+    clf_fit,
+    new_data_clf,
+    ntree_end = 3
+  )
+
+  # prob predictions
+  preds_prob_all <- predict_catboost_classification_prob(clf_fit, new_data_clf)
+  preds_prob_subset <- predict_catboost_classification_prob(
+    clf_fit,
+    new_data_clf,
+    ntree_end = 3
+  )
+
+  # should be different
+  expect_false(identical(preds_prob_all, preds_prob_subset))
+
+  # verify prob predictions against direct catboost call
+  pool_clf <- catboost::catboost.load_pool(data = new_data_clf)
+  cat_preds_prob_subset <- catboost::catboost.predict(
+    clf_fit$fit,
+    pool_clf,
+    prediction_type = "Probability",
+    ntree_end = 3
+  )
+  colnames(cat_preds_prob_subset) <- clf_fit$lvl
+  expect_equal(as.matrix(preds_prob_subset), cat_preds_prob_subset)
+})
