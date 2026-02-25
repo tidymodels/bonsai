@@ -1,5 +1,7 @@
 # bonsai (development version)
 
+## Bug Fixes
+
 * Added `multi_predict()` method for catboost engine, enabling efficient tuning of the `trees` parameter (#115).
 
 * catboost tuning parameters were updates: (#119)
