@@ -216,6 +216,24 @@ make_boost_tree_catboost <- function() {
     func = list(pkg = "dials", fun = "stop_iter"),
     has_submodel = FALSE
   )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "catboost",
+    parsnip = "max_leaves",
+    original = "max_leaves",
+    func = list(pkg = "dials", fun = "num_leaves"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "catboost",
+    parsnip = "l2_leaf_reg",
+    original = "l2_leaf_reg",
+    func = list(pkg = "dials", fun = "penalty", range = c(-4, 1)),
+    has_submodel = FALSE
+  )
 }
 
 # nocov end
