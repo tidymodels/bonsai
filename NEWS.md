@@ -1,4 +1,4 @@
-# bonsai (development version)
+# bonsai 0.4.1
 
 ## Bug Fixes
 
