@@ -2,6 +2,10 @@
 
 ## bonsai (development version)
 
+## bonsai 0.4.1
+
+### Bug Fixes
+
 - Added
   [`multi_predict()`](https://parsnip.tidymodels.org/reference/multi_predict.html)
   method for catboost engine, enabling efficient tuning of the `trees`
@@ -93,7 +97,7 @@ CRAN release: 2024-06-23
 
 - Addressed type check error when fitting lightgbm model specifications
   with arguments mistakenly left as
-  [`tune()`](https://rdrr.io/pkg/hardhat/man/tune.html)
+  [`tune()`](https://hardhat.tidymodels.org/reference/tune.html)
   ([\#79](https://github.com/tidymodels/bonsai/issues/79)).
 
 ## bonsai 0.2.1
@@ -112,6 +116,7 @@ CRAN release: 2022-11-29
   argument for tuning when defining your model specification:
 
 ``` r
+
 boost_tree() %>% set_engine("lightgbm", num_leaves = tune())
 ```
 
@@ -122,6 +127,7 @@ boost_tree() %>% set_engine("lightgbm", num_leaves = tune())
   `num_threads` via engine arguments with `engine = "lightgbm"`:
 
 ``` r
+
 boost_tree() %>% set_engine("lightgbm", num_threads = x)
 ```
 
@@ -177,8 +183,8 @@ CRAN release: 2022-08-31
 > ignored without setting this argument manually. Other boosting
 > libraries, like xgboost, do not have an analogous argument to
 > `bagging_freq` and use `k = 1` when the analogue to `bagging_fraction`
-> is in $(0,1)$. *bonsai will thus automatically set* `bagging_freq = 1`
-> *in* `set_engine("lightgbm", ...)` if `sample_size`
+> is in $`(0, 1)`$. *bonsai will thus automatically set*
+> `bagging_freq = 1` *in* `set_engine("lightgbm", ...)` if `sample_size`
 > (i.e. `bagging_fraction`) is not equal to 1 and no `bagging_freq`
 > value is supplied. This default can be overridden by setting the
 > `bagging_freq` argument to

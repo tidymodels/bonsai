@@ -28,12 +28,12 @@ Source:
 
 Falbel D, Damiani A, Hogervorst R, Kuhn M, Couch S, Hvitfeldt E (2026).
 *bonsai: Model Wrappers for Tree-Based Models*. R package version
-0.4.0.9000, <https://bonsai.tidymodels.org/>.
+0.4.1.9000, <https://bonsai.tidymodels.org/>.
 
     @Manual{,
       title = {bonsai: Model Wrappers for Tree-Based Models},
       author = {Daniel Falbel and Athos Damiani and Roel M. Hogervorst and Max Kuhn and Simon Couch and Emil Hvitfeldt},
       year = {2026},
-      note = {R package version 0.4.0.9000},
+      note = {R package version 0.4.1.9000},
       url = {https://bonsai.tidymodels.org/},
     }

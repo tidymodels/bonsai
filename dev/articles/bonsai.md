@@ -9,6 +9,7 @@ on it’s [website](https://parsnip.tidymodels.org).
 To get started, load bonsai with:
 
 ``` r
+
 library(bonsai)
 #> Loading required package: parsnip
 ```
@@ -18,6 +19,7 @@ containing measurements on 3 different species of penguins. Loading in
 that data and checking it out:
 
 ``` r
+
 library(modeldata)
 #> 
 #> Attaching package: 'modeldata'
@@ -44,6 +46,7 @@ species using a decision tree. We’ll first do so using the engine
 `"rpart"`, which is supported with parsnip alone:
 
 ``` r
+
 # set seed for reproducibility
 set.seed(1)
 
@@ -87,6 +90,7 @@ instance, using `"partykit"`—which implements a type of decision tree
 called a *conditional inference tree*—as our backend instead:
 
 ``` r
+
 decision_tree() |>
   set_engine(engine = "partykit") |>
   set_mode(mode = "classification") |>
@@ -143,6 +147,7 @@ with
 and remember to keep the engine set as `"partykit"`:
 
 ``` r
+
 rf_mod <- 
   rand_forest() |>
   set_engine(engine = "partykit") |>
@@ -163,6 +168,7 @@ for this model type called `lightgbm`. To make use of it, start out with
 a `boost_tree` model spec and set `engine = "lightgbm"`:
 
 ``` r
+
 bt_mod <- 
   boost_tree() |>
   set_engine(engine = "lightgbm") |>
