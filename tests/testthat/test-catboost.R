@@ -492,6 +492,112 @@ test_that("multi_predict() works for catboost regression", {
   expect_false(all(pred_tbl$.pred == pred_tbl$.pred[1]))
 })
 
+test_that("catboost does not inject loss_function when objective is already set", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  library(catboost)
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  # regression with objective alias — must not produce the CatBoost hard-error
+  # "Only one of the parameters [loss_function, objective] should be initialized"
+  expect_no_error({
+    bst <- train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["bill_length_mm"]],
+      objective = "MAE",
+      iterations = 5,
+      allow_writing_files = FALSE
+    )
+  })
+
+  # classification with objective alias
+  expect_no_error({
+    bst <- train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["species"]],
+      objective = "MultiClass",
+      iterations = 5,
+      allow_writing_files = FALSE
+    )
+  })
+})
+
+test_that("catboost errors on synonym aliases passed to set_engine()", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  expect_error(
+    train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["bill_length_mm"]],
+      n_estimators = 100,
+      allow_writing_files = FALSE
+    ),
+    regexp = "alias for a main model argument"
+  )
+
+  expect_error(
+    train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["bill_length_mm"]],
+      eta = 0.1,
+      allow_writing_files = FALSE
+    ),
+    regexp = "alias for a main model argument"
+  )
+})
+
+test_that("stop_iter is functional when validation is supplied", {
+  skip_if_not_installed("catboost")
+  skip_if_not_installed("modeldata")
+
+  library(catboost)
+
+  data("penguins", package = "modeldata")
+  penguins <- penguins[complete.cases(penguins), ]
+
+  # direct API: early stopping with a proper holdout
+  set.seed(1)
+  expect_no_error({
+    bst <- train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["bill_length_mm"]],
+      early_stopping_rounds = 5,
+      validation = 0.2,
+      iterations = 50,
+      allow_writing_files = FALSE
+    )
+  })
+
+  # fallback: early stopping with no explicit validation (uses training data)
+  set.seed(1)
+  expect_no_error({
+    bst2 <- train_catboost(
+      x = penguins[, c("bill_length_mm", "bill_depth_mm")],
+      y = penguins[["bill_length_mm"]],
+      early_stopping_rounds = 5,
+      iterations = 50,
+      allow_writing_files = FALSE
+    )
+  })
+
+  # parsnip interface
+  set.seed(1)
+  expect_no_error({
+    fit_es <-
+      boost_tree(trees = 50, stop_iter = 5) |>
+      set_engine("catboost", validation = 0.2) |>
+      set_mode("regression") |>
+      fit(bill_length_mm ~ ., data = penguins)
+  })
+})
+
 test_that("multi_predict() works for catboost classification", {
   skip_if_not_installed("catboost")
   skip_if_not_installed("modeldata")
