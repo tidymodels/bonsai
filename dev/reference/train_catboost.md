@@ -17,6 +17,7 @@ train_catboost(
   random_strength = 1,
   bagging_temperature = 1,
   rsm = 1,
+  validation = 0,
   quiet = TRUE,
   ...
 )
@@ -75,6 +76,11 @@ https://catboost.ai/docs/en/references/training-parameters/.
   percentage of features to use at each iteration of building trees. At
   each iteration, features are selected over again at random. Defaults
   to 1.
+
+- validation:
+
+  The *proportion* of the training data that are used for performance
+  assessment and potential early stopping.
 
 - quiet:
 

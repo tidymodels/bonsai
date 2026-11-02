@@ -20,6 +20,16 @@ CRAN release: 2026-05-21
   - Enabled model arguments for `min_n`, `sample_size`, and `stop_iter`.
     `min_n` is only enabled for GPU computations.
 
+- Bug fixed to enable early stopping with catboost models
+  ([\#125](https://github.com/tidymodels/bonsai/issues/125)).
+
+- A bug was fixed so that `objective` can be successfully passed for
+  catboost models
+  ([\#125](https://github.com/tidymodels/bonsai/issues/125)).
+
+- Better errors are produce for catboost when there are argument name
+  conflcts ([\#125](https://github.com/tidymodels/bonsai/issues/125)).
+
 ## bonsai 0.4.0
 
 CRAN release: 2025-06-25

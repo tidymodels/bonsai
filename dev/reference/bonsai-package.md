@@ -27,6 +27,9 @@ Useful links:
 
 Authors:
 
+- Emil Hvitfeldt <emil.hvitfeldt@posit.co>
+  ([ORCID](https://orcid.org/0000-0002-0679-1945))
+
 - Daniel Falbel <dfalbel@curso-r.com>
 
 - Athos Damiani <adamiani@curso-r.com>

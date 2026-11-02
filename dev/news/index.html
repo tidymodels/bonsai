@@ -48,6 +48,9 @@
 <ul><li>Fixed a bug in <code>mtry</code>; it used the parsnip name <code>mtry_prop</code>.</li>
 <li>Enabled model arguments for <code>min_n</code>, <code>sample_size</code>, and <code>stop_iter</code>. <code>min_n</code> is only enabled for GPU computations.</li>
 </ul></li>
+<li><p>Bug fixed to enable early stopping with catboost models (<a href="https://github.com/tidymodels/bonsai/issues/125" class="external-link">#125</a>).</p></li>
+<li><p>A bug was fixed so that <code>objective</code> can be successfully passed for catboost models (<a href="https://github.com/tidymodels/bonsai/issues/125" class="external-link">#125</a>).</p></li>
+<li><p>Better errors are produce for catboost when there are argument name conflcts (<a href="https://github.com/tidymodels/bonsai/issues/125" class="external-link">#125</a>).</p></li>
 </ul></div>
 </div>
     <div class="section level2">

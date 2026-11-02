@@ -5,4 +5,4 @@ to see their documentation.
 
 - parsnip:
 
-  [`%>%`](https://parsnip.tidymodels.org/reference/reexports.html)
+  [`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)
