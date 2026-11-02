@@ -177,7 +177,7 @@ make_boost_tree_catboost <- function() {
     eng = "catboost",
     parsnip = "learn_rate",
     original = "learning_rate",
-    func = list(pkg = "dials", fun = "learn_rate"),
+    func = list(pkg = "dials", fun = "learn_rate", range = c(-3, -1 / 2)),
     has_submodel = FALSE
   )
 
@@ -204,7 +204,7 @@ make_boost_tree_catboost <- function() {
     eng = "catboost",
     parsnip = "sample_size",
     original = "subsample",
-    func = list(pkg = "dials", fun = "sample_prop"),
+    func = list(pkg = "dials", fun = "sample_prop", range = c(0.5, 1.0)),
     has_submodel = FALSE
   )
 
@@ -253,7 +253,6 @@ make_boost_tree_catboost <- function() {
     func = list(pkg = "dials", fun = "one_hot_max_size"),
     has_submodel = FALSE
   )
-
 }
 
 # nocov end

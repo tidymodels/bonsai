@@ -179,7 +179,7 @@ make_boost_tree_lightgbm <- function() {
     eng = "lightgbm",
     parsnip = "learn_rate",
     original = "learning_rate",
-    func = list(pkg = "dials", fun = "learn_rate"),
+    func = list(pkg = "dials", fun = "learn_rate", range = c(-3, -1 / 2)),
     has_submodel = FALSE
   )
 
@@ -215,7 +215,7 @@ make_boost_tree_lightgbm <- function() {
     eng = "lightgbm",
     parsnip = "sample_size",
     original = "bagging_fraction",
-    func = list(pkg = "dials", fun = "sample_size"),
+    func = list(pkg = "dials", fun = "sample_prop", range = c(0.5, 1.0)),
     has_submodel = FALSE
   )
 
@@ -225,6 +225,43 @@ make_boost_tree_lightgbm <- function() {
     parsnip = "stop_iter",
     original = "early_stopping_round",
     func = list(pkg = "dials", fun = "stop_iter"),
+    has_submodel = FALSE
+  )
+
+  ## engine arguments
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "lightgbm",
+    parsnip = "num_leaves",
+    original = "num_leaves",
+    func = list(pkg = "dials", fun = "num_leaves"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "lightgbm",
+    parsnip = "lambda_l1",
+    original = "lambda_l1",
+    func = list(pkg = "dials", fun = "penalty_L1"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "lightgbm",
+    parsnip = "lambda_l2",
+    original = "lambda_l2",
+    func = list(pkg = "dials", fun = "penalty_L2"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "lightgbm",
+    parsnip = "scale_pos_weight",
+    original = "scale_pos_weight",
+    func = list(pkg = "dials", fun = "scale_pos_weight"),
     has_submodel = FALSE
   )
 }
