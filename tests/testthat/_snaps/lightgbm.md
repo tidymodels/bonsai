@@ -127,3 +127,83 @@
       ! The `min_split_gain` argument passed to `set_engine()` (`?parsnip::set_engine()`) is an alias for a main model argument.
       i Please instead pass this argument via the `loss_reduction` argument to `boost_tree()` (`?parsnip::boost_tree()`).
 
+# train_lightgbm() validates argument ranges
+
+    Code
+      train_lightgbm(x, y, num_iterations = 0)
+    Condition
+      Error in `fit()`:
+      ! `num_iterations` must be a whole number larger than or equal to 1, not the number 0.
+
+---
+
+    Code
+      train_lightgbm(x, y, num_iterations = Inf)
+    Condition
+      Error in `fit()`:
+      ! `num_iterations` must be a whole number, not `Inf`.
+
+---
+
+    Code
+      train_lightgbm(x, y, learning_rate = -1)
+    Condition
+      Error in `fit()`:
+      ! `learning_rate` must be a number larger than or equal to 0, not the number -1.
+
+---
+
+    Code
+      train_lightgbm(x, y, max_depth = Inf)
+    Condition
+      Error in `fit()`:
+      ! `max_depth` must be a whole number, not `Inf`.
+
+---
+
+    Code
+      train_lightgbm(x, y, feature_fraction_bynode = -1, counts = FALSE)
+    Condition
+      Error in `fit()`:
+      ! `feature_fraction_bynode` must be a number larger than or equal to 0, not the number -1.
+
+---
+
+    Code
+      train_lightgbm(x, y, min_data_in_leaf = -1)
+    Condition
+      Error in `fit()`:
+      ! `min_data_in_leaf` must be a whole number larger than or equal to 0, not the number -1.
+
+---
+
+    Code
+      train_lightgbm(x, y, min_gain_to_split = -1)
+    Condition
+      Error in `fit()`:
+      ! `min_gain_to_split` must be a number larger than or equal to 0, not the number -1.
+
+---
+
+    Code
+      train_lightgbm(x, y, bagging_fraction = 1.5)
+    Condition
+      Error in `fit()`:
+      ! `bagging_fraction` must be a number between 0 and 1, not the number 1.5.
+
+---
+
+    Code
+      train_lightgbm(x, y, early_stopping_round = 2.5)
+    Condition
+      Error in `fit()`:
+      ! `early_stopping_round` must be a whole number or `NULL`, not the number 2.5.
+
+---
+
+    Code
+      train_lightgbm(x, y, validation = 1)
+    Condition
+      Error in `fit()`:
+      ! `validation` must be a number between 0 and 0.999, not the number 1.
+

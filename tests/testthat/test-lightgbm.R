@@ -884,3 +884,27 @@ test_that("sparse data with lightgbm", {
   expect_equal(sprs_prob, dens_prob, tolerance = .001)
   expect_equal(sprs_cls, dens_cls)
 })
+
+test_that("train_lightgbm() validates argument ranges", {
+  skip_if_not_installed("lightgbm")
+
+  x <- mtcars[, -1]
+  y <- mtcars$mpg
+
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, num_iterations = 0))
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, num_iterations = Inf))
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, learning_rate = -1))
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, max_depth = Inf))
+  expect_snapshot(
+    error = TRUE,
+    train_lightgbm(x, y, feature_fraction_bynode = -1, counts = FALSE)
+  )
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, min_data_in_leaf = -1))
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, min_gain_to_split = -1))
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, bagging_fraction = 1.5))
+  expect_snapshot(
+    error = TRUE,
+    train_lightgbm(x, y, early_stopping_round = 2.5)
+  )
+  expect_snapshot(error = TRUE, train_lightgbm(x, y, validation = 1))
+})

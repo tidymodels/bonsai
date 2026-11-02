@@ -18,6 +18,7 @@ train_catboost(
   random_strength = 1,
   bagging_temperature = 1,
   rsm = 1,
+  validation = 0,
   quiet = TRUE,
   ...
 )
@@ -51,6 +52,9 @@ to 1.}
 \item{rsm}{A numeric value between 0 and 1, random subspace method. The
 percentage of features to use at each iteration of building trees. At each
 iteration, features are selected over again at random. Defaults to 1.}
+
+\item{validation}{The \emph{proportion} of the training data that are used for
+performance assessment and potential early stopping.}
 
 \item{quiet}{A logical; should logging by catboost::catboost.train() be
 muted?}
