@@ -4,6 +4,8 @@
 
 ## bonsai 0.4.1
 
+CRAN release: 2026-05-21
+
 ### Bug Fixes
 
 - Added
