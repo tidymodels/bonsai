@@ -21,7 +21,8 @@
 #' the model. Defaults to 1.
 #' @param bagging_temperature A numeric value, controls intensity of Bayesian
 #' bagging. The higher the temperature the more aggressive bagging is. Defaults
-#' to 1.
+#' to 1. Only used with Bayesian bootstrapping; it is only passed to catboost
+#' when supplied.
 #' @param rsm A numeric value between 0 and 1, random subspace method. The
 #' percentage of features to use at each iteration of building trees. At each
 #' iteration, features are selected over again at random. Defaults to 1.
@@ -30,6 +31,26 @@
 #' @param ... Other options to pass to catboost::catboost.train(). Arguments
 #' will be correctly routed to the `param` argument, or as a main argument,
 #' depending on their name.
+#'
+#' @details
+#' Some catboost parameters are only used for specific values of other
+#' parameters. `train_catboost()` checks for these combinations before
+#' fitting:
+#'
+#' - `max_leaves` requires `grow_policy = "Lossguide"` (error).
+#' - `min_data_in_leaf` (`min_n`) is ignored when `grow_policy` is
+#'   `"SymmetricTree"`, the default (warning).
+#' - `subsample` (`sample_size`) cannot be used with Bayesian bootstrapping,
+#'   which is the default for multiclass outcomes, or with
+#'   `bootstrap_type = "No"` (error).
+#' - `bagging_temperature` cannot be used with `bootstrap_type` values of
+#'   `"Bernoulli"`, `"Poisson"`, or `"No"` (error) and is ignored with
+#'   `"MVS"`, the default for other outcomes (warning).
+#' - `one_hot_max_size` has no effect when there are no factor predictors
+#'   (warning).
+#'
+#' When `task_type = "GPU"` and `bootstrap_type` is not set, the default
+#' bootstrap type is not inferred and the bootstrap checks are skipped.
 #'
 #' @source https://catboost.ai/docs/en/references/training-parameters/.
 #'
@@ -120,6 +141,13 @@ train_catboost <- function(
   )
 
   arg_params <- process_loss_function(arg_params, y)
+
+  arg_params <- check_catboost_constraints(
+    arg_params,
+    x = x,
+    user_bagging_temperature = !missing(bagging_temperature),
+    call = call
+  )
 
   if (!is.null(arg_params$params) && is.list(arg_params$params)) {
     cli::cli_warn(c(
@@ -307,6 +335,115 @@ process_loss_function <- function(args, y) {
   }
 
   args
+}
+
+check_catboost_constraints <- function(
+  params,
+  x,
+  user_bagging_temperature,
+  call = rlang::caller_env()
+) {
+  grow_policy <- params$grow_policy
+  if (is.null(grow_policy)) {
+    grow_policy <- "SymmetricTree"
+  }
+
+  if (!is.null(params$max_leaves) && grow_policy != "Lossguide") {
+    cli::cli_abort(
+      c(
+        "!" = "{.arg max_leaves} can only be used when
+               {.code grow_policy = \"Lossguide\"}.",
+        "i" = "The grow policy is {.val {grow_policy}}."
+      ),
+      call = call
+    )
+  }
+
+  if (!is.null(params$min_data_in_leaf) && grow_policy == "SymmetricTree") {
+    cli::cli_warn(
+      c(
+        "!" = "{.arg min_n} ({.arg min_data_in_leaf} in catboost) is ignored
+               when the grow policy is {.val SymmetricTree}.",
+        "i" = "Set {.arg grow_policy} to {.val Depthwise} or
+               {.val Lossguide} for it to have an effect."
+      ),
+      call = call
+    )
+  }
+
+  bootstrap <- catboost_bootstrap_type(params)
+  no_bagging <- c("Bernoulli", "Poisson", "No")
+
+  if (!is.null(params$subsample) && bootstrap %in% c("Bayesian", "No")) {
+    cli::cli_abort(
+      c(
+        "!" = "{.arg sample_size} ({.arg subsample} in catboost) cannot be
+               used when the bootstrap type is {.val {bootstrap}}.",
+        "i" = "Set {.arg bootstrap_type} to {.val MVS} or {.val Bernoulli}
+               to subsample the data."
+      ),
+      call = call
+    )
+  }
+
+  # catboost's default bagging_temperature is 1, so it only needs to be passed
+  # when supplied; passing it errors for some bootstrap types.
+  if (!user_bagging_temperature) {
+    params$bagging_temperature <- NULL
+  } else if (bootstrap %in% no_bagging) {
+    cli::cli_abort(
+      c(
+        "!" = "{.arg bagging_temperature} cannot be used when the bootstrap
+               type is {.val {bootstrap}}.",
+        "i" = "It is only used with {.code bootstrap_type = \"Bayesian\"}."
+      ),
+      call = call
+    )
+  } else if (identical(bootstrap, "MVS")) {
+    cli::cli_warn(
+      c(
+        "!" = "{.arg bagging_temperature} is ignored when the bootstrap type
+               is {.val MVS}.",
+        "i" = "It is only used with {.code bootstrap_type = \"Bayesian\"}."
+      ),
+      call = call
+    )
+  }
+
+  if (!is.null(params$one_hot_max_size)) {
+    has_factors <- any(vapply(x, is.factor, logical(1)))
+    if (!has_factors) {
+      cli::cli_warn(
+        c(
+          "!" = "{.arg one_hot_max_size} has no effect since there are no
+                 factor predictors."
+        ),
+        call = call
+      )
+    }
+  }
+
+  params
+}
+
+# Mirrors catboost's CPU defaults; returns NA when the default can't be
+# determined (GPU training).
+catboost_bootstrap_type <- function(params) {
+  if (!is.null(params$bootstrap_type)) {
+    return(params$bootstrap_type)
+  }
+  if (identical(params$task_type, "GPU")) {
+    return(NA_character_)
+  }
+
+  loss <- params$loss_function
+  if (is.null(loss)) {
+    loss <- params$objective
+  }
+  if (is.character(loss) && startsWith(loss, "MultiClass")) {
+    return("Bayesian")
+  }
+  "MVS"
 }
 
 #' @keywords internal
