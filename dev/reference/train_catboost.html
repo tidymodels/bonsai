@@ -110,7 +110,8 @@ the model. Defaults to 1.</p></dd>
 <dt id="arg-bagging-temperature">bagging_temperature<a class="anchor" aria-label="anchor" href="#arg-bagging-temperature"></a></dt>
 <dd><p>A numeric value, controls intensity of Bayesian
 bagging. The higher the temperature the more aggressive bagging is. Defaults
-to 1.</p></dd>
+to 1. Only used with Bayesian bootstrapping; it is only passed to catboost
+when supplied.</p></dd>
 
 
 <dt id="arg-rsm">rsm<a class="anchor" aria-label="anchor" href="#arg-rsm"></a></dt>
@@ -142,6 +143,21 @@ depending on their name.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This is an internal function, not meant to be directly called by the user.</p>
+<p>Some catboost parameters are only used for specific values of other
+parameters. <code>train_catboost()</code> checks for these combinations before
+fitting:</p><ul><li><p><code>max_leaves</code> requires <code>grow_policy = "Lossguide"</code> (error).</p></li>
+<li><p><code>min_data_in_leaf</code> (<code>min_n</code>) is ignored when <code>grow_policy</code> is
+<code>"SymmetricTree"</code>, the default (warning).</p></li>
+<li><p><code>subsample</code> (<code>sample_size</code>) cannot be used with Bayesian bootstrapping,
+which is the default for multiclass outcomes, or with
+<code>bootstrap_type = "No"</code> (error).</p></li>
+<li><p><code>bagging_temperature</code> cannot be used with <code>bootstrap_type</code> values of
+<code>"Bernoulli"</code>, <code>"Poisson"</code>, or <code>"No"</code> (error) and is ignored with
+<code>"MVS"</code>, the default for other outcomes (warning).</p></li>
+<li><p><code>one_hot_max_size</code> has no effect when there are no factor predictors
+(warning).</p></li>
+</ul><p>When <code>task_type = "GPU"</code> and <code>bootstrap_type</code> is not set, the default
+bootstrap type is not inferred and the bootstrap checks are skipped.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

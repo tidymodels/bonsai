@@ -68,7 +68,9 @@ https://catboost.ai/docs/en/references/training-parameters/.
 - bagging_temperature:
 
   A numeric value, controls intensity of Bayesian bagging. The higher
-  the temperature the more aggressive bagging is. Defaults to 1.
+  the temperature the more aggressive bagging is. Defaults to 1. Only
+  used with Bayesian bootstrapping; it is only passed to catboost when
+  supplied.
 
 - rsm:
 
@@ -100,3 +102,26 @@ A fitted `catboost.Model` object.
 
 This is an internal function, not meant to be directly called by the
 user.
+
+Some catboost parameters are only used for specific values of other
+parameters. `train_catboost()` checks for these combinations before
+fitting:
+
+- `max_leaves` requires `grow_policy = "Lossguide"` (error).
+
+- `min_data_in_leaf` (`min_n`) is ignored when `grow_policy` is
+  `"SymmetricTree"`, the default (warning).
+
+- `subsample` (`sample_size`) cannot be used with Bayesian
+  bootstrapping, which is the default for multiclass outcomes, or with
+  `bootstrap_type = "No"` (error).
+
+- `bagging_temperature` cannot be used with `bootstrap_type` values of
+  `"Bernoulli"`, `"Poisson"`, or `"No"` (error) and is ignored with
+  `"MVS"`, the default for other outcomes (warning).
+
+- `one_hot_max_size` has no effect when there are no factor predictors
+  (warning).
+
+When `task_type = "GPU"` and `bootstrap_type` is not set, the default
+bootstrap type is not inferred and the bootstrap checks are skipped.
