@@ -5,6 +5,7 @@
 #'
 #' This is an internal function, not meant to be directly called by the user.
 #'
+#' @inheritParams train_lightgbm validation
 #' @param x A data frame of predictors.
 #' @param y A vector (factor or numeric) or matrix (numeric) of outcome data.
 #' @param weights A numeric vector of sample weights, defaults to `NULL`.
@@ -24,8 +25,6 @@
 #' @param rsm A numeric value between 0 and 1, random subspace method. The
 #' percentage of features to use at each iteration of building trees. At each
 #' iteration, features are selected over again at random. Defaults to 1.
-#' @param validation The _proportion_ of the training data that are used for
-#' performance assessment and potential early stopping.
 #' @param quiet A logical; should logging by catboost::catboost.train() be
 #' muted?
 #' @param ... Other options to pass to catboost::catboost.train(). Arguments
@@ -66,7 +65,7 @@ train_catboost <- function(
   check_number_decimal(random_strength, call = call)
   check_number_decimal(bagging_temperature, call = call)
   check_number_decimal(rsm, call = call)
-  check_number_decimal(validation, call = call)
+  check_number_decimal(validation, min = 0, max = 0.999, allow_infinite = FALSE, call = call)
   check_bool(quiet, call = call)
 
   check_catboost_aliases(...)

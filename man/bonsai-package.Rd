@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Emil Hvitfeldt \email{emil.hvitfeldt@posit.co} (\href{https://orcid.org/0000-0002-0679-1945}{ORCID})
   \item Daniel Falbel \email{dfalbel@curso-r.com}
   \item Athos Damiani \email{adamiani@curso-r.com}
   \item Roel M. Hogervorst \email{hogervorst.rm@gmail.com} (\href{https://orcid.org/0000-0001-7509-0328}{ORCID})

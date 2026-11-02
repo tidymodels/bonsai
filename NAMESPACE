@@ -15,25 +15,33 @@ export(train_catboost)
 export(train_lightgbm)
 import(rlang)
 importFrom(dials,min_n)
-importFrom(parsnip,"%>%")
-importFrom(parsnip,boost_tree)
-importFrom(parsnip,decision_tree)
-importFrom(parsnip,fit)
-importFrom(parsnip,multi_predict)
-importFrom(parsnip,rand_forest)
-importFrom(parsnip,set_engine)
-importFrom(parsnip,set_mode)
-importFrom(purrr,map_df)
-importFrom(purrr,map_dfr)
-importFrom(rlang,call2)
-importFrom(rlang,empty_env)
-importFrom(rlang,enquo)
-importFrom(rlang,enquos)
-importFrom(rlang,eval_tidy)
-importFrom(rlang,expr)
-importFrom(rlang,new_quosure)
+importFrom(parsnip,
+  "%>%",
+  boost_tree,
+  decision_tree,
+  fit,
+  multi_predict,
+  rand_forest,
+  set_engine,
+  set_mode
+)
+importFrom(purrr,
+  map_df,
+  map_dfr
+)
+importFrom(rlang,
+  call2,
+  empty_env,
+  enquo,
+  enquos,
+  eval_tidy,
+  expr,
+  new_quosure
+)
 importFrom(stats,predict)
-importFrom(tibble,as_tibble)
-importFrom(tibble,tibble)
+importFrom(tibble,
+  as_tibble,
+  tibble
+)
 importFrom(utils,packageVersion)
 importFrom(withr,defer)
