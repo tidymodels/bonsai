@@ -30,7 +30,7 @@ Depends:
     R (>= 4.1)
 Imports: 
     cli,
-    dials,
+    dials (>= 1.4.4.9000),
     dplyr,
     purrr,
     rlang (>= 1.1.0),
@@ -50,6 +50,8 @@ Suggests:
     rsample,
     testthat (>= 3.0.0),
     tune
+Remotes: 
+    tidymodels/dials
 VignetteBuilder: 
     knitr
 Config/Needs/website: tidyverse/tidytemplate
