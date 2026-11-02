@@ -47,7 +47,8 @@ the model. Defaults to 1.}
 
 \item{bagging_temperature}{A numeric value, controls intensity of Bayesian
 bagging. The higher the temperature the more aggressive bagging is. Defaults
-to 1.}
+to 1. Only used with Bayesian bootstrapping; it is only passed to catboost
+when supplied.}
 
 \item{rsm}{A numeric value between 0 and 1, random subspace method. The
 percentage of features to use at each iteration of building trees. At each
@@ -72,5 +73,25 @@ where all of the model arguments are in the main function.
 }
 \details{
 This is an internal function, not meant to be directly called by the user.
+
+Some catboost parameters are only used for specific values of other
+parameters. \code{train_catboost()} checks for these combinations before
+fitting:
+\itemize{
+\item \code{max_leaves} requires \code{grow_policy = "Lossguide"} (error).
+\item \code{min_data_in_leaf} (\code{min_n}) is ignored when \code{grow_policy} is
+\code{"SymmetricTree"}, the default (warning).
+\item \code{subsample} (\code{sample_size}) cannot be used with Bayesian bootstrapping,
+which is the default for multiclass outcomes, or with
+\code{bootstrap_type = "No"} (error).
+\item \code{bagging_temperature} cannot be used with \code{bootstrap_type} values of
+\code{"Bernoulli"}, \code{"Poisson"}, or \code{"No"} (error) and is ignored with
+\code{"MVS"}, the default for other outcomes (warning).
+\item \code{one_hot_max_size} has no effect when there are no factor predictors
+(warning).
+}
+
+When \code{task_type = "GPU"} and \code{bootstrap_type} is not set, the default
+bootstrap type is not inferred and the bootstrap checks are skipped.
 }
 \keyword{internal}

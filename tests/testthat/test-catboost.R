@@ -702,3 +702,180 @@ test_that("train_catboost() validates argument ranges", {
   expect_snapshot(error = TRUE, train_catboost(x, y, rsm = 1.5))
   expect_snapshot(error = TRUE, train_catboost(x, y, validation = 1))
 })
+
+test_that("train_catboost() checks parameter constraints", {
+  skip_if_not_installed("catboost")
+
+  x <- mtcars[, -1]
+  y <- mtcars$mpg
+  iris_x <- iris[, 1:4]
+  iris_y <- iris$Species
+
+  # grow policy ----------------------------------------------------------------
+  expect_snapshot(
+    error = TRUE,
+    train_catboost(x, y, iterations = 2, max_leaves = 8)
+  )
+  expect_snapshot(
+    error = TRUE,
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      max_leaves = 8,
+      grow_policy = "Depthwise"
+    )
+  )
+  expect_no_condition(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      max_leaves = 8,
+      grow_policy = "Lossguide",
+      allow_writing_files = FALSE
+    )
+  )
+
+  expect_snapshot_warning(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      min_data_in_leaf = 5,
+      allow_writing_files = FALSE
+    )
+  )
+  expect_no_condition(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      min_data_in_leaf = 5,
+      grow_policy = "Depthwise",
+      allow_writing_files = FALSE
+    )
+  )
+
+  # bootstrap ------------------------------------------------------------------
+  expect_snapshot(
+    error = TRUE,
+    train_catboost(iris_x, iris_y, iterations = 2, subsample = 0.5)
+  )
+  expect_snapshot(
+    error = TRUE,
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      subsample = 0.5,
+      bootstrap_type = "No"
+    )
+  )
+  expect_no_condition(
+    train_catboost(
+      iris_x,
+      iris_y,
+      iterations = 2,
+      subsample = 0.5,
+      bootstrap_type = "MVS",
+      allow_writing_files = FALSE
+    )
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      bagging_temperature = 2,
+      bootstrap_type = "Bernoulli"
+    )
+  )
+  expect_snapshot_warning(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      bagging_temperature = 2,
+      allow_writing_files = FALSE
+    )
+  )
+  expect_no_condition(
+    train_catboost(
+      iris_x,
+      iris_y,
+      iterations = 2,
+      bagging_temperature = 2,
+      allow_writing_files = FALSE
+    )
+  )
+
+  # the default `bagging_temperature` is not passed, so these bootstrap types
+  # can be used
+  expect_no_condition(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      bootstrap_type = "Bernoulli",
+      subsample = 0.5,
+      allow_writing_files = FALSE
+    )
+  )
+  expect_no_condition(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      bootstrap_type = "No",
+      allow_writing_files = FALSE
+    )
+  )
+
+  # one-hot encoding -----------------------------------------------------------
+  expect_snapshot_warning(
+    train_catboost(
+      x,
+      y,
+      iterations = 2,
+      one_hot_max_size = 4,
+      allow_writing_files = FALSE
+    )
+  )
+  x_fac <- x
+  x_fac$cyl <- factor(x_fac$cyl)
+  expect_no_condition(
+    train_catboost(
+      x_fac,
+      y,
+      iterations = 2,
+      one_hot_max_size = 4,
+      allow_writing_files = FALSE
+    )
+  )
+})
+
+test_that("catboost_bootstrap_type() mirrors catboost defaults", {
+  expect_identical(catboost_bootstrap_type(list(loss_function = "RMSE")), "MVS")
+  expect_identical(
+    catboost_bootstrap_type(list(loss_function = "MultiClass")),
+    "Bayesian"
+  )
+  expect_identical(
+    catboost_bootstrap_type(list(objective = "MultiClassOneVsAll")),
+    "Bayesian"
+  )
+  expect_identical(
+    catboost_bootstrap_type(list(
+      loss_function = "MultiClass",
+      bootstrap_type = "Bernoulli"
+    )),
+    "Bernoulli"
+  )
+  expect_identical(
+    catboost_bootstrap_type(list(loss_function = "RMSE", task_type = "GPU")),
+    NA_character_
+  )
+})
