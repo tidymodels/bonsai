@@ -684,3 +684,21 @@ test_that("multi_predict() works for catboost classification", {
       levels(penguins[["sex"]])
   ))
 })
+
+test_that("train_catboost() validates argument ranges", {
+  skip_if_not_installed("catboost")
+
+  x <- mtcars[, -1]
+  y <- mtcars$mpg
+
+  expect_snapshot(error = TRUE, train_catboost(x, y, iterations = 0))
+  expect_snapshot(error = TRUE, train_catboost(x, y, iterations = Inf))
+  expect_snapshot(error = TRUE, train_catboost(x, y, learning_rate = -1))
+  expect_snapshot(error = TRUE, train_catboost(x, y, depth = 0))
+  expect_snapshot(error = TRUE, train_catboost(x, y, depth = 17))
+  expect_snapshot(error = TRUE, train_catboost(x, y, l2_leaf_reg = -1))
+  expect_snapshot(error = TRUE, train_catboost(x, y, random_strength = -1))
+  expect_snapshot(error = TRUE, train_catboost(x, y, bagging_temperature = -1))
+  expect_snapshot(error = TRUE, train_catboost(x, y, rsm = 1.5))
+  expect_snapshot(error = TRUE, train_catboost(x, y, validation = 1))
+})

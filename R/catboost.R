@@ -58,14 +58,52 @@ train_catboost <- function(
 
   call <- call2("fit")
 
-  check_number_whole(iterations, call = call)
-  check_number_decimal(learning_rate, call = call)
-  check_number_whole(depth, call = call)
-  check_number_decimal(l2_leaf_reg, call = call)
-  check_number_decimal(random_strength, call = call)
-  check_number_decimal(bagging_temperature, call = call)
-  check_number_decimal(rsm, call = call)
-  check_number_decimal(validation, min = 0, max = 0.999, allow_infinite = FALSE, call = call)
+  check_number_whole(iterations, min = 1, allow_infinite = FALSE, call = call)
+  check_number_decimal(
+    learning_rate,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_whole(
+    depth,
+    min = 1,
+    max = 16,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    l2_leaf_reg,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    random_strength,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    bagging_temperature,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    rsm,
+    min = 0,
+    max = 1,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    validation,
+    min = 0,
+    max = 0.999,
+    allow_infinite = FALSE,
+    call = call
+  )
   check_bool(quiet, call = call)
 
   check_catboost_aliases(...)
@@ -106,12 +144,19 @@ train_catboost <- function(
     val_index <- setdiff(seq_len(n), trn_index)
   }
 
+  trn_weights <- NULL
+  val_weights <- NULL
+  if (!is.null(weights)) {
+    trn_weights <- weights[trn_index]
+    val_weights <- weights[val_index]
+  }
+
   learn_pool <- rlang::eval_tidy(
     rlang::call2(
       "catboost.load_pool",
       data = x[trn_index, , drop = FALSE],
       label = y[trn_index],
-      weight = if (is.null(weights)) NULL else weights[trn_index],
+      weight = trn_weights,
       .ns = "catboost"
     ),
     env = rlang::current_env()
@@ -124,7 +169,7 @@ train_catboost <- function(
         "catboost.load_pool",
         data = x[val_index, , drop = FALSE],
         label = y[val_index],
-        weight = if (is.null(weights)) NULL else weights[val_index],
+        weight = val_weights,
         .ns = "catboost"
       ),
       env = rlang::current_env()

@@ -58,14 +58,57 @@ train_lightgbm <- function(
 
   call <- call2("fit")
 
-  check_number_whole(max_depth, call = call)
-  check_number_whole(num_iterations, call = call)
-  check_number_decimal(learning_rate, call = call)
-  check_number_decimal(feature_fraction_bynode, call = call)
-  check_number_whole(min_data_in_leaf, call = call)
-  check_number_decimal(min_gain_to_split, call = call)
-  check_number_decimal(bagging_fraction, call = call)
-  check_number_decimal(early_stopping_round, allow_null = TRUE, call = call)
+  check_number_whole(max_depth, allow_infinite = FALSE, call = call)
+  check_number_whole(
+    num_iterations,
+    min = 1,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    learning_rate,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    feature_fraction_bynode,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_whole(
+    min_data_in_leaf,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    min_gain_to_split,
+    min = 0,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_decimal(
+    bagging_fraction,
+    min = 0,
+    max = 1,
+    allow_infinite = FALSE,
+    call = call
+  )
+  check_number_whole(
+    early_stopping_round,
+    allow_infinite = FALSE,
+    allow_null = TRUE,
+    call = call
+  )
+  check_number_decimal(
+    validation,
+    min = 0,
+    max = 0.999,
+    allow_infinite = FALSE,
+    call = call
+  )
   check_bool(counts, call = call)
   check_bool(quiet, call = call)
 
@@ -142,20 +185,14 @@ process_mtry <- function(
 ) {
   check_bool(counts, call = call)
 
-  ineq <- if (counts) {
-    "greater"
+  if (counts) {
+    ineq <- "greater"
+    interp <- "count"
+    opp <- "proportion"
   } else {
-    "less"
-  }
-  interp <- if (counts) {
-    "count"
-  } else {
-    "proportion"
-  }
-  opp <- if (!counts) {
-    "count"
-  } else {
-    "proportion"
+    ineq <- "less"
+    interp <- "proportion"
+    opp <- "count"
   }
 
   if (
