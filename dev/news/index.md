@@ -2,6 +2,19 @@
 
 ## bonsai (development version)
 
+- Engine-specific tuning parameters are now registered with parsnip:
+  `num_leaves`, `lambda_l1`, `lambda_l2`, and `scale_pos_weight` for
+  `boost_tree(engine = "lightgbm")`; `mincriterion`, `testtype`, and
+  `teststat` for
+  [`decision_tree()`](https://parsnip.tidymodels.org/reference/decision_tree.html)
+  and
+  [`rand_forest()`](https://parsnip.tidymodels.org/reference/rand_forest.html)
+  with the `"partykit"` engine; and `split_min_stat` for
+  `rand_forest(engine = "aorsf")`. The tuning ranges for `learn_rate`
+  and `sample_size` with the lightgbm and catboost engines are now also
+  set in bonsai, and `rand_forest(engine = "partykit")` no longer
+  reports a spurious `tree_depth` tuning parameter.
+
 ## bonsai 0.4.1
 
 CRAN release: 2026-05-21
