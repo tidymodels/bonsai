@@ -189,3 +189,32 @@ test_that("condition inference forests", {
   pk_prob_4 <- unname(predict(pk_fit_4, ad_data, type = "prob")[, 2])
   expect_equal(pk_prob_4, cf_prob_4)
 })
+
+test_that("partykit tunable parameters", {
+  skip_if_not_installed("tune")
+
+  specs <- list(
+    decision_tree() |> set_engine("partykit"),
+    rand_forest() |> set_engine("partykit")
+  )
+  for (spec in specs) {
+    res <- tune::tunable(spec)
+    info <- rlang::set_names(res$call_info, res$name)
+
+    expect_equal(
+      info$mincriterion,
+      list(pkg = "dials", fun = "conditional_min_criterion")
+    )
+    expect_equal(
+      info$testtype,
+      list(pkg = "dials", fun = "conditional_test_type")
+    )
+    expect_equal(
+      info$teststat,
+      list(pkg = "dials", fun = "conditional_test_statistic")
+    )
+  }
+
+  rf_res <- rand_forest() |> set_engine("partykit") |> tune::tunable()
+  expect_false("tree_depth" %in% rf_res$name)
+})

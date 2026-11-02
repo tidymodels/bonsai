@@ -879,3 +879,19 @@ test_that("catboost_bootstrap_type() mirrors catboost defaults", {
     NA_character_
   )
 })
+
+test_that("catboost tunable parameters", {
+  skip_if_not_installed("tune")
+
+  res <- boost_tree() |> set_engine("catboost") |> tune::tunable()
+  info <- rlang::set_names(res$call_info, res$name)
+
+  expect_equal(
+    info$learn_rate,
+    list(pkg = "dials", fun = "learn_rate", range = c(-3, -1 / 2))
+  )
+  expect_equal(
+    info$sample_size,
+    list(pkg = "dials", fun = "sample_prop", range = c(0.5, 1.0))
+  )
+})

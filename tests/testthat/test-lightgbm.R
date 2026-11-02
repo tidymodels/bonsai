@@ -908,3 +908,26 @@ test_that("train_lightgbm() validates argument ranges", {
   )
   expect_snapshot(error = TRUE, train_lightgbm(x, y, validation = 1))
 })
+
+test_that("lightgbm tunable parameters", {
+  skip_if_not_installed("tune")
+
+  res <- boost_tree() |> set_engine("lightgbm") |> tune::tunable()
+  info <- rlang::set_names(res$call_info, res$name)
+
+  expect_equal(
+    info$learn_rate,
+    list(pkg = "dials", fun = "learn_rate", range = c(-3, -1 / 2))
+  )
+  expect_equal(
+    info$sample_size,
+    list(pkg = "dials", fun = "sample_prop", range = c(0.5, 1.0))
+  )
+  expect_equal(info$num_leaves, list(pkg = "dials", fun = "num_leaves"))
+  expect_equal(info$lambda_l1, list(pkg = "dials", fun = "penalty_L1"))
+  expect_equal(info$lambda_l2, list(pkg = "dials", fun = "penalty_L2"))
+  expect_equal(
+    info$scale_pos_weight,
+    list(pkg = "dials", fun = "scale_pos_weight")
+  )
+})

@@ -47,12 +47,13 @@ make_rand_forest_aorsf <- function() {
     has_submodel = FALSE
   )
 
+  ## engine arguments
   parsnip::set_model_arg(
     model = "rand_forest",
     eng = "aorsf",
-    parsnip = "mtry",
-    original = "mtry",
-    func = list(pkg = "dials", fun = "mtry"),
+    parsnip = "split_min_stat",
+    original = "split_min_stat",
+    func = list(pkg = "dials", fun = "conditional_min_criterion"),
     has_submodel = FALSE
   )
 

@@ -63,6 +63,34 @@ make_decision_tree_partykit <- function() {
     has_submodel = FALSE
   )
 
+  ## engine arguments
+  parsnip::set_model_arg(
+    model = "decision_tree",
+    eng = "partykit",
+    parsnip = "mincriterion",
+    original = "mincriterion",
+    func = list(pkg = "dials", fun = "conditional_min_criterion"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "decision_tree",
+    eng = "partykit",
+    parsnip = "testtype",
+    original = "testtype",
+    func = list(pkg = "dials", fun = "conditional_test_type"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "decision_tree",
+    eng = "partykit",
+    parsnip = "teststat",
+    original = "teststat",
+    func = list(pkg = "dials", fun = "conditional_test_statistic"),
+    has_submodel = FALSE
+  )
+
   parsnip::set_pred(
     model = "decision_tree",
     eng = "partykit",
@@ -249,6 +277,34 @@ make_rand_forest_partykit <- function() {
     has_submodel = FALSE
   )
 
+  ## engine arguments
+  parsnip::set_model_arg(
+    model = "rand_forest",
+    eng = "partykit",
+    parsnip = "mincriterion",
+    original = "mincriterion",
+    func = list(pkg = "dials", fun = "conditional_min_criterion"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "rand_forest",
+    eng = "partykit",
+    parsnip = "testtype",
+    original = "testtype",
+    func = list(pkg = "dials", fun = "conditional_test_type"),
+    has_submodel = FALSE
+  )
+
+  parsnip::set_model_arg(
+    model = "rand_forest",
+    eng = "partykit",
+    parsnip = "teststat",
+    original = "teststat",
+    func = list(pkg = "dials", fun = "conditional_test_statistic"),
+    has_submodel = FALSE
+  )
+
   parsnip::set_pred(
     model = "rand_forest",
     eng = "partykit",
@@ -309,24 +365,6 @@ make_rand_forest_partykit <- function() {
       func = c(pkg = "parsnip", fun = "cforest_train"),
       defaults = list()
     )
-  )
-
-  parsnip::set_model_arg(
-    model = "rand_forest",
-    eng = "partykit",
-    parsnip = "min_n",
-    original = "minsplit",
-    func = list(pkg = "dials", fun = "min_n"),
-    has_submodel = FALSE
-  )
-
-  parsnip::set_model_arg(
-    model = "rand_forest",
-    eng = "partykit",
-    parsnip = "tree_depth",
-    original = "maxdepth",
-    func = list(pkg = "dials", fun = "tree_depth"),
-    has_submodel = FALSE
   )
 
   parsnip::set_pred(

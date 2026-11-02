@@ -233,3 +233,15 @@ test_that("classification predictions", {
   pred_1row <- predict(bonsai_clsf_fit, mtcars_orsf[2, ])
   expect_identical(nrow(pred_1row), 1L)
 })
+
+test_that("aorsf tunable parameters", {
+  skip_if_not_installed("tune")
+
+  res <- rand_forest() |> set_engine("aorsf") |> tune::tunable()
+  info <- rlang::set_names(res$call_info, res$name)
+
+  expect_equal(
+    info$split_min_stat,
+    list(pkg = "dials", fun = "conditional_min_criterion")
+  )
+})
